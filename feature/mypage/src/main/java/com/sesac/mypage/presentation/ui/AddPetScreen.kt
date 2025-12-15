@@ -1,6 +1,7 @@
 package com.sesac.mypage.presentation.ui
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -102,7 +103,7 @@ fun AddPetScreen(
     var isBreedDropdownExpanded by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var image by remember { mutableStateOf<String?>(null) }
+    var imageUrl by remember { mutableStateOf<String?>(null) }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -128,7 +129,7 @@ fun AddPetScreen(
                 birthday = pet.birthday ?: ""
                 isNeutered = pet.neutering
                 selectedBreed = pet.breed ?: ""
-                image = pet.imageUrl // 기존 이미지 URL 설정
+                imageUrl = pet.image // 기존 이미지 URL 설정
             }
         }
     }
@@ -203,7 +204,7 @@ fun AddPetScreen(
                     .border(2.dp, Primary, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                if (imageUri == null && image == null) {
+                if (imageUri == null && imageUrl == null) {
                     Icon(
                         imageVector = Icons.Default.PhotoCamera,
                         contentDescription = "Add Photo",
@@ -212,7 +213,7 @@ fun AddPetScreen(
                     )
                 } else {
                     AsyncImage(
-                        model = imageUri ?: image,
+                        model = imageUri ?: imageUrl,
                         contentDescription = "Pet Image",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -283,7 +284,7 @@ fun AddPetScreen(
                         neutering = isNeutered,
                         breed = selectedBreed,
                         owner = uiState.user?.id.toString(),
-                        image = image, // The image is now sent as a separate part, not in the Pet object.
+                        image = imageUrl, // The image is now sent as a separate part, not in the Pet object.
                         linkedUser = null,
                         lastLocation = PetLocation.EMPTY,
                     )

@@ -550,7 +550,7 @@ fun PetInfoCard(
             Column(modifier = Modifier.padding(paddingLarge)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     AsyncImage(
-                        model = pet.imageUrl ?: cR.drawable.placeholder,
+                        model = pet.image ?: cR.drawable.placeholder,
                         contentDescription = pet.name,
                         modifier = Modifier
                             .size(64.dp)
