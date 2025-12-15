@@ -129,6 +129,8 @@
     <string name="auth_join_agreement_age">만 14세 이상입니다.</string>
     <string name="auth_join_agreement_terms">서비스 이용약관에 동의합니다.</string>
     <string name="auth_join_agreement_privacy">개인정보 수집 및 이용에 동의합니다.</string>
+    <string name="auth_info_pet_register_code">펫 등록 코드 (선택)</string>
+    <string name="auth_input_pet_register_code">펫 등록 코드가 있다면 입력해주세요</string>
 
 </resources>
 

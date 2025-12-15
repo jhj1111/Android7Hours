@@ -1,10 +1,8 @@
-package com.sesac.auth.presentation.ui
+package com.sesac.auth.presentation.LoginScreen
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.pm.Signature
 import android.os.Build
-import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -20,10 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.DirectionsRun
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.rounded.DirectionsRun
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -51,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -67,7 +59,6 @@ import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.domain.result.JoinUiState
-import java.security.MessageDigest
 
 @Composable
 fun AuthLoginScreen(

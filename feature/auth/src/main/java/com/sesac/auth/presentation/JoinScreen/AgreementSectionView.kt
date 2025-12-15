@@ -1,4 +1,4 @@
-package com.sesac.auth.presentation.ui
+package com.sesac.auth.presentation.JoinScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import com.sesac.common.R
+import com.sesac.common.ui.theme.Android7HoursTheme
 
 /**
  * 약관 동의 섹션
@@ -43,5 +45,22 @@ fun AgreementSectionView(
             Checkbox(checked = agreePrivacy, onCheckedChange = onAgreePrivacyChange)
             Text(stringResource(id = R.string.auth_join_agreement_privacy), color = Color.Gray)
         }
+    }
+}
+
+@Preview
+@Composable
+fun AgreementSectionViewPreview(){
+    Android7HoursTheme {
+        AgreementSectionView(
+            agreeAll = true,
+            onAgreeAgeChange = { _ -> },
+            agreeAge = true,
+            onAgreeAllChange = { _ -> },
+            agreeTerms = false,
+            onAgreeTermsChange = { _ -> },
+            agreePrivacy = false,
+            onAgreePrivacyChange = { _ -> }
+        )
     }
 }

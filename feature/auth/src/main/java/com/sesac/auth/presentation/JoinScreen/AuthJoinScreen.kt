@@ -1,4 +1,4 @@
-package com.sesac.auth.presentation.ui
+package com.sesac.auth.presentation.JoinScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,30 +23,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sesac.auth.presentation.AuthViewModel
 import com.sesac.domain.result.JoinUiState
 import com.sesac.common.R
 import com.sesac.common.component.CommonLabelledTextField
-import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.ui.theme.Gray500
 import com.sesac.common.ui.theme.iconSizeLarge
 import com.sesac.common.ui.theme.paddingLarge
-import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 
 @Composable
@@ -145,8 +137,8 @@ fun AuthJoinScreen(
         CommonLabelledTextField(
             value = formState.invitationCode,
             onValueChange = viewModel::onInvitationCodeChange,
-            labelContent = { Text("펫 등록 코드 (선택)") },
-            placeholder = { Text("펫 등록 코드가 있다면 입력해주세요") }
+            labelContent = { Text(stringResource(R.string.auth_info_pet_register_code)) },
+            placeholder = { Text(stringResource(R.string.auth_input_pet_register_code)) }
         )
 
         Spacer(modifier = Modifier.height(paddingSmall))
@@ -201,7 +193,7 @@ fun AuthJoinScreen(
             )
             Text(
                 text = stringResource(id = R.string.auth_join_or_divider),
-                color = Color.Gray,
+                color = Gray500,
                 fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
             HorizontalDivider(
@@ -218,27 +210,5 @@ fun AuthJoinScreen(
             onClick = { /* TODO: 카카오워크 가입 */ }
         )
         Spacer(modifier = Modifier.height(paddingLarge))
-    }
-}
-
-@Composable
-private fun RequiredLabel(text: String) {
-    Text(
-        text = buildAnnotatedString {
-            append(text)
-            withStyle(style = SpanStyle(color = Color.Red)) {
-                append(" *")
-            }
-        },
-        style = MaterialTheme.typography.bodySmall,
-        fontWeight = FontWeight.Bold
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AuthJoinScreenPreview() {
-    Android7HoursTheme {
-        Text("AuthJoinScreen Preview - ViewModel required")
     }
 }

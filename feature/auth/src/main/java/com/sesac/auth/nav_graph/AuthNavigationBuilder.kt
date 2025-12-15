@@ -6,8 +6,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.sesac.auth.presentation.AuthViewModel
-import com.sesac.auth.presentation.ui.AuthJoinScreen
-import com.sesac.auth.presentation.ui.AuthLoginScreen
+import com.sesac.auth.presentation.JoinScreen.AuthJoinScreen
+import com.sesac.auth.presentation.LoginScreen.AuthLoginScreen
 import com.sesac.auth.presentation.FindAccountViewModel
 import com.sesac.auth.presentation.ui.FindAccountScreen
 
