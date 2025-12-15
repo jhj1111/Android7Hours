@@ -203,7 +203,7 @@ fun CommunityMainScreen(
             }
         }
 
-        LaunchedEffect(uiState) {
+        LaunchedEffect(uiState, Unit) {
             viewModel.getPostList(uiState.token)
         }
 

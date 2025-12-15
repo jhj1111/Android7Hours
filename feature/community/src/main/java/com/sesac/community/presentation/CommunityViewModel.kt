@@ -130,15 +130,10 @@ class CommunityViewModel @Inject constructor(
     // ---------------------------------------------------------
     // 🔥 게시글 목록
     // ---------------------------------------------------------
-    fun getPostList(token: String?, query: String? = null) {
+    fun getPostList(query: String? = null) {
         viewModelScope.launch {
-            if (token.isNullOrEmpty()) {
-                _invalidToken.send(UiEvent.ToastEvent("유저 정보가 없습니다."))
-                return@launch
-            }
-
             _postList.value = ResponseUiState.Loading
-            postUseCase.getPostListUseCase(token, query)
+            postUseCase.getPostListUseCase(query)
                 .catch { e ->
                     Log.e("CommunityVM", "게시글 리스트 로드 실패: ${e.message}")
                 }

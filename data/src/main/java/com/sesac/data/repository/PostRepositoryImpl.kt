@@ -26,10 +26,10 @@ class PostRepositoryImpl @Inject constructor(
     // ------------------------------
     // GET LIST
     // ------------------------------
-    override suspend fun getPostList(token: String, query: String?): Flow<AuthResult<List<Post>>> = flow {
+    override suspend fun getPostList(query: String?): Flow<AuthResult<List<Post>>> = flow {
         emit(AuthResult.Loading)
 
-        val posts = postApi.getPostsList("Bearer $token", query).toDomain()
+        val posts = postApi.getPostsList(query).toDomain()
         emit(AuthResult.Success(posts))
 
     }.catch {

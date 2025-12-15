@@ -23,7 +23,7 @@ interface PostApi {
 
     @GET("posts/")
     suspend fun getPostsList(
-        @Header("Authorization") token: String,
+//        @Header("Authorization") token: String,
         @Query("query") query: String? = null
     ): List<PostDTO>
 
