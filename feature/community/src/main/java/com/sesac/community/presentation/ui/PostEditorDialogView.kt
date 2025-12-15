@@ -1,7 +1,6 @@
 package com.sesac.community.presentation.ui
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -70,8 +69,8 @@ fun PostEditorDialogView(
     var content by remember { mutableStateOf(initialPost?.content ?: "") }
     var selectedCategory by remember { mutableStateOf(initialPost?.postType ?: PostType.REVIEW) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var existingImageUrl by remember { mutableStateOf(initialPost?.imageUrl) }
-    Log.d("TAG-PostEditorDialogView", "수정 전 포스트 이미지 : $existingImageUrl")
+    var existingImageUrl by remember { mutableStateOf(initialPost?.image) }
+
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->

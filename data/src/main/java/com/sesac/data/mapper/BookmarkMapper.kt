@@ -78,7 +78,6 @@ fun BookmarkedPostDTO.toDomain(): BookmarkedPost = BookmarkedPost(
     title = this.title,
     content = this.content,
     image = fixImageUrl(this.image),
-    imageUrl = fixImageUrl(this.imageUrl),
     viewCount = this.viewCount,
     commentCount = this.commentCount,
     likeCount = this.likeCount,

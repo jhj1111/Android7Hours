@@ -67,8 +67,7 @@ fun PostDTO.toPost(): Post = Post(
         PostType.UNKNOWN
     },
     title = this.title,
-//    image = fixImageUrl(this.image),
-    imageUrl = fixImageUrl(this.imageUrl),
+    image = fixImageUrl(this.image),
     viewCount = this.viewCount,
     commentCount = this.commentCount,
     likeCount = this.likeCount,
