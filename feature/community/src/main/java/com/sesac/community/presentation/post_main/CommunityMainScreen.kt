@@ -1,4 +1,4 @@
-package com.sesac.community.presentation.ui
+package com.sesac.community.presentation.post_main
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -58,7 +58,7 @@ import com.sesac.common.component.CommonFilterTabs
 import com.sesac.common.ui.theme.Gray400
 import com.sesac.common.ui.theme.Primary
 import com.sesac.common.ui.theme.White
-import com.sesac.community.component.CommunityCommentSheetContent
+import com.sesac.common.component.CommonCommentSheetContent
 import com.sesac.community.presentation.CommunityViewModel
 import com.sesac.domain.model.Post
 import com.sesac.domain.type.PostType
@@ -324,7 +324,7 @@ fun CommunityMainScreen(
             sheetState = modalSheetState
         ) {
             selectedPost?.let { post ->
-                CommunityCommentSheetContent(
+                CommonCommentSheetContent(
                     comments = comments,
                     newCommentContent = newCommentContent,
                     onNewCommentChange = { viewModel.onNewCommentChange(it) },

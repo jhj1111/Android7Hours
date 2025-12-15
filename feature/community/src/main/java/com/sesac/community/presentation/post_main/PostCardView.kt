@@ -1,4 +1,4 @@
-package com.sesac.community.presentation.ui
+package com.sesac.community.presentation.post_main
 
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut

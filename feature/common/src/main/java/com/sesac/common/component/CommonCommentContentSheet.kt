@@ -1,6 +1,5 @@
-package com.sesac.community.component
+package com.sesac.common.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,12 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sesac.common.component.CommonCommentItem
 import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.utils.samplePathUrl
 import com.sesac.domain.model.Comment
 
 @Composable
-fun CommunityCommentSheetContent(
+fun CommonCommentSheetContent(
     modifier: Modifier = Modifier,
     comments: List<Comment>,
     newCommentContent: String,
@@ -124,8 +123,13 @@ fun CommunityCommentSheetContent(
 @Composable
 fun CommunityCommentSheetContentPreview() {
     Android7HoursTheme {
-        CommunityCommentSheetContent(
-            comments = listOf(Comment.EMPTY),
+        CommonCommentSheetContent(
+            comments = listOf(Comment.EMPTY.copy(
+                authorNickName = "홍동길",
+                authorImage = samplePathUrl,
+                content = "댓글1111",
+                timeAgo = "10년 전",
+            )),
             newCommentContent = "입력",
             onNewCommentChange = {},
             onAddComment = {},

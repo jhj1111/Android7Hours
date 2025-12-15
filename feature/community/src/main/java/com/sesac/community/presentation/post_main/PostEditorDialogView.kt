@@ -1,4 +1,4 @@
-package com.sesac.community.presentation.ui
+package com.sesac.community.presentation.post_main
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
