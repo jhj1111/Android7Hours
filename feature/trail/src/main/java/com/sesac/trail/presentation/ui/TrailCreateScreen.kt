@@ -150,12 +150,13 @@ fun TrailCreateScreen(
                 Log.d("TAG-TrailCreateScreen", "created path : $createdPath")
                 // 수정 화면 스택에서 제거하고, 수정된 상세 화면으로 이동
                 viewModel.resetCreateState()
-                navController.navigate(NestedNavigationRoute.TrailDetail(createdPath.toPathParceler())) {
-                    popUpTo(navController.currentDestination!!.id) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
+//                navController.navigate(NestedNavigationRoute.TrailDetail(createdPath.toPathParceler())) {
+//                    popUpTo(navController.currentDestination!!.id) {
+//                        inclusive = true
+//                    }
+//                    launchSingleTop = true
+//                }
+                navController.popBackStack()
 
             }
             is ResponseUiState.Error -> {
