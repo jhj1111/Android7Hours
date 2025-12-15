@@ -26,7 +26,7 @@ object CommentMapper {
             content = this.content,
             createdAt = this.createdAt,
             timeAgo = timeAgoString,
-            authorImage = fixImageUrl(this.author.profileImageUrl) ?: "https://img.icons8.com/?size=100&id=Fx70T4fgtNmt&format=png&color=000000"
+            authorImage = fixImageUrl(this.author.image) ?: "https://img.icons8.com/?size=100&id=Fx70T4fgtNmt&format=png&color=000000"
         )
     }
 
@@ -44,7 +44,7 @@ object CommentMapper {
             content = this.content,
             createdAt = this.createdAt,
             timeAgo = null, // UI 레이어에서 계산하도록 null로 설정
-            authorImage = fixImageUrl(this.author.profileImageUrl) ?: "https://img.icons8.com/?size=100&id=Fx70T4fgtNmt&format=png&color=000000"
+            authorImage = fixImageUrl(this.author.image) ?: "https://img.icons8.com/?size=100&id=Fx70T4fgtNmt&format=png&color=000000"
         )
     }
 
@@ -63,7 +63,7 @@ object CommentMapper {
             author = AuthorDTO(
                 id = this.authorId,
                 nickname = this.authorNickName,
-                profileImageUrl = this.authorImage
+                image = this.authorImage
             ),
             content = this.content,
             createdAt = createdAtString
