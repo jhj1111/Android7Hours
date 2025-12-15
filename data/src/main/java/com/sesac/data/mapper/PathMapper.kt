@@ -26,7 +26,6 @@ fun PathDTO.toPath() = Path(
     duration = this.duration ?: 0,
     isPrivate = this.isPrivate,
     thumbnail = fixImageUrl(this.thumbnail),
-    imageUrl = fixImageUrl(this.imageUrl),
     coord = this.coords.toCoordList(),
     distanceFromMe = this.distanceFromMe,
     bookmarkCount = this.bookmarksCount,

@@ -2,6 +2,7 @@ package com.sesac.home.presentation.ui
 
 import android.Manifest
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +44,7 @@ import com.sesac.common.ui.theme.cardWidth
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.domain.result.AuthUiState
+import com.sesac.domain.result.ResponseUiState
 import com.sesac.home.presentation.HomeViewModel
 import kotlinx.coroutines.delay
 import com.sesac.common.R as cR
@@ -98,7 +100,7 @@ fun HomeScreen(
                     items = pathList,
                 ) { path ->
                     ContentCardView(
-                        path = path,
+                        data = path,
                         onClick = { onNavigateToPathDetail(path?.toPathParceler()) },
                         modifier = Modifier.width(cardWidth)
                     )

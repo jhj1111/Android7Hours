@@ -147,7 +147,7 @@ fun PathItem(
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context)
-                        .data(path.imageUrl ?: samplePathUrl)
+                        .data(path.thumbnail ?: samplePathUrl)
                         .crossfade(true)
                         .scale(Scale.FILL)
                         .build(),

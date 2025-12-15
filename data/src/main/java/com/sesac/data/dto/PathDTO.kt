@@ -19,8 +19,6 @@ data class PathDTO(
     @Json(name = "is_private")
     val isPrivate: Boolean,
     val thumbnail: String?,
-    @Json(name = "thumbnail_url")
-    val imageUrl: String? = null,
     val coords: List<CoordDTO>,
     @Json(name = "distance_from_me")
     val distanceFromMe: Float? = null,

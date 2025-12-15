@@ -18,8 +18,7 @@ data class BookmarkedPathDTO(
     val duration: Int?,
     @Json(name = "is_private")
     val isPrivate: Boolean,
-    @Json(name = "thumbnail_url")
-    val thumbnailUrl: String?,
+    val thumbnail: String?,
     @Json(name = "bookmark_count")
     val bookmarksCount: Int,
     @Json(name = "is_bookmarked")

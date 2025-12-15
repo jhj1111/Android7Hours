@@ -128,8 +128,7 @@ fun TrailDetailScreen(
                 pathName = selected.pathName,
                 isBookmarked = isBookmarked,
                 onBookmarkClick = handleBookmark,
-//                imageUrl = selected.thumbnail ?: samplePathUrl,
-                imageUrl = selected.imageUrl ?: samplePathUrl,
+                imageUrl = selected.thumbnail ?: samplePathUrl,
             )
 
             Column(
@@ -305,8 +304,9 @@ fun PathImageHeader(
             .fillMaxWidth()
             .height(256.dp)
     ) {
+        Log.d("TAG-TrailDetailScreen", "imageUrl : ${fixImageUrl(imageUrl)}")
         AsyncImage(
-            model = imageUrl,
+            model = fixImageUrl(imageUrl),
             contentDescription = pathName,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

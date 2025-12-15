@@ -20,7 +20,6 @@ data class Path(
     val duration: Int = 0,
     val isPrivate: Boolean = false,
     val thumbnail: String? = null,
-    val imageUrl: String? = null,
     val coord: List<Coord>? = null,
     val bookmarkCount: Int,
     val isBookmarked: Boolean,
@@ -40,7 +39,6 @@ data class Path(
             duration = 0,
             isPrivate = false,
             thumbnail = "",
-            imageUrl = null,
             coord = null,
             bookmarkCount = 0,
             isBookmarked = false,
@@ -66,7 +64,7 @@ data class Path(
         distance = this.distance.toDouble(),
         duration = this.duration,
         isPrivate = this.isPrivate,
-        thumbnailUrl = this.thumbnail,
+        thumbnail = this.thumbnail,
         bookmarkCount = this.bookmarkCount,
         isBookmarked = true,
     )
@@ -87,7 +85,7 @@ data class BookmarkedPath(
     val distance: Double,
     val duration: Int?,
     val isPrivate: Boolean,
-    val thumbnailUrl: String?,
+    val thumbnail: String?,
     var bookmarkCount: Int,
     var isBookmarked: Boolean,
 ) : BookmarkedItem {
@@ -102,7 +100,7 @@ data class BookmarkedPath(
             distance = .0,
             duration = 0,
             isPrivate = false,
-            thumbnailUrl = "",
+            thumbnail = "",
             bookmarkCount = 0,
             isBookmarked = false
         )

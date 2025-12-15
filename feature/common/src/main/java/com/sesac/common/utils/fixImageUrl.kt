@@ -9,7 +9,7 @@ fun fixImageUrl(url: String?): String? {
     var serverIp = BuildConfig.SERVER_URL
     serverIp = serverIp.replace("http://", "")
     serverIp = serverIp.replace(":8000/", "")
-//    Log.d("TAG-fixImageUrl", "serverIp : $serverIp")
+    Log.d("TAG-fixImageUrl", "serverIp : $serverIp")
     Log.d("TAG-fixImageUrl", "url : $url")
 
     return url.replace(Regex("(http://|https://)(127\\.0\\.0\\.1|localhost|minio)"), "$1$serverIp")
