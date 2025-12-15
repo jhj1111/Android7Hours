@@ -1,4 +1,4 @@
-package com.sesac.auth.presentation.JoinScreen
+package com.sesac.auth.presentation.join_screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement

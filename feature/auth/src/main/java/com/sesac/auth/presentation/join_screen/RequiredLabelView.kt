@@ -1,4 +1,4 @@
-package com.sesac.auth.presentation.JoinScreen
+package com.sesac.auth.presentation.join_screen
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,7 +12,7 @@ import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.Red500
 
 @Composable
-fun RequiredLabel(text: String) {
+fun RequiredLabelView(text: String) {
     Text(
         text = buildAnnotatedString {
             append(text)
@@ -29,6 +29,6 @@ fun RequiredLabel(text: String) {
 @Composable
 fun RequiredLabelPreview(){
     Android7HoursTheme {
-        RequiredLabel("필수")
+        RequiredLabelView("필수")
     }
 }

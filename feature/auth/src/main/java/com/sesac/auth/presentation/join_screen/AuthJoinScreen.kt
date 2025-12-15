@@ -1,4 +1,4 @@
-package com.sesac.auth.presentation.JoinScreen
+package com.sesac.auth.presentation.join_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -83,7 +83,7 @@ fun AuthJoinScreen(
         CommonLabelledTextField(
             value = formState.email,
             onValueChange = viewModel::onEmailChange,
-            labelContent = { RequiredLabel(text = stringResource(id = R.string.auth_join_email_label)) },
+            labelContent = { RequiredLabelView(text = stringResource(id = R.string.auth_join_email_label)) },
             placeholder = { Text("email@example.com") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             isError = showError && !formState.isEmailValid,
@@ -92,7 +92,7 @@ fun AuthJoinScreen(
         CommonLabelledTextField(
             value = formState.password,
             onValueChange = viewModel::onPasswordChange,
-            labelContent = { RequiredLabel(text = stringResource(id = R.string.auth_join_password_label)) },
+            labelContent = { RequiredLabelView(text = stringResource(id = R.string.auth_join_password_label)) },
             isPassword = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             isError = showError && !formState.isPasswordValid,
@@ -101,7 +101,7 @@ fun AuthJoinScreen(
         CommonLabelledTextField(
             value = formState.passwordConfirm,
             onValueChange = viewModel::onPasswordConfirmChange,
-            labelContent = { RequiredLabel(text = stringResource(id = R.string.auth_join_password_confirm_label)) },
+            labelContent = { RequiredLabelView(text = stringResource(id = R.string.auth_join_password_confirm_label)) },
             isPassword = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             isError = showError && !formState.doPasswordsMatch,
@@ -110,7 +110,7 @@ fun AuthJoinScreen(
         CommonLabelledTextField(
             value = formState.nickname,
             onValueChange = viewModel::onNicknameChange,
-            labelContent = { RequiredLabel(text = stringResource(id = R.string.auth_join_nickname_label)) },
+            labelContent = { RequiredLabelView(text = stringResource(id = R.string.auth_join_nickname_label)) },
             isError = showError && formState.nickname.isBlank(),
         )
 
@@ -119,7 +119,7 @@ fun AuthJoinScreen(
                 CommonLabelledTextField(
                     value = formState.name,
                     onValueChange = viewModel::onNameChange,
-                    labelContent = { RequiredLabel(text = stringResource(id = R.string.auth_join_name_label)) },
+                    labelContent = { RequiredLabelView(text = stringResource(id = R.string.auth_join_name_label)) },
                     isError = showError && formState.name.isBlank(),
                 )
             }
@@ -127,7 +127,7 @@ fun AuthJoinScreen(
                 CommonLabelledTextField(
                     value = formState.phone,
                     onValueChange = viewModel::onPhoneChange,
-                    labelContent = { RequiredLabel(text = stringResource(id = R.string.auth_join_phone_label)) },
+                    labelContent = { RequiredLabelView(text = stringResource(id = R.string.auth_join_phone_label)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
                 )
             }
