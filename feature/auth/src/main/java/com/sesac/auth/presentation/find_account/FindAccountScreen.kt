@@ -1,4 +1,4 @@
-package com.sesac.auth.presentation.ui
+package com.sesac.auth.presentation.find_account
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
