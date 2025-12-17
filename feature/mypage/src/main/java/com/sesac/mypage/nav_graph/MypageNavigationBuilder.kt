@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.sesac.common.model.PathParceler
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.mypage.presentation.ui.AddPetScreen
 import com.sesac.mypage.presentation.ui.MypageDetailScreen

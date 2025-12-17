@@ -10,7 +10,7 @@ import com.sesac.common.model.PlaceParcelerNavType // Add this import
 import com.sesac.common.model.parcelableType
 import com.sesac.common.model.toPlace
 import com.sesac.domain.model.Path
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.trail.presentation.TrailViewModel
 import com.sesac.trail.presentation.ui.PlaceInfoDetailScreen
 import com.sesac.trail.presentation.ui.TrailDetailScreen

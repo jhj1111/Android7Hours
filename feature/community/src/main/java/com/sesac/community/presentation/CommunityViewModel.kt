@@ -9,7 +9,7 @@ import com.sesac.common.model.UiEvent
 import com.sesac.domain.model.Comment
 import com.sesac.domain.model.Post
 import com.sesac.domain.result.AuthResult
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.type.LikeType

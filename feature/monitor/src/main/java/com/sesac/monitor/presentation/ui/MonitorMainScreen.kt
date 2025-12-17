@@ -33,7 +33,7 @@ import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui_state.MonitorUiState
 import com.sesac.monitor.presentation.MonitorViewModel
 import com.sesac.common.R as cR
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

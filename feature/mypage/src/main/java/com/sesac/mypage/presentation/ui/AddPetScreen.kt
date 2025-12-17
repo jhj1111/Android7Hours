@@ -1,7 +1,6 @@
 package com.sesac.mypage.presentation.ui
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,10 +68,10 @@ import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.domain.model.Pet
 import com.sesac.domain.model.PetLocation
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.presentation.MypageViewModel
 import java.text.SimpleDateFormat
 import java.util.Date

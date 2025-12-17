@@ -5,7 +5,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sesac.domain.model.BookmarkedItem
 import com.sesac.domain.model.BookmarkedPath
 import com.sesac.domain.model.BookmarkedPost
 import com.sesac.domain.model.Breed
@@ -13,11 +12,9 @@ import com.sesac.domain.model.InvitationCode
 import com.sesac.domain.model.MypageSchedule
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.Pet
-import com.sesac.domain.model.Post
-import com.sesac.domain.model.User
 import com.sesac.domain.result.AuthResult
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.usecase.bookmark.BookmarkUseCase
 import com.sesac.domain.usecase.mypage.DiaryUseCase

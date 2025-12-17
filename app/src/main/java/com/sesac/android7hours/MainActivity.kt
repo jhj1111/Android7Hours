@@ -20,7 +20,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,7 +48,7 @@ import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.community.nav_graph.CommunityNavigationRoute
 import com.sesac.community.presentation.CommunityViewModel
 import com.sesac.domain.model.Coord
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.home.nav_graph.EntryPointScreen
 import com.sesac.home.nav_graph.HomeNavigationRoute
 import com.sesac.home.nav_graph.TopBarAction

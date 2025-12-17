@@ -3,7 +3,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,15 +44,14 @@ import kotlinx.coroutines.delay
 import com.sesac.domain.model.Coord
 import com.sesac.common.utils.EffectPauseStop
 import com.sesac.domain.model.Path
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.trail.nav_graph.TrailNavigationRoute
 import com.sesac.trail.presentation.TrailViewModel
 import com.sesac.trail.presentation.component.BottomSheetContent
 import com.sesac.trail.presentation.component.MemoDialog
 import com.sesac.trail.presentation.component.RecordingControls
 import com.sesac.trail.presentation.component.ReopenSheetButton
-import com.sesac.trail.presentation.component.addMemoMarker
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb

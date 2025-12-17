@@ -2,8 +2,6 @@ package com.sesac.trail.presentation.ui
 
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -64,7 +62,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import com.sesac.common.model.PathParceler
 import com.sesac.common.ui.theme.Border
 import com.sesac.common.ui.theme.GrayTabText
 import com.sesac.common.ui.theme.NoteBox
@@ -81,11 +78,9 @@ import com.sesac.common.ui.theme.paddingNone
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.model.UiEvent
 import com.sesac.common.model.toPathParceler
-import com.sesac.domain.model.Path
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.trail.nav_graph.NestedNavigationRoute
-import com.sesac.trail.nav_graph.TrailNavigationRoute
 import com.sesac.trail.presentation.TrailViewModel
 import com.sesac.trail.presentation.component.TagFlow
 import kotlinx.coroutines.flow.collectLatest

@@ -90,11 +90,10 @@ import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.utils.FileUtils
-import com.sesac.common.utils.fixImageUrl
 import com.sesac.domain.model.InvitationCode
 import com.sesac.domain.model.Pet
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.nav_graph.MypageNavigationRoute
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.common.R as cR

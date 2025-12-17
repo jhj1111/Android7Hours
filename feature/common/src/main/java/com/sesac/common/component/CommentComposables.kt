@@ -26,7 +26,7 @@ import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.domain.model.Comment
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 
 @Composable
 fun CommonCommentSection(

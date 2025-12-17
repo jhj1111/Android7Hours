@@ -1,6 +1,5 @@
 package com.sesac.mypage.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,10 +36,9 @@ import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.domain.model.MypageMenuItem
-import com.sesac.domain.result.ResponseUiState
-import com.sesac.mypage.model.MyPathStats
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.nav_graph.MypageNavigationRoute
 import com.sesac.mypage.presentation.MypageViewModel
 

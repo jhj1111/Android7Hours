@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sesac.auth.presentation.AuthViewModel
-import com.sesac.domain.result.JoinUiState
+import com.sesac.common.ui_state.JoinUiState
 import com.sesac.common.R
 import com.sesac.common.component.CommonLabelledTextField
 import com.sesac.common.ui.theme.Gray500

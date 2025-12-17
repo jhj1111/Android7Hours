@@ -22,7 +22,7 @@ import com.sesac.common.model.toPathParceler
 import com.sesac.common.ui.theme.cardWidth
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.home.presentation.HomeViewModel
 import kotlinx.coroutines.delay
 import com.sesac.common.R as cR

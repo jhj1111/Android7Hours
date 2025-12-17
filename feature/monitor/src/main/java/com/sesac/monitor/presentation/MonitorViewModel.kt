@@ -9,7 +9,7 @@ import com.sesac.common.usecase.webrtc.WebRTCUseCase
 import com.sesac.domain.model.Pet
 import com.sesac.domain.model.User
 import com.sesac.domain.result.AuthResult
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.usecase.pet.PetUseCase
 import com.sesac.domain.usecase.session.SessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -68,8 +68,8 @@ import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.utils.fixImageUrl
 import com.sesac.common.utils.samplePathUrl
 import com.sesac.domain.model.Path
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.trail.nav_graph.TrailNavigationRoute
 import com.sesac.trail.presentation.TrailViewModel
 import com.sesac.trail.presentation.component.TagFlow

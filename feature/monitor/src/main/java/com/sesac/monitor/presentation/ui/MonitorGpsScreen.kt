@@ -29,7 +29,7 @@ import com.sesac.common.component.CommonMapView
 import com.sesac.common.utils.EffectPauseStop
 import com.sesac.monitor.presentation.MonitorViewModel
 import com.naver.maps.geometry.LatLng
-import com.sesac.domain.result.ResponseUiState // NEW IMPORT
+import com.sesac.common.ui_state.ResponseUiState // NEW IMPORT
 
 
 @Composable

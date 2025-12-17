@@ -27,7 +27,7 @@ import com.sesac.auth.nav_graph.AuthNavigationRoute
 import com.sesac.auth.presentation.AuthViewModel
 import com.sesac.auth.utils.handleKakaoLogin
 import com.sesac.common.ui.theme.paddingLarge
-import com.sesac.domain.result.JoinUiState
+import com.sesac.common.ui_state.JoinUiState
 
 @Composable
 fun AuthLoginScreen(

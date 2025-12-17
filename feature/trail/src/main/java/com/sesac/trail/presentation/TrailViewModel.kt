@@ -17,7 +17,7 @@ import com.sesac.domain.model.Place
 import com.sesac.domain.model.User
 import com.sesac.domain.result.AuthResult
 import com.sesac.domain.result.LocationFlowResult
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.usecase.bookmark.BookmarkUseCase

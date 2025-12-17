@@ -4,12 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sesac.auth.utils.ValidationUtils
-import com.sesac.domain.model.Auth
 import com.sesac.domain.model.JoinFormState
 import com.sesac.domain.model.LoginRequest
-import com.sesac.domain.model.LoginResponse
 import com.sesac.domain.result.AuthResult
-import com.sesac.domain.result.JoinUiState
+import com.sesac.common.ui_state.JoinUiState
 import com.sesac.domain.usecase.auth.AuthUseCase
 import com.sesac.domain.usecase.session.SessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +20,6 @@ import javax.inject.Inject
 import android.util.Log
 import com.sesac.auth.utils.validate
 import com.sesac.domain.usecase.user.UserUseCase
-import kotlinx.coroutines.delay
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(

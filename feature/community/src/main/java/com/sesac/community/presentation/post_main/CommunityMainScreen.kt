@@ -62,8 +62,8 @@ import com.sesac.common.component.CommonCommentSheetContent
 import com.sesac.community.presentation.CommunityViewModel
 import com.sesac.domain.model.Post
 import com.sesac.domain.type.PostType
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import java.util.Date
 import com.sesac.common.R as cR
 
@@ -204,7 +204,7 @@ fun CommunityMainScreen(
         }
 
         LaunchedEffect(uiState, Unit) {
-            viewModel.getPostList(uiState.token)
+            viewModel.getPostList()
         }
 
         // region LaunchedEffect for CRUD

@@ -24,8 +24,8 @@ import com.sesac.common.component.CommonFilterTabs
 import com.sesac.common.component.CommonListContainer
 import com.sesac.common.model.PathParceler
 import com.sesac.common.model.toPathParceler
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.presentation.MypageViewModel
 
 @Composable
