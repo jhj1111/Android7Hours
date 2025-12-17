@@ -1,4 +1,4 @@
-package com.sesac.mypage.presentation.ui
+package com.sesac.mypage.presentation.mypage_main
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CatchingPokemon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -19,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.ui.theme.borderMicro
 import com.sesac.common.ui.theme.elevationSmall
 import com.sesac.common.ui.theme.iconSizeMedium
 import com.sesac.common.ui.theme.paddingSmall
@@ -31,7 +35,7 @@ fun MypageButtonView(
     text: String,
     icon: ImageVector?,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
-    border: BorderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+    border: BorderStroke = BorderStroke(borderMicro, MaterialTheme.colorScheme.primary),
 ) {
     Button(
         onClick = onClick,
@@ -59,5 +63,17 @@ fun MypageButtonView(
                 modifier = Modifier.padding(vertical = paddingSmall)
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun MypageButtonViewPreview(){
+    Android7HoursTheme {
+        MypageButtonView(
+            onClick = {},
+            text = "버튼",
+            icon = Icons.Default.CatchingPokemon
+        )
     }
 }

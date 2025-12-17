@@ -1,4 +1,4 @@
-package com.sesac.mypage.presentation.ui
+package com.sesac.mypage.presentation.mypage_main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,19 +22,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.sesac.common.R
 import com.sesac.common.ui.theme.AccentGreen
 import com.sesac.common.ui.theme.Gray400
+import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.avatarSizeLarge
+import com.sesac.common.ui.theme.borderSmall
+import com.sesac.common.ui.theme.iconSize
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
+import com.sesac.common.utils.sampleIconImageUrl
 
 @Composable
 fun ProfileHeaderView(
@@ -43,7 +43,7 @@ fun ProfileHeaderView(
     imageUrl: String,
     onNavigateToProfile: () -> Unit
 ) {
-    Surface(color = Color.White) {
+    Surface(color = White) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,15 +57,15 @@ fun ProfileHeaderView(
                     modifier = Modifier
                         .size(avatarSizeLarge)
                         .clip(CircleShape)
-                        .border(4.dp, Color.White, CircleShape),
+                        .border(borderSmall, White, CircleShape),
                     contentScale = ContentScale.Crop,
-                    placeholder = painterResource(id = R.drawable.placeholder) // ⚠️ placeholder 이미지 추가
+//                    placeholder = painterResource(id = R.drawable.placeholder) // ⚠️ placeholder 이미지 추가
                 )
                 Box(
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(iconSize)
                         .background(AccentGreen, CircleShape)
-                        .border(4.dp, Color.White, CircleShape)
+                        .border(borderSmall, White, CircleShape)
                         .align(Alignment.BottomEnd)
                 )
             }
@@ -97,7 +97,7 @@ fun ProfileHeaderPreview() {
     ProfileHeaderView(
         name = "홍길동",
         email = "hong@example.com",
-        imageUrl = "https://img.icons8.com/?size=100&id=bk5bg5zVk9sN&format=png&color=000000", // 혹은 "https://example.com/profile.jpg"
-        onNavigateToProfile = { /* 미리보기용 클릭 동작 */ }
+        imageUrl = sampleIconImageUrl,
+        onNavigateToProfile = { }
     )
 }

@@ -90,10 +90,33 @@
     <string name="mypage_setting">설정</string>
     <string name="mypage_main">마이페이지</string>
     <string name="mypage_myinfo">내 프로필</string>
+    <string name="mypage_menu_email">이메일</string>
+    <string name="mypage_menu_phone">전화번호</string>
+    <string name="mypage_menu_address">주소</string>
     <string name="mypage_register_pet">반려견 등록</string>
     <string name="mypage_like">좋아요</string>
     <string name="mypage_create_list">작성목록</string>
     <string name="mypage_stats_title">내 산책 기록</string>
+    <string name="mypage_detail_header_message">반려견과 함께하는 즐거운 산책</string>
+
+    <string name="mypage_pet_info">반려견 정보</string>
+    <string name="mypage_select_breed">품종을 선택해주세요</string>
+    <string name="mypage_pet_neutering">중성화</string>
+    <string name="mypage_pet_code">반려견 초대 코드</string>
+    <string name="mypage_pet_code_creating">코드 생성 중…</string>
+    <string name="mypage_pet_code_created">초대 코드가 생성되었습니다. 기기를 등록하여 위치 추적을 시작하세요.</string>
+    <string name="mypage_select_pet_options">반려견 추가 옵션 선택</string>
+    <string name="mypage_select_pet_massage">어떤 방식으로 펫을 추가하시겠습니까?</string>
+    <string name="mypage_create_new_pet">반려견 정보 등록</string>
+    <string name="mypage_input_pet_name">이름을 입력해주세요.</string>
+    <string name="mypage_edit_pet">반려견 정보 수정</string>
+    <string name="mypage_create_pet_code">반려견 기기 등록 코드 생성</string>
+    <string name="mypage_pet_code_create_failed">코드 생성에 실패했습니다: </string>
+    <string name="mypage_pet_code_pasted">코드가 클립보드에 복사되었습니다.</string>
+    <string name="mypage_pet_code_info_text">회원가입 시 코드를 입력해주세요!</string>
+    <string name="mypage_pet_empty_list">등록된 반려견이 없어요</string>
+    <string name="mypage_pet_empty_list_subtitle">우측 하단의 \'+\' 버튼으로\n반려견을 추가하고 산책을 기록해보세요</string>
+    <string name="mypage_pet_delete_confirm_message">정말 이 반려견의 정보를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.</string>
 
     <!-- ========= Common ========= -->
     <string name="common_see_all">전체보기</string>
@@ -106,13 +129,26 @@
     <string name="common_action_delete">삭제</string>
     <string name="common_action_save">저장</string>
     <string name="common_action_cancel">취소</string>
+    <string name="common_action_confirm">확인</string>
     <string name="common_action_post">게시</string>
     <string name="comment_delete_confirm_title">댓글 삭제</string>
     <string name="comment_delete_confirm_text">이 댓글을 정말로 삭제하시겠습니까?</string>
     <string name="common_yes">예</string>
     <string name="common_no">아니오</string>
     <string name="common_finish">종료</string>
+    <string name="common_share">공유하기</string>
+    <string name="common_close">닫기</string>
+    <string name="common_empty_page">게시물이 없습니다.</string>
+    <string name="common_empty_page_submessage">게시물을 추가해보세요.</string>
+    <string name="common_error_message_input_all">모든 정보를 입력해주세요.</string>
+    <string name="common_select_date">날짜를 선택해주세요</string>
 
+    <string name="common_name">이름</string>
+    <string name="common_birthday">생일</string>
+    <string name="common_gender">성별</string>
+    <string name="common_pet_breed">품종</string>
+    <string name="common_pet_male">남아</string>
+    <string name="common_pet_female">여아</string>
 
     <!-- ========= Auth ========= -->
     <string name="auth_join_welcome_title">환영합니다!</string>

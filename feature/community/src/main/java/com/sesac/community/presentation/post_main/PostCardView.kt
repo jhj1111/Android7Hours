@@ -57,7 +57,7 @@ import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.utils.getTimeAgo
 import com.sesac.common.utils.sampleBannerImageUrl
-import com.sesac.common.utils.sampleIconUmageUrl
+import com.sesac.common.utils.sampleIconImageUrl
 import com.sesac.domain.model.Post
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -324,7 +324,7 @@ fun PostCardViewPreview() {
         PostCardView(
             Post.EMPTY.copy(
                 title = "제목",
-                authUserProfileImageUrl = sampleIconUmageUrl,
+                authUserProfileImageUrl = sampleIconImageUrl,
                 image = sampleBannerImageUrl,
                 authUserNickname = "작성자",
                 content = "글",

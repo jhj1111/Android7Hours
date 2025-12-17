@@ -8,10 +8,10 @@ import androidx.navigation.toRoute
 import com.sesac.common.model.PathParceler
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.mypage.presentation.MypageViewModel
-import com.sesac.mypage.presentation.ui.AddPetScreen
-import com.sesac.mypage.presentation.ui.MypageDetailScreen
-import com.sesac.mypage.presentation.ui.MypageBookmarkScreen
-import com.sesac.mypage.presentation.ui.MypageMainScreen
+import com.sesac.mypage.presentation.mypage_add_pet.AddPetScreen
+import com.sesac.mypage.presentation.mypage_detail.MypageDetailScreen
+import com.sesac.mypage.presentation.bookmark.MypageBookmarkScreen
+import com.sesac.mypage.presentation.mypage_main.MypageMainScreen
 import com.sesac.mypage.presentation.ui.MypageManageScreen
 import com.sesac.mypage.presentation.ui.MypageSettingScreen
 

@@ -1,10 +1,12 @@
-package com.sesac.mypage.presentation.ui
+package com.sesac.mypage.presentation.bookmark
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.twotone.Bookmarks
@@ -27,6 +29,8 @@ import com.sesac.common.model.toPathParceler
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.presentation.MypageViewModel
+import com.sesac.mypage.presentation.ui.BookmarkedPathCard
+import com.sesac.mypage.presentation.ui.BookmarkedPostCard
 
 @Composable
 fun MypageBookmarkScreen(
@@ -89,6 +93,7 @@ fun MypageBookmarkScreen(
                         is ResponseUiState.Loading -> CircularProgressIndicator()
                         is ResponseUiState.Success -> {
                             CommonListContainer(
+                                modifier = Modifier.verticalScroll(rememberScrollState()),
                                 title = "즐겨찾는 산책로",
                                 itemList = state.result,
                                 emptyStateMessage = "즐겨찾는 산책로가 없습니다",
@@ -112,6 +117,7 @@ fun MypageBookmarkScreen(
                         is ResponseUiState.Loading -> CircularProgressIndicator()
                         is ResponseUiState.Success -> {
                             CommonListContainer(
+                                modifier = Modifier.verticalScroll(rememberScrollState()),
                                 title = "즐겨찾는 게시글",
                                 itemList = state.result,
                                 emptyStateMessage = "즐겨찾는 게시글이 없습니다",

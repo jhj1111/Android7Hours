@@ -1,4 +1,4 @@
-package com.sesac.mypage.presentation.ui
+package com.sesac.mypage.presentation.mypage_main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -25,19 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow // Add this import
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle // Add this import
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.sesac.common.ui.theme.Android7HoursTheme
-import com.sesac.common.ui.theme.StatBlue
-import com.sesac.common.ui.theme.StatGreen
 import com.sesac.common.ui.theme.StatPurple
 import com.sesac.common.ui.theme.White
+import com.sesac.common.ui.theme.cardHeightSmall
+import com.sesac.common.ui.theme.elevationMedium
 import com.sesac.common.ui.theme.elevationSmall
 import com.sesac.common.ui.theme.iconSizeLarge
 import com.sesac.common.ui.theme.paddingLarge
@@ -79,8 +74,7 @@ fun StatCard(item: MyPathStats, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(horizontal = paddingMicro)
-//            .fillMaxHeight(),
-            .height(125.dp),
+            .height(cardHeightSmall),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = White),
         elevation = CardDefaults.cardElevation(defaultElevation = elevationSmall)
@@ -94,7 +88,7 @@ fun StatCard(item: MyPathStats, modifier: Modifier = Modifier) {
             Box(
                 modifier = Modifier
                     .size(iconSizeLarge)
-                    .shadow(elevation = 4.dp, shape = MaterialTheme.shapes.medium) // Shadow added here
+                    .shadow(elevation = elevationMedium, shape = MaterialTheme.shapes.medium) // Shadow added here
                     .clip(MaterialTheme.shapes.medium)
                     .background(item.color as Color),
                 contentAlignment = Alignment.Center

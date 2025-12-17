@@ -1,4 +1,4 @@
-package com.sesac.mypage.presentation.ui
+package com.sesac.mypage.presentation.mypage_main
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,21 +24,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.sesac.common.R
 import com.sesac.common.component.CommonMenuItem
-import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.White
+import com.sesac.common.ui.theme.borderMicro
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.ui_state.AuthUiState
-import com.sesac.domain.model.MypageMenuItem
 import com.sesac.common.ui_state.ResponseUiState
+import com.sesac.common.utils.defaultProfileImageUrl
+import com.sesac.domain.model.MypageMenuItem
 import com.sesac.mypage.nav_graph.MypageNavigationRoute
 import com.sesac.mypage.presentation.MypageViewModel
 
@@ -76,7 +74,7 @@ fun MypageMainScreen(
             ProfileHeaderView(
                 name = uiState.user?.fullName ?: "",
                 email = uiState.user?.email ?: "",
-                imageUrl = uiState.user?.profileImageUrl ?: "https://img.icons8.com/?size=100&id=bk5bg5zVk9sN&format=png&color=000000",
+                imageUrl = uiState.user?.profileImageUrl ?: defaultProfileImageUrl,
                 onNavigateToProfile = { navController.navigate(MypageNavigationRoute.DetailScreen) }
             )
         }
@@ -124,7 +122,7 @@ fun MypageMainScreen(
                     containerColor = White,
                     contentColor = MaterialTheme.colorScheme.error
                 ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onError),
+                border = BorderStroke(borderMicro, MaterialTheme.colorScheme.onError),
             )
         }
 
@@ -143,22 +141,10 @@ fun MypageMainScreen(
                     containerColor = White,
                     contentColor = MaterialTheme.colorScheme.error
                 ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onError),
+                border = BorderStroke(borderMicro, MaterialTheme.colorScheme.onError),
             )
         }
 
     }
 
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MyPageMainScreenPreview() {
-    Android7HoursTheme {
-        MypageMainScreen(
-            navController = rememberNavController(),
-            nav2LoginScreen = {},
-            uiState = AuthUiState(),
-        )
-    }
 }

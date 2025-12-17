@@ -24,6 +24,9 @@ val iconSizeSmall = 16.dp
 val iconSizeMedium = 20.dp
 val iconSize = 28.dp       // Standard (w-7 h-7)
 val iconSizeLarge = 48.dp
+val iconSizeExtremeLarge = 120.dp
+val iconPhotoSize = 36.dp
+val iconPhotoInnerSize = 20.dp
 
 // Specific Icons
 val cardIconSize = 40.dp
@@ -49,12 +52,16 @@ val bannerHeight = 192.dp
 
 // Cards
 val cardWidth = 256.dp
+val cardHeightSmall = 125.dp
 val cardHeight = 160.dp
 val cardImageHeight = 256.dp
+val cardImageSizeMicro = 64.dp
+val cardImageSizeSmall = 80.dp
 val cardImageSize = 96.dp
 val postImageHeight = 192.dp
 
 // Buttons & Handle
+val buttonHeightMedium = 56.dp
 val circularButtonSize = 80.dp
 val SheetMinHeight = 240.dp
 val SheetHandleWidth = 40.dp
@@ -83,3 +90,11 @@ val cardShape = RoundedCornerShape(cardRound)     // 12.dp
 val elevationSmall = 2.dp
 val elevationMedium = 4.dp
 val elevationLarge = 8.dp
+
+// =================================================================
+// 8. Border (테두리 패딩)
+// =================================================================
+
+val borderNone = 0.dp
+val borderMicro = 1.dp
+val borderSmall = 4.dp

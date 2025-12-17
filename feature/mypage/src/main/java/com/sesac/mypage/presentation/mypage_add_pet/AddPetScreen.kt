@@ -1,11 +1,10 @@
-package com.sesac.mypage.presentation.ui
+package com.sesac.mypage.presentation.mypage_add_pet
 
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,8 +28,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -53,25 +47,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
+import com.sesac.common.R
+import com.sesac.common.component.CommonDropDownMenuBox
 import com.sesac.common.ui.theme.Primary
 import com.sesac.common.ui.theme.Typography
 import com.sesac.common.ui.theme.White
+import com.sesac.common.ui.theme.buttonHeightMedium
+import com.sesac.common.ui.theme.iconSizeMedium
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.Pet
 import com.sesac.domain.model.PetLocation
-import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.presentation.MypageViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -94,12 +89,17 @@ fun AddPetScreen(
     val isLoading = addPetState is ResponseUiState.Loading || updatePetState is ResponseUiState.Loading
     val isEditMode = petId != -1
 
+    val textMale = stringResource(R.string.common_pet_male)
+    val textFemale = stringResource(R.string.common_pet_female)
+    val textSelectDate = stringResource(R.string.common_select_date)
+    val textErrorMessageInputAll = stringResource(R.string.common_error_message_input_all)
+
     var name by remember { mutableStateOf("") }
-    var selectedGender by remember { mutableStateOf("남아") }
-    var birthday by remember { mutableStateOf("날짜를 선택해주세요") }
+    var selectedGender by remember { mutableStateOf(textMale) }
+    var birthday by remember { mutableStateOf(textSelectDate) }
     var isNeutered by remember { mutableStateOf(false) }
     var selectedBreed by remember { mutableStateOf("") }
-    var isBreedDropdownExpanded by remember { mutableStateOf(false) }
+    var isBreedDropdownExpanded = remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var imageUrl by remember { mutableStateOf<String?>(null) }
@@ -124,7 +124,7 @@ fun AddPetScreen(
         if (isEditMode) {
             selectedPet?.let { pet ->
                 name = pet.name
-                selectedGender = if (pet.gender == "M") "남아" else "여아"
+                selectedGender = if (pet.gender == "M") textMale else textFemale
                 birthday = pet.birthday ?: ""
                 isNeutered = pet.neutering
                 selectedBreed = pet.breed ?: ""
@@ -186,57 +186,40 @@ fun AddPetScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = if (isEditMode) "반려견 정보 수정" else "반려견 정보 입력",
+                text = if (isEditMode) stringResource(R.string.mypage_edit_pet) else stringResource(R.string.mypage_create_new_pet),
                 style = Typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(paddingLarge))
 
-            // Image Picker
-            Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .clickable { galleryLauncher.launch("image/*") }
-                    .border(2.dp, Primary, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                if (imageUri == null && imageUrl == null) {
-                    Icon(
-                        imageVector = Icons.Default.PhotoCamera,
-                        contentDescription = "Add Photo",
-                        modifier = Modifier.size(40.dp),
-                        tint = Primary
-                    )
-                } else {
-                    AsyncImage(
-                        model = imageUri ?: imageUrl,
-                        contentDescription = "Pet Image",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-
+            ImagePicker(
+                modifier = Modifier.clickable { galleryLauncher.launch("image/*") },
+                imageUri = imageUri,
+                imageUrl = imageUrl,
+            )
 
             Spacer(modifier = Modifier.height(paddingLarge))
 
             // Form Items...
-            AddPetFormItem(label = "이름") {
-                OutlinedTextField(value = name, onValueChange = { name = it }, modifier = Modifier.fillMaxWidth(), placeholder = { Text("이름을 입력해주세요") })
+            AddPetFormItem(label = stringResource(R.string.common_name)) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text(stringResource(R.string.mypage_input_pet_name)) },
+                )
             }
-            AddPetFormItem(label = "성별") {
+            AddPetFormItem(label = stringResource(R.string.common_gender)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    listOf("남아", "여아").forEach { gender ->
+                    listOf(textMale, textFemale).forEach { gender ->
                         RadioButton(selected = selectedGender == gender, onClick = { selectedGender = gender }, colors = RadioButtonDefaults.colors(selectedColor = Primary))
                         Text(text = gender, modifier = Modifier.padding(start = paddingSmall))
                         Spacer(modifier = Modifier.width(paddingMedium))
                     }
                 }
             }
-            AddPetFormItem(label = "생일") {
+            AddPetFormItem(label = stringResource(R.string.common_birthday)) {
                 Box(modifier = Modifier.fillMaxWidth().clickable { showDatePicker = true }.padding(vertical = paddingMedium)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = Icons.Default.CalendarToday, contentDescription = "Birthday")
@@ -245,23 +228,21 @@ fun AddPetScreen(
                     }
                 }
             }
-            AddPetFormItem(label = "중성화") {
+            AddPetFormItem(label = stringResource(R.string.mypage_pet_neutering)) {
                 Switch(checked = isNeutered, onCheckedChange = { isNeutered = it }, colors = SwitchDefaults.colors(checkedThumbColor = Primary))
             }
-            AddPetFormItem(label = "품종") {
-                ExposedDropdownMenuBox(expanded = isBreedDropdownExpanded, onExpandedChange = { isBreedDropdownExpanded = it }) {
-                    OutlinedTextField(
-                        value = selectedBreed,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isBreedDropdownExpanded) },
-                        modifier = Modifier.menuAnchor().fillMaxWidth(),
-                        placeholder = { Text("품종을 선택해주세요") }
-                    )
-                    ExposedDropdownMenu(expanded = isBreedDropdownExpanded, onDismissRequest = { isBreedDropdownExpanded = false }) {
-                        breeds.forEach { breed ->
-                            DropdownMenuItem(text = { Text(breed.breedName) }, onClick = { selectedBreed = breed.breedName; isBreedDropdownExpanded = false })
-                        }
+            AddPetFormItem(label = stringResource(R.string.common_pet_breed)) {
+                CommonDropDownMenuBox(
+                    isDropdownExpanded = isBreedDropdownExpanded,
+                    selectedItem = selectedBreed,
+                ) {
+                    breeds.forEach { breed ->
+                        DropdownMenuItem(
+                            text = { Text(breed.breedName) },
+                            onClick = {
+                                selectedBreed = breed.breedName; isBreedDropdownExpanded.value = false
+                            },
+                        )
                     }
                 }
             }
@@ -272,13 +253,13 @@ fun AddPetScreen(
         // Save Button
         Button(
             onClick = {
-                if (name.isBlank() || birthday == "날짜를 선택해주세요" || selectedBreed.isBlank()) {
-                    Toast.makeText(context, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                if (name.isBlank() || birthday == textSelectDate || selectedBreed.isBlank()) {
+                    Toast.makeText(context, textErrorMessageInputAll, Toast.LENGTH_SHORT).show()
                 } else {
                     val pet = Pet(
                         id = if (isEditMode) petId else 0,
                         name = name,
-                        gender = if (selectedGender == "남아") "M" else "F",
+                        gender = if (selectedGender == textMale) "M" else "F",
                         birthday = birthday,
                         neutering = isNeutered,
                         breed = selectedBreed,
@@ -294,15 +275,15 @@ fun AddPetScreen(
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(56.dp),
-            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth().height(buttonHeightMedium),
+            shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.buttonColors(containerColor = Primary),
             enabled = !isLoading
         ) {
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.size(24.dp), color = White)
+                CircularProgressIndicator(modifier = Modifier.size(iconSizeMedium), color = White)
             } else {
-                Text(text = "저장", color = White)
+                Text(text = stringResource(R.string.common_action_save), color = White)
             }
         }
     }
@@ -317,22 +298,13 @@ fun AddPetScreen(
                         birthday = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
                     }
                     showDatePicker = false
-                }) { Text("확인") }
+                }) { Text(stringResource(R.string.common_action_confirm)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("취소") }
+                TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.common_action_cancel)) }
             }
         ) {
             DatePicker(state = datePickerState)
         }
-    }
-}
-
-@Composable
-fun AddPetFormItem(label: String, content: @Composable () -> Unit) {
-    Column(modifier = Modifier.padding(vertical = paddingMedium).fillMaxWidth()) {
-        Text(text = label, style = Typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-        Spacer(modifier = Modifier.height(paddingSmall))
-        content()
     }
 }
