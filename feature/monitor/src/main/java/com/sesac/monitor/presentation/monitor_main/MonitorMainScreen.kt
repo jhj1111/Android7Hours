@@ -15,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.naver.maps.map.NaverMap
 import com.sesac.common.component.CommonMapLifecycle
-import com.sesac.common.component.HandleUiState
+import com.sesac.common.utils.HandleUiState
 import com.sesac.common.ui_state.MonitorUiState
 import com.sesac.monitor.presentation.MonitorViewModel
 import com.sesac.monitor.presentation.monitor_cam.MonitorCamScreen
