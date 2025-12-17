@@ -1,4 +1,4 @@
-package com.sesac.monitor.presentation.ui
+package com.sesac.monitor.presentation.monitor_GPS
 
 import android.util.Log
 import android.view.ViewGroup

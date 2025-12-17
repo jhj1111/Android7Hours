@@ -31,8 +31,18 @@
     <string name="community_title_post_image">게시글 이미지</string>
 
     <!-- ========= Monitor ========== -->
+    <string name="monitoring">모니터링</string>
+    <string name="monitor_ready">모니터링 대기</string>
+    <string name="monitor_pet_stream_message">보호자가 모니터링을 시작할 수 있도록 준비합니다.</string>
+    <string name="monitor_permissions">카메라와 마이크 권한이 필요합니다.</string>
     <string name="monitor_button_webcam">영상</string>
     <string name="monitor_button_GPS">GPS</string>
+    <string name="monitor_pet_list_loading">펫 목록을 불러오는 중…</string>
+    <string name="monitor_pet_list_load_failed">펫 목록 로드 실패</string>
+    <string name="monitor_pet_connecting_now_message">에게 연결 중…</string>
+    <string name="monitor_pet_select_pet_target">모니터링할 펫을 선택하세요</string>
+    <string name="monitor_pet_list_empty">등록된 펫이 없습니다.</string>
+    <string name="monitor_ready_set">준비 완료</string>
 
     <!-- ========= Trail ========== -->
     <string name="trail_create_page">산책로 생성</string>
@@ -92,15 +102,16 @@
     <string name="common_detail">상세</string>
     <string name="common_create">생성</string>
     <string name="comment_placeholder_comment_write">댓글을 입력하세요…</string>
-    <string name="comment_action_edit">수정</string>
-    <string name="comment_action_delete">삭제</string>
-    <string name="comment_action_save">저장</string>
-    <string name="comment_action_cancel">취소</string>
-    <string name="comment_action_post">게시</string>
+    <string name="common_action_edit">수정</string>
+    <string name="common_action_delete">삭제</string>
+    <string name="common_action_save">저장</string>
+    <string name="common_action_cancel">취소</string>
+    <string name="common_action_post">게시</string>
     <string name="comment_delete_confirm_title">댓글 삭제</string>
     <string name="comment_delete_confirm_text">이 댓글을 정말로 삭제하시겠습니까?</string>
     <string name="common_yes">예</string>
     <string name="common_no">아니오</string>
+    <string name="common_finish">종료</string>
 
 
     <!-- ========= Auth ========= -->

@@ -1,4 +1,4 @@
-package com.sesac.monitor.presentation.ui
+package com.sesac.monitor.presentation.monitor_main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,9 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.sesac.common.R
 import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.ui.theme.cardIconSize
+import com.sesac.common.ui.theme.elevationSmall
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.domain.model.Pet
@@ -38,10 +41,13 @@ fun PetSelectionScreen(pets: List<Pet>, onPetSelect: (Pet) -> Unit) {
             .padding(paddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("모니터링할 펫을 선택하세요", style = MaterialTheme.typography.titleLarge)
+        Text(
+            stringResource(R.string.monitor_pet_select_pet_target),
+            style = MaterialTheme.typography.titleLarge,
+        )
         Spacer(modifier = Modifier.height(paddingLarge))
         if (pets.isEmpty()) {
-            Text("모니터링 가능한 펫이 없습니다.")
+            Text(stringResource(R.string.monitor_pet_list_empty))
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(paddingMedium)) {
                 items(pets) { pet ->
@@ -49,13 +55,17 @@ fun PetSelectionScreen(pets: List<Pet>, onPetSelect: (Pet) -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { onPetSelect(pet) },
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        elevation = CardDefaults.cardElevation(defaultElevation = elevationSmall)
                     ) {
                         Row(
                             modifier = Modifier.padding(paddingLarge),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.Default.Pets, contentDescription = null, modifier = Modifier.size(40.dp))
+                            Icon(
+                                Icons.Default.Pets,
+                                contentDescription = null,
+                                modifier = Modifier.size(cardIconSize)
+                            )
                             Spacer(modifier = Modifier.width(paddingMedium))
                             Text(pet.name, style = MaterialTheme.typography.bodyLarge)
                         }
