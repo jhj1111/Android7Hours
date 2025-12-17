@@ -20,20 +20,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Scale
 import com.sesac.common.model.PathParceler
+import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.cardHeight
 import com.sesac.common.ui.theme.cardRound
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.utils.fixImageUrl
+import com.sesac.common.utils.samplePathUrl
 import com.sesac.domain.model.Path
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContentCardView(data: Path?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ContentCardView(
+    data: Path?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     Card(
         onClick = onClick,
@@ -76,5 +83,30 @@ fun ContentCardView(data: Path?, onClick: () -> Unit, modifier: Modifier = Modif
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ContentCardViewPreview(){
+    Android7HoursTheme {
+        ContentCardView(
+            data = Path.EMPTY.copy(
+                uploader = "sss",
+                thumbnail = samplePathUrl
+            ),
+            onClick = {},
+            )
+    }
+}
+
+@Preview
+@Composable
+fun ContentCardViewEmptyPreview(){
+    Android7HoursTheme {
+        ContentCardView(
+            data = null,
+            onClick = {},
+        )
     }
 }
