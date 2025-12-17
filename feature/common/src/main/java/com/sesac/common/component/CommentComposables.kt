@@ -115,7 +115,7 @@ fun CommentInput(
         IconButton(onClick = onPostClick, enabled = value.isNotBlank()) {
             Icon(
                 imageVector = Icons.Default.Send,
-                contentDescription = stringResource(id = R.string.comment_action_post),
+                contentDescription = stringResource(id = R.string.common_action_post),
                 tint = if (value.isNotBlank()) MaterialTheme.colorScheme.primary else Gray400
             )
         }
@@ -193,11 +193,11 @@ fun CommentItem(
                                 onUpdate(newContent)
                                 isEditing = false
                             }) {
-                                Text(stringResource(id = R.string.comment_action_save))
+                                Text(stringResource(id = R.string.common_action_save))
                             }
                             Spacer(modifier = Modifier.width(paddingSmall))
                             OutlinedButton(onClick = { isEditing = false }) {
-                                Text(stringResource(id = R.string.comment_action_cancel))
+                                Text(stringResource(id = R.string.common_action_cancel))
                             }
                         }
                     }
@@ -217,14 +217,14 @@ fun CommentItem(
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.comment_action_edit)) },
+                            text = { Text(stringResource(id = R.string.common_action_edit)) },
                             onClick = {
                                 isEditing = true
                                 showMenu = false
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.comment_action_delete)) },
+                            text = { Text(stringResource(id = R.string.common_action_delete)) },
                             onClick = {
                                 showDeleteDialog = true
                                 showMenu = false

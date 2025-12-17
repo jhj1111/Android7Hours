@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.utils.sampleIconUmageUrl
 import com.sesac.common.utils.samplePathUrl
 import com.sesac.domain.model.Comment
 
@@ -126,7 +127,7 @@ fun CommunityCommentSheetContentPreview() {
         CommonCommentSheetContent(
             comments = listOf(Comment.EMPTY.copy(
                 authorNickName = "홍동길",
-                authorImage = samplePathUrl,
+                authorImage = sampleIconUmageUrl,
                 content = "댓글1111",
                 timeAgo = "10년 전",
             )),
