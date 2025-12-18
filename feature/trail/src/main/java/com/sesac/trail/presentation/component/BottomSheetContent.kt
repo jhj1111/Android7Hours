@@ -36,7 +36,7 @@ import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.User
 import com.sesac.common.ui_state.AuthUiState
-import com.sesac.trail.presentation.ui.WalkPathTab
+import com.sesac.trail.presentation.trail_main_screen.WalkPathTab
 
 @Composable
 fun BottomSheetContent(

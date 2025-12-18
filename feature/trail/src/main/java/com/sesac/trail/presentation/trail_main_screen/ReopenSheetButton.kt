@@ -1,4 +1,4 @@
-package com.sesac.trail.presentation.component
+package com.sesac.trail.presentation.trail_main_screen
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
