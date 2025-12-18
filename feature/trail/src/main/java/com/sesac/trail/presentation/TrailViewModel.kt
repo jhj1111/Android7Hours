@@ -29,7 +29,7 @@ import com.sesac.domain.usecase.mypage.MypageUseCase
 import com.sesac.domain.usecase.path.PathUseCase
 import com.sesac.domain.usecase.place.PlaceUseCase
 import com.sesac.domain.usecase.session.SessionUseCase
-import com.sesac.trail.presentation.ui.WalkPathTab
+import com.sesac.trail.presentation.trail_main_screen.WalkPathTab
 import com.sesac.trail.utils.toLatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

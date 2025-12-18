@@ -1,4 +1,4 @@
-package com.sesac.trail.presentation.component
+package com.sesac.trail.presentation.trail_main_screen
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -10,6 +10,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import android.content.Context
+import androidx.compose.ui.tooling.preview.Preview
 
 
 @Composable
@@ -78,4 +79,16 @@ fun addMemoMarker(
     }
 
     markers.add(marker)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MemoDialogPreview() {
+    MemoDialog(
+        show = true,
+        memoText = "프리뷰 메모입니다",
+        onTextChange = {},
+        onCancel = {},
+        onConfirm = {}
+    )
 }

@@ -1,4 +1,4 @@
-package com.sesac.trail.presentation.ui
+package com.sesac.trail.presentation.trail_detail_screen
 
 import android.util.Log
 import android.widget.Toast
@@ -135,7 +135,7 @@ fun TrailDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingLarge),
-                verticalArrangement = Arrangement.spacedBy(PaddingSection)
+                verticalArrangement = spacedBy(PaddingSection)
             ) {
                 // Title & Uploader
                 Column {
@@ -205,7 +205,7 @@ fun TrailDetailScreen(
                 }
 
                 // Stats Grid
-                Column(verticalArrangement = Arrangement.spacedBy(paddingSmall)) {
+                Column(verticalArrangement = spacedBy(paddingSmall)) {
                     Row(horizontalArrangement = spacedBy(paddingSmall)) {
                         InfoCard(
                             icon = Icons.Filled.LocationOn,

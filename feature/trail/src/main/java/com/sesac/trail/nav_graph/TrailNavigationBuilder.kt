@@ -7,8 +7,8 @@ import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.domain.model.Path
 import com.sesac.domain.result.AuthUiState
 import com.sesac.trail.presentation.TrailViewModel
-import com.sesac.trail.presentation.ui.TrailCreateScreen
-import com.sesac.trail.presentation.ui.TrailMainScreen
+import com.sesac.trail.presentation.trail_create_screen.TrailCreateScreen
+import com.sesac.trail.presentation.trail_main_screen.TrailMainScreen
 
 
 fun NavGraphBuilder.trailRoute(
@@ -31,7 +31,7 @@ fun NavGraphBuilder.trailRoute(
         TrailCreateScreen(
             viewModel = trailViewModel,
             navController = navController,
-            uiState = uiState
+//            uiState = uiState
         )
     }
 //    composable<TrailNavigationRoute.TrailDetailTab> {

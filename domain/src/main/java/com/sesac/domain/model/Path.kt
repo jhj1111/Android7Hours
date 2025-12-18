@@ -106,3 +106,7 @@ data class BookmarkedPath(
         )
     }
 }
+
+data class ValidationState(
+    val isNameInvalid: Boolean = false
+)

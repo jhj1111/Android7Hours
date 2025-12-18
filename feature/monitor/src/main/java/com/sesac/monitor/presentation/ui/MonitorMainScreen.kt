@@ -31,6 +31,7 @@ import com.sesac.common.component.CommonFilterTabs
 import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui_state.MonitorUiState
+import com.sesac.domain.model.Pet
 import com.sesac.monitor.presentation.MonitorViewModel
 import com.sesac.common.R as cR
 import com.sesac.domain.result.ResponseUiState
@@ -102,8 +103,8 @@ fun MonitorMainScreen(
             // 모니터링 대시보드
                     MonitoringDashboard(
                         viewModel = viewModel,
-                        commonMapLifecycle = commonMapLifecycle
-                    )
+                        commonMapLifecycle = commonMapLifecycle,
+                     )
                 }
             }
         }
