@@ -24,6 +24,7 @@ val Gray900 = Color(0xFF1F2937)
 // Purple Scale
 val Purple40 = Color(0xFF6650a4)
 val Purple80 = Color(0xFFD0BCFF)
+val PurpleLight = Color(0xFFF0F4FF)
 val Purple100 = Color(0xFFEDE9FE)
 val Purple500 = Color(0xFF6200EE) // NOTE: 8B5CF6(PurpleMain)와 중복 용도, 통합 검토 필요
 val Purple600 = Color(0xFF5D3E8C)

@@ -16,6 +16,8 @@ val paddingExtraLarge = 48.dp
 // Section Padding (Naming Exception 유지)
 val PaddingSection = 24.dp
 
+val paddingBottom = 80.dp
+
 
 // =================================================================
 // 2. Icon Sizes (아이콘 크기)
@@ -68,6 +70,10 @@ val SheetHandleWidth = 40.dp
 val SheetHandleHeight = 4.dp
 val bottomSheetMaxHeight = 240.dp
 
+// =================================================================
+// Text Field
+// =================================================================
+val textFieldHeightLarge = 100.dp
 
 // =================================================================
 // 5. Corner Radius (둥근 모서리 값)

@@ -1,4 +1,4 @@
-package com.sesac.mypage.presentation.bookmark
+package com.sesac.mypage.presentation.mypage_bookmark
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -29,8 +29,6 @@ import com.sesac.common.model.toPathParceler
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.presentation.MypageViewModel
-import com.sesac.mypage.presentation.ui.BookmarkedPathCard
-import com.sesac.mypage.presentation.ui.BookmarkedPostCard
 
 @Composable
 fun MypageBookmarkScreen(

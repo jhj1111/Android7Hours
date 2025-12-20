@@ -10,10 +10,10 @@ import com.sesac.common.ui_state.AuthUiState
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.mypage.presentation.mypage_add_pet.AddPetScreen
 import com.sesac.mypage.presentation.mypage_detail.MypageDetailScreen
-import com.sesac.mypage.presentation.bookmark.MypageBookmarkScreen
+import com.sesac.mypage.presentation.mypage_bookmark.MypageBookmarkScreen
 import com.sesac.mypage.presentation.mypage_main.MypageMainScreen
-import com.sesac.mypage.presentation.ui.MypageManageScreen
-import com.sesac.mypage.presentation.ui.MypageSettingScreen
+import com.sesac.mypage.presentation.mypage_manage.MypageManageScreen
+import com.sesac.mypage.presentation.mypage_setting.MypageSettingScreen
 
 fun NavGraphBuilder.mypageRoute(
     mypageViewModel: MypageViewModel,

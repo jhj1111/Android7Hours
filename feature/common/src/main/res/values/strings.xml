@@ -118,14 +118,44 @@
     <string name="mypage_pet_empty_list_subtitle">우측 하단의 \'+\' 버튼으로\n반려견을 추가하고 산책을 기록해보세요</string>
     <string name="mypage_pet_delete_confirm_message">정말 이 반려견의 정보를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.</string>
 
+    <string name="mypage_manage_schedules_today">🐕 오늘의 산책로 일기</string>
+    <string name="mypage_manage_schedules_date_of">의 일정</string>
+    <string name="mypage_manage_schedules_loading">일기를 불러오는 중…</string>
+    <string name="mypate_manage_no_schedules">일정이 없습니다.</string>
+    <string name="mypage_manage_schedules_text_create">일정 추가</string>
+    <string name="mypage_manage_schedules_title">일정 제목</string>
+    <string name="mypage_manage_schedules_input_title">일정 제목을 입력하세요</string>
+    <string name="mypage_manage_schedules_create">일정 추가하기</string>
+    <string name="mypage_manage_schedules_create_in_selected_date">선택한 날짜에 새로운 일정을 추가하세요</string>
+    <string name="mypage_schedules_created_succeed">일정이 추가되었습니다</string>
+
+    <!-- ========= Mypage Setting ========= -->
+    <string name="mypage_setting_title">권한 설정</string>
+    <string name="mypage_setting_subtitle">앱 기능 사용을 위한 권한을 관리합니다</string>
+    <string name="mypage_setting_enabled">활성화됨</string>
+    <string name="mypage_setting_permission_info_title">권한 안내</string>
+    <string name="mypage_setting_permission_info_camera">카메라: 산책 중 추억을 사진과 영상으로 남길 수 있습니다</string>
+    <string name="mypage_setting_permission_info_gps">GPS: 산책 경로를 기록하고 주변 산책로를 추천받을 수 있습니다</string>
+    <string name="mypage_setting_permission_info_notification">알림: 중요한 산책 일정과 커뮤니티 소식을 받을 수 있습니다</string>
+    <string name="mypage_setting_privacy_note">모든 권한은 언제든지 변경할 수 있으며,\n수집된 정보는 안전하게 보호됩니다.</string>
+
+    <string name="mypage_permission_camera_label">카메라</string>
+    <string name="mypage_permission_camera_desc">산책 중 사진 및 영상 촬영</string>
+    <string name="mypage_permission_gps_label">GPS</string>
+    <string name="mypage_permission_gps_desc">위치 기반 산책로 추천 및 기록</string>
+    <string name="mypage_permission_notification_label">알림</string>
+    <string name="mypage_permission_notification_desc">산책 알림 및 커뮤니티 소식</string>
+
     <!-- ========= Common ========= -->
     <string name="common_see_all">전체보기</string>
     <string name="common_searchbar_text_default">검색</string>
+    <string name="common_view_more">더보기</string>
     <string name="common_menu">메뉴</string>
     <string name="common_detail">상세</string>
     <string name="common_create">생성</string>
     <string name="comment_placeholder_comment_write">댓글을 입력하세요…</string>
     <string name="common_action_edit">수정</string>
+    <string name="common_action_add">추가</string>
     <string name="common_action_delete">삭제</string>
     <string name="common_action_save">저장</string>
     <string name="common_action_cancel">취소</string>
@@ -149,6 +179,11 @@
     <string name="common_pet_breed">품종</string>
     <string name="common_pet_male">남아</string>
     <string name="common_pet_female">여아</string>
+    <string name="common_memo">메모</string>
+    <string name="common_input_memo">메모를 추가하세요</string>
+
+    <string name="common_date_format_Md">M월 d일</string>
+    <string name="common_date_format_yyyyMd">yyyy년 M월 d일 (E)</string>
 
     <!-- ========= Auth ========= -->
     <string name="auth_join_welcome_title">환영합니다!</string>
