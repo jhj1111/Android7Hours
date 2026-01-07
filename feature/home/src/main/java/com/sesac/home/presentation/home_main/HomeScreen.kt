@@ -1,4 +1,4 @@
-package com.sesac.home.presentation.ui
+package com.sesac.home.presentation.home_main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -74,7 +75,7 @@ fun HomeScreen(
 
             item {
                 CommonLazyRow(
-                    title = "산책로 추천",
+                    title = stringResource(cR.string.home_carousel_title_trail_recommendation),
                     items = pathList,
                 ) { path ->
                     ContentCardView(

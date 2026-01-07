@@ -65,7 +65,8 @@ import com.sesac.domain.type.PostType
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import java.util.Date
-import com.sesac.common.R as cR
+import com.sesac.common.R
+import com.sesac.common.component.CommonPostCardView
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,7 +137,7 @@ fun CommunityMainScreen(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .focusRequester(focusRequester),
-                                    placeholder = { Text("검색...") },
+                                    placeholder = { Text(stringResource(R.string.common_searchbar_placeholder_text)) },
                                     singleLine = true,
                                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                                     keyboardActions = KeyboardActions(onSearch = {
@@ -152,19 +153,18 @@ fun CommunityMainScreen(
                                 )
                             },
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    isSearchOpen = false
-                                    viewModel.onSearchQueryChange("")
-                                }) {
+                                IconButton(
+                                    onClick = {
+                                        isSearchOpen = false
+                                        viewModel.onSearchQueryChange("")
+                                    }
+                                ){
                                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "검색 닫기")
                                 }
                             },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-//                                navigationIconContentColor = Color.Unspecified,
-//                                titleContentColor = Color.Unspecified,
-//                                actionIconContentColor = Color.Unspecified
                             )
                         )
                         LaunchedEffect(Unit) {
@@ -172,7 +172,7 @@ fun CommunityMainScreen(
                         }
                     } else {
                         CenterAlignedTopAppBar(
-                            title = { Text("커뮤니티", fontWeight = FontWeight.Bold) },
+                            title = { Text(stringResource(R.string.community), fontWeight = FontWeight.Bold) },
                             actions = {
                                 IconButton(onClick = { isSearchOpen = true }) {
                                     Icon(Icons.Default.Search, contentDescription = "검색 열기")
@@ -181,9 +181,6 @@ fun CommunityMainScreen(
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-//                                navigationIconContentColor = Color.Unspecified,
-//                                titleContentColor = Color.Unspecified,
-//                                actionIconContentColor = Color.Unspecified
                             )
                         )
                     }
@@ -196,7 +193,6 @@ fun CommunityMainScreen(
             }
         }
     ) { paddingValues ->
-
         LaunchedEffect(lifecycleOwner) {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.closeComments()
@@ -259,12 +255,12 @@ fun CommunityMainScreen(
         ) {
             if (filteredPosts.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(stringResource(cR.string.community_placeholder_post_empty), color = Gray400)
+                    Text(stringResource(R.string.community_placeholder_post_empty), color = Gray400)
                 }
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(filteredPosts, key = { it.id }) { post ->
-                        PostCardView(
+                        CommonPostCardView(
                             post = post,
                             isMyPost = post.userId == uiState.user?.id,
                             onLikeToggle = { viewModel.toggleLike(token, post.id) },

@@ -1,8 +1,8 @@
-package com.sesac.community.presentation.post_main
+package com.sesac.common.component
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,21 +40,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.sesac.common.R
 import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.TextSecondary
 import com.sesac.common.ui.theme.Typography
+import com.sesac.common.ui.theme.White
+import com.sesac.common.ui.theme.avatarSize
+import com.sesac.common.ui.theme.elevationSmall
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
+import com.sesac.common.ui.theme.postImageExtremeLarge
 import com.sesac.common.utils.getTimeAgo
 import com.sesac.common.utils.sampleBannerImageUrl
 import com.sesac.common.utils.sampleIconImageUrl
@@ -62,9 +65,8 @@ import com.sesac.domain.model.Post
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 @Composable
-fun PostCardView(
+fun CommonPostCardView(
     post: Post,
     isMyPost: Boolean,
     onLikeToggle: (postId: Int) -> Unit,
@@ -75,36 +77,36 @@ fun PostCardView(
 ) {
     val context = LocalContext.current
     Card(
-        modifier = Modifier
+        modifier = Modifier.Companion
             .fillMaxWidth()
             .padding(vertical = paddingSmall),
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = elevationSmall),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Column(modifier = Modifier.padding(vertical = paddingMedium)) {
+        Column(modifier = Modifier.Companion.padding(vertical = paddingMedium)) {
             // --- 1. Header ---
             PostHeader(
-                author = post.authUserNickname ?: "사용자",
+                author = post.authUserNickname ?: "author",
                 authorImage = post.authUserProfileImageUrl,
                 timeAgo = post.createdAt.getTimeAgo(context),
                 isMyPost = isMyPost,
                 onEdit = { onEdit(post) },
                 onDelete = { onDelete(post.id) }
             )
-            Spacer(modifier = Modifier.height(paddingMedium))
+            Spacer(modifier = Modifier.Companion.height(paddingMedium))
 
             // --- 2. Title and Content ---
-            Column(modifier = Modifier.padding(horizontal = paddingLarge)) {
+            Column(modifier = Modifier.Companion.padding(horizontal = paddingLarge)) {
                 Text(
                     text = post.title,
                     style = Typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Companion.Bold
                 )
-                Spacer(modifier = Modifier.height(paddingSmall))
+                Spacer(modifier = Modifier.Companion.height(paddingSmall))
                 CommonExpandableText(text = post.content)
             }
-            Spacer(modifier = Modifier.height(paddingMedium))
+            Spacer(modifier = Modifier.Companion.height(paddingMedium))
 
             // --- 3. Image ---
             post.image?.let { imageUrl ->
@@ -112,9 +114,9 @@ fun PostCardView(
                 val coroutineScope = rememberCoroutineScope()
 
                 Box(
-                    modifier = Modifier
+                    modifier = Modifier.Companion
                         .fillMaxWidth()
-                        .height(300.dp)
+                        .height(postImageExtremeLarge)
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onDoubleTap = {
@@ -127,13 +129,13 @@ fun PostCardView(
                                 }
                             )
                         },
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Companion.Center
                 ) {
                     AsyncImage(
                         model = imageUrl,
                         contentDescription = "Post image",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        modifier = Modifier.Companion.fillMaxSize(),
+                        contentScale = ContentScale.Companion.Crop
                     )
                     androidx.compose.animation.AnimatedVisibility(
                         visible = showHeart,
@@ -143,13 +145,13 @@ fun PostCardView(
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = "Like Heart",
-                            tint = Color.White.copy(alpha = 0.8f),
-                            modifier = Modifier.size(100.dp)
+                            tint = White.copy(alpha = 0.8f),
+//                            modifier = Modifier.size(100.dp)
                         )
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(paddingMedium))
+            Spacer(modifier = Modifier.Companion.height(paddingMedium))
 
             // --- 4. Actions ---
             PostActions(
@@ -159,7 +161,7 @@ fun PostCardView(
                 onCommentClick = { onCommentClick(post.id) },
                 onBookmarkToggle = { onBookmarkToggle(post.id) }
             )
-            Spacer(modifier = Modifier.height(paddingSmall))
+            Spacer(modifier = Modifier.Companion.height(paddingSmall))
 
             // --- 5. Status (Likes, Comments, Views) ---
             PostStatus(
@@ -183,22 +185,26 @@ fun PostHeader(
     var menuExpanded by remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier
+        modifier = Modifier.Companion
             .fillMaxWidth()
             .padding(horizontal = paddingLarge),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Companion.CenterVertically
     ) {
         AsyncImage(
             model = authorImage,
             contentDescription = "Author image",
-            modifier = Modifier
-                .size(40.dp)
+            modifier = Modifier.Companion
+                .size(avatarSize)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Companion.Crop
         )
-        Spacer(modifier = Modifier.width(paddingMedium))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = author, style = Typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.Companion.width(paddingMedium))
+        Column(modifier = Modifier.Companion.weight(1f)) {
+            Text(
+                text = author,
+                style = Typography.titleSmall,
+                fontWeight = FontWeight.Companion.Bold
+            )
             Text(text = timeAgo, style = Typography.bodySmall, color = TextSecondary)
         }
         if (isMyPost) {
@@ -210,39 +216,20 @@ fun PostHeader(
                     expanded = menuExpanded,
                     onDismissRequest = { menuExpanded = false }
                 ) {
-                    DropdownMenuItem(text = { Text("수정") }, onClick = {
-                        onEdit()
-                        menuExpanded = false
-                    })
-                    DropdownMenuItem(text = { Text("삭제") }, onClick = {
-                        onDelete()
-                        menuExpanded = false
-                    })
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.common_action_edit)) },
+                        onClick = {
+                            onEdit()
+                            menuExpanded = false
+                        })
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.common_action_delete)) },
+                        onClick = {
+                            onDelete()
+                            menuExpanded = false
+                        })
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun CommonExpandableText(text: String, minimizedMaxLines: Int = 2) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val canExpand = text.lines().size > minimizedMaxLines || text.length > 100
-
-    Column(modifier = Modifier.clickable(enabled = canExpand) { isExpanded = !isExpanded }) {
-        Text(
-            text = text,
-            style = Typography.bodyMedium,
-            maxLines = if (isExpanded || !canExpand) Int.MAX_VALUE else minimizedMaxLines,
-            overflow = TextOverflow.Ellipsis
-        )
-        if (canExpand && !isExpanded) {
-            Text(
-                text = "더보기",
-                style = Typography.bodyMedium,
-                color = TextSecondary,
-                modifier = Modifier.padding(top = 4.dp)
-            )
         }
     }
 }
@@ -256,10 +243,10 @@ fun PostActions(
     onBookmarkToggle: () -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = Modifier.Companion
             .fillMaxWidth()
             .padding(horizontal = paddingSmall),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Companion.CenterVertically
     ) {
         // Like, Comment, Share (Left-aligned)
         IconButton(onClick = onLikeToggle) {
@@ -277,7 +264,7 @@ fun PostActions(
             )
         }
         // Spacer to push bookmark to the end
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.Companion.weight(1f))
 
         // Bookmark (Right-aligned)
         IconButton(onClick = onBookmarkToggle) {
@@ -292,25 +279,27 @@ fun PostActions(
 
 @Composable
 fun PostStatus(likes: Int, comments: Int, views: Int) {
+    val countsText = stringResource(R.string.common_counts)
+
     Row(
-        modifier = Modifier
+        modifier = Modifier.Companion
             .fillMaxWidth()
             .padding(horizontal = paddingLarge),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Companion.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(paddingMedium)
     ) {
         Text(
-            text = "좋아요 ${likes}개",
+            text = "${stringResource(R.string.common_like)} ${likes}$countsText",
             style = Typography.bodyMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Companion.Bold
         )
         Text(
-            text = "댓글 ${comments}개",
+            text = "${stringResource(R.string.common_comment)} ${comments}$countsText",
             style = Typography.bodyMedium,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Companion.Normal
         )
         Text(
-            text = "조회수 ${views}회",
+            text = "${stringResource(R.string.common_view_counts)} ${views}${stringResource(R.string.common_counts_views)}",
             style = Typography.bodyMedium,
             color = TextSecondary
         )
@@ -321,13 +310,13 @@ fun PostStatus(likes: Int, comments: Int, views: Int) {
 @Composable
 fun PostCardViewPreview() {
     Android7HoursTheme {
-        PostCardView(
-            Post.EMPTY.copy(
+        CommonPostCardView(
+            Post.Companion.EMPTY.copy(
                 title = "제목",
                 authUserProfileImageUrl = sampleIconImageUrl,
                 image = sampleBannerImageUrl,
                 authUserNickname = "작성자",
-                content = "글",
+                content = "글".repeat(200),
             ),
             isMyPost = true,
             onEdit = {},

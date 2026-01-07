@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.sesac.common.R
+import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.iconSizeLarge
 import com.sesac.common.ui.theme.paddingExtraLarge
 import com.sesac.common.ui.theme.paddingMedium
@@ -30,4 +32,12 @@ fun AuthLoginHeaderView() {
         style = MaterialTheme.typography.headlineLarge
     )
     Spacer(modifier = Modifier.height(paddingExtraLarge))
+}
+
+@Preview
+@Composable
+fun AuthLoginHeaderViewPreview(){
+    Android7HoursTheme {
+        AuthLoginHeaderView()
+    }
 }

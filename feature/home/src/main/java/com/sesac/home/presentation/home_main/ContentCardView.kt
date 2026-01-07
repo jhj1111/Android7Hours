@@ -1,4 +1,4 @@
-package com.sesac.home.presentation.ui
+package com.sesac.home.presentation.home_main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,12 +25,10 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Scale
-import com.sesac.common.model.PathParceler
 import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.cardHeight
 import com.sesac.common.ui.theme.cardRound
 import com.sesac.common.ui.theme.paddingMedium
-import com.sesac.common.utils.fixImageUrl
 import com.sesac.common.utils.samplePathUrl
 import com.sesac.domain.model.Path
 
