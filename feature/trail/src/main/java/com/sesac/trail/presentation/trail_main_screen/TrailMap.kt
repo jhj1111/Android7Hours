@@ -1,18 +1,19 @@
 package com.sesac.trail.presentation.trail_main_screen
 
-import android.view.ViewGroup
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.sesac.common.component.CommonMapLifecycle
-import com.sesac.common.component.CommonMapView
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.domain.model.Coord
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
+
 
 @Composable
 fun TrailMap(
@@ -21,47 +22,49 @@ fun TrailMap(
     locationSource: FusedLocationSource,
     isRecording: Boolean,
     onMapReady: (NaverMap) -> Unit,
-    viewModel: TrailViewModel,
+    viewModel: TrailMainViewModel,
+    createViewModel: TrailCreateViewModel,
     selectedCoordSetter: (coord: LatLng?) -> Unit,
     showMemoDialogSetter: (Boolean) -> Unit,
-    memoTextSetter: (String) -> Unit
+    memoTextSetter: (String) -> Unit,
+    onLocationChanged: (Coord) -> Unit,
 ) {
-    val isRecordingState = rememberUpdatedState(isRecording)
-
     AndroidView(
         modifier = modifier,
         factory = { context ->
-            val mapView = commonMapLifecycle.mapView ?: CommonMapView.getMapView(context).also {
-                commonMapLifecycle.setMapView(it)
+            MapView(context).also { mapView ->
+                commonMapLifecycle.setMapView(mapView)
+                mapView.onCreate(null)
+                Log.d("TrailMap", "✅ MapView 생성")
             }
-            (mapView.parent as? ViewGroup)?.removeView(mapView)
-            mapView.onStart()
-            mapView.onResume()
+        },
+        update = { mapView ->
             mapView.getMapAsync { naverMap ->
-                onMapReady(naverMap)
+                Log.d("TrailMap", "✅ NaverMap 준비 완료")
+
+                // ✅ 지도 기본 설정
                 naverMap.locationSource = locationSource
                 naverMap.locationTrackingMode = LocationTrackingMode.Follow
                 naverMap.uiSettings.isLocationButtonEnabled = true
-                naverMap.uiSettings.isZoomControlEnabled = false
 
-                val newPolyline = PolylineOverlay().apply {
-                    color = 0xFF0000FF.toInt()
-                    width = 10
-                    capType = PolylineOverlay.LineCap.Round
-                    joinType = PolylineOverlay.LineJoin.Round
-                }
-                viewModel.setPolylineInstance(newPolyline)
-
+                // ✅ 롱클릭 리스너 (메모 추가)
                 naverMap.setOnMapLongClickListener { _, coord ->
-                    if (isRecordingState.value) {
+                    if (isRecording) {
                         selectedCoordSetter(coord)
-                        memoTextSetter("")
                         showMemoDialogSetter(true)
+                        memoTextSetter("")
+                        Log.d("TrailMap", "📍 메모 추가 위치: $coord")
                     }
                 }
+
+                // ✅ 위치 변경 리스너
+                naverMap.addOnLocationChangeListener { location ->
+                    onLocationChanged(Coord(location.latitude, location.longitude))
+                }
+
+                // ✅ 지도 준비 완료 콜백
+                onMapReady(naverMap)
             }
-            mapView
-        },
-        update = { it.requestLayout() }
+        }
     )
 }

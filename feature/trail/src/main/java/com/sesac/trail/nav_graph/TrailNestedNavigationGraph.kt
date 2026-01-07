@@ -1,5 +1,5 @@
 package com.sesac.trail.nav_graph
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -11,16 +11,17 @@ import com.sesac.common.model.parcelableType
 import com.sesac.common.model.toPlace
 import com.sesac.domain.model.Path
 import com.sesac.common.ui_state.AuthUiState
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.PlaceViewModel
+import com.sesac.trail.presentation.TrailDetailViewModel
 import com.sesac.trail.presentation.place_info_detail_screen.PlaceInfoDetailScreen
 import com.sesac.trail.presentation.trail_detail_screen.TrailDetailScreen
 import kotlin.reflect.typeOf
 
-// ... other imports ...
 
 fun NavGraphBuilder.trailNestedNavGraph(
     uiState: AuthUiState,
-    trailViewModel: TrailViewModel,
+    detailViewModel: TrailDetailViewModel,
+    placeViewModel: PlaceViewModel,
     navController: NavController,
     onStartFollowing: (Path) -> Unit,
 ) {
@@ -30,7 +31,7 @@ fun NavGraphBuilder.trailNestedNavGraph(
         val selectedDetailPath = navBackStackEntry.toRoute<NestedNavigationRoute.TrailDetail>().pathParceler.toPath()
         TrailDetailScreen(
             uiState = uiState,
-            viewModel = trailViewModel,
+            viewModel = detailViewModel,
             navController = navController,
             selectedDetailPath = selectedDetailPath,
             onStartFollowing = onStartFollowing,
@@ -38,7 +39,7 @@ fun NavGraphBuilder.trailNestedNavGraph(
                 navController.navigate(TrailNavigationRoute.TrailCreateTab)
             },
             onDeleteClick = { path ->
-                trailViewModel.deletePath(path.id)
+                detailViewModel.deletePath(path.id)
                 navController.popBackStack()
             }
         )
@@ -51,12 +52,11 @@ fun NavGraphBuilder.trailNestedNavGraph(
     ) { backStackEntry ->
         val args = backStackEntry.toRoute<NestedNavigationRoute.PlaceDetail>()
         val loadedPlace = args.placeParceler.toPlace()
-        val viewModel: TrailViewModel = hiltViewModel()
 
         PlaceInfoDetailScreen(
             place = loadedPlace,
             onBackClick = { navController.popBackStack() },
-            viewModel = viewModel
+            placeViewModel = placeViewModel
         )
     }
 }

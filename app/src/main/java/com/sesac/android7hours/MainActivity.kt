@@ -55,7 +55,12 @@ import com.sesac.home.nav_graph.TopBarAction
 import com.sesac.mypage.nav_graph.MypageNavigationRoute
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.trail.nav_graph.NestedNavigationRoute
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.PlaceViewModel
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailDetailViewModel
+import com.sesac.trail.presentation.TrailFollowViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
+//import com.sesac.trail.presentation.TrailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.sesac.common.R as cR
 
@@ -158,7 +163,11 @@ class MainActivity : ComponentActivity() {
             val commonMapView = remember { CommonMapView.getMapView(context) }
             val lifecycle = LocalLifecycleOwner.current.lifecycle
             val commonMapLifecycle = remember { CommonMapLifecycle(lifecycle) }
-            val trailViewModel = hiltViewModel<TrailViewModel>()
+            val trailMainViewModel = hiltViewModel<TrailMainViewModel>()
+            val trailCreateViewModel = hiltViewModel<TrailCreateViewModel>()
+            val trailDetailViewModel = hiltViewModel<TrailDetailViewModel>()
+            val followViewModel = hiltViewModel<TrailFollowViewModel>()
+            val placeViewModel = hiltViewModel<PlaceViewModel>()
             val communityViewModel = hiltViewModel<CommunityViewModel>()
             val mypageViewModel = hiltViewModel<MypageViewModel>()
             val navController = rememberNavController()
@@ -182,7 +191,7 @@ class MainActivity : ComponentActivity() {
                 if (initialLocationState is ResponseUiState.Success) {
                     val coord = (initialLocationState as ResponseUiState.Success<Coord?>).result
                     if (coord != null) {
-                        trailViewModel.loadInitialPaths(coord)
+                        trailMainViewModel.loadInitialPaths(coord)
                     }
                 }
             }
@@ -225,7 +234,7 @@ class MainActivity : ComponentActivity() {
             val appBottomBarItem = remember { AppBottomBarItem().fetch() }
             val isSearchOpen = remember { mutableStateOf(false) }
             val permissionStates = remember { mutableStateMapOf<String, Boolean>() }
-            val isRecording by trailViewModel.isRecording.collectAsStateWithLifecycle()
+            val isRecording by trailMainViewModel.isRecording.collectAsStateWithLifecycle()
 
             Android7HoursTheme {
                 LaunchedEffect(uiState) {
@@ -256,7 +265,11 @@ class MainActivity : ComponentActivity() {
                     screensWithCustomTopBar = listOf(stringResource(cR.string.community)), // New parameter
                     navHost = { paddingValues ->
                         AppNavHost(
-                            trailViewModel = trailViewModel,
+                            trailMainViewModel = trailMainViewModel,
+                            placeViewModel = placeViewModel,
+                            trailCreateViewModel = trailCreateViewModel,
+                            trailDetailViewModel = trailDetailViewModel,
+                            followViewModel = followViewModel,
                             communityViewModel = communityViewModel,
                             mypageViewModel = mypageViewModel,
                             paddingValues = paddingValues,
@@ -272,9 +285,8 @@ class MainActivity : ComponentActivity() {
                             startDestination = startDestination,
                             uiState = uiState,
                             onStartFollowing = { path ->
-                                trailViewModel.startFollowing(path) // ✅ ViewModel 함수 호출
-                                trailViewModel.updateIsSheetOpen(false) // 시트 닫기
-                                trailViewModel.updateIsFollowingPath(true) // 상태 업데이트
+                                followViewModel.startFollowing(path) // ✅ ViewModel 함수 호출
+                                trailMainViewModel.updateIsSheetOpen(false) // 시트 닫기
                                 Log.d("Tag-MainActivity", "Following path: ${path.pathName}")
                             },
                             commonMapLifecycle = commonMapLifecycle,

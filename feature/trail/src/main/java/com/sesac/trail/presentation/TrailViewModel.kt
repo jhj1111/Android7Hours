@@ -66,7 +66,6 @@ class TrailViewModel @Inject constructor(
     // =================================================================
 
     private val _currentLocation = MutableStateFlow<ResponseUiState<Coord?>>(ResponseUiState.Idle)
-    val currentLocation: StateFlow<ResponseUiState<Coord?>> = _currentLocation.asStateFlow()
 
     private val _tempPathCoords = MutableStateFlow<List<LatLng>>(emptyList())
     val tempPathCoords = _tempPathCoords.asStateFlow()
@@ -114,24 +113,6 @@ class TrailViewModel @Inject constructor(
             }
         }
     }
-    
-    // TODO: 이 함수는 일회성 위치를 가져오는 데 사용될 수 있으므로 다른 화면에서 사용되는지 확인 후 삭제가 필요합니다.
-    fun getCurrentLocation() {
-        viewModelScope.launch {
-            _currentLocation.value = ResponseUiState.Idle
-            locationUseCase.getCurrentLocationUseCase().collectLatest { location ->
-                when (location) {
-                    is LocationFlowResult.Success -> {
-                        _currentLocation.value = ResponseUiState.Success("현재 위치 갱신 성공", location.coord)
-                        Log.d("TAG-TrailViewModel", "현재 위치 : ${location.coord}")
-                    }
-
-                    is LocationFlowResult.Error -> _currentLocation.value =
-                        ResponseUiState.Error(location.exception.message ?: "unknown error")
-                }
-            }
-        }
-    }
 
     private fun addTempPoint(point: LatLng) {
         _tempPathCoords.value = _tempPathCoords.value + point
@@ -159,14 +140,8 @@ class TrailViewModel @Inject constructor(
         clearMemoMarkers()
     }
 
-
     fun stopRecording() {
         _isRecording.value = false
-//        _recordingTime.value = 0L
-    }
-
-    fun addRecordingTime(delta: Long) {
-        _recordingTime.value += delta
     }
 
     // ✅ 추가: MainScreen에서 사용하는 편의 함수
@@ -174,11 +149,6 @@ class TrailViewModel @Inject constructor(
         _recordingTime.value += changeRate ?: -_recordingTime.value
     }
 
-    fun updateIsRecording(newState: Boolean?) {
-        viewModelScope.launch {
-            _isRecording.value = newState ?: !_isRecording.value
-        }
-    }
 
     // =================================================================
     // 📌 3. 지도 오버레이 관리 (폴리라인, 마커)
@@ -374,18 +344,6 @@ class TrailViewModel @Inject constructor(
                     }
                 }
         }
-    }
-
-    fun updateSelectedPathLikes(isLiked: Boolean): Boolean {
-        viewModelScope.launch {
-            _selectedPath.value?.let {
-                val preLikes = it.likes
-                _selectedPath.value = it.copy(
-                    likes = if (isLiked) preLikes - 1 else preLikes + 1
-                )
-            }
-        }
-        return !isLiked
     }
 
     // =================================================================
