@@ -38,7 +38,7 @@ fun AuthLoginScreen(
 ) {
     val email by remember { viewModel.loginEmail }
     val password by remember { viewModel.loginPassword }
-    val uiState by viewModel.joinUiState.collectAsState()
+    val joinUiState by viewModel.joinUiState.collectAsState()
     var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -54,8 +54,8 @@ fun AuthLoginScreen(
         onDispose { viewModel.resetUiState() }
     }
 
-    LaunchedEffect(uiState) {
-        when (uiState) {
+    LaunchedEffect(joinUiState) {
+        when (joinUiState) {
             is JoinUiState.Success -> onLoginSuccess()
             is JoinUiState.Error -> isLoading = false
             is JoinUiState.Loading -> isLoading = true
@@ -64,9 +64,9 @@ fun AuthLoginScreen(
     }
 
     // 에러 메시지 처리
-    LaunchedEffect(uiState) {
-        if (uiState is JoinUiState.Error) {
-            Toast.makeText(context, (uiState as JoinUiState.Error).message, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(joinUiState) {
+        if (joinUiState is JoinUiState.Error) {
+            Toast.makeText(context, (joinUiState as JoinUiState.Error).message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -94,7 +94,7 @@ fun AuthLoginScreen(
 
         // 3. 로그인 버튼 영역
         LoginButtonsView(
-            isLoading = uiState is JoinUiState.Loading || isLoading,
+            isLoading = joinUiState is JoinUiState.Loading || isLoading,
             onLoginClick = { viewModel.onLoginClick() },
             onKakaoLoginClick = {
                 handleKakaoLogin(context, { accessToken ->

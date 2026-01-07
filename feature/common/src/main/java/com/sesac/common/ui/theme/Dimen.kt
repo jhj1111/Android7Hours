@@ -22,6 +22,7 @@ val paddingBottom = 80.dp
 // =================================================================
 // 2. Icon Sizes (아이콘 크기)
 // =================================================================
+val iconSizeMico = 8.dp
 val iconSizeSmall = 16.dp
 val iconSizeMedium = 20.dp
 val iconSize = 28.dp       // Standard (w-7 h-7)
@@ -61,6 +62,7 @@ val cardImageSizeMicro = 64.dp
 val cardImageSizeSmall = 80.dp
 val cardImageSize = 96.dp
 val postImageHeight = 192.dp
+val postImageExtremeLarge = 300.dp
 
 // Buttons & Handle
 val buttonHeightMedium = 56.dp

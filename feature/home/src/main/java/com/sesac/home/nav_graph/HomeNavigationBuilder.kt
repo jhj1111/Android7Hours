@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.sesac.common.model.PathParceler
 import com.sesac.common.ui_state.AuthUiState
-import com.sesac.home.presentation.ui.HomeScreen
+import com.sesac.home.presentation.home_main.HomeScreen
 
 fun NavGraphBuilder.homeRoute(
     uiState: AuthUiState,

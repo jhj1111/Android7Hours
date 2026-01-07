@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import android.util.Log
+import androidx.compose.ui.res.stringResource
 import com.sesac.auth.utils.validate
+import com.sesac.common.R
 import com.sesac.domain.usecase.user.UserUseCase
 
 @HiltViewModel
@@ -111,20 +113,11 @@ class AuthViewModel @Inject constructor(
 
         // 디버깅용: 유효하지 않은 필드 로그
         if (!validationResult.isValid) {
-            Log.d("Validation", "Invalid fields: ${validationResult.invalidFields}")
+            Log.e("Validation", "Invalid fields: ${validationResult.invalidFields}")
         }
 
         return validationResult.isValid
     }
-
-//    fun onSubmit() {
-//        _joinFormState.update { it.copy(showValidationErrors = true) }
-//
-//        if (validateForm()) {
-//            // 폼 제출 로직
-//            submitJoinForm()
-//        }
-//    }
 
     fun onJoinClick() {
         _joinFormState.update { it.copy(showValidationErrors = true) }
@@ -175,7 +168,6 @@ class AuthViewModel @Inject constructor(
                             _joinUiState.value = JoinUiState.Success("Login successful!")
                         }
                         is AuthResult.NetworkError -> {
-//                            _joinUiState.value = JoinUiState.Error(result.exception.message ?: "Network Error")
                             val errorMassage = result.exception.message?: "Unknown Error"
                             val resultMessage = when {
                                 errorMassage.contains("Bad Request") -> "아이디 혹은 비밀번호가 잘못되었습니다."
@@ -187,9 +179,7 @@ class AuthViewModel @Inject constructor(
                         is AuthResult.Loading -> {
                             _joinUiState.value = JoinUiState.Loading
                         }
-                        else -> {
-                            // Not handled state
-                        }
+                        else -> {}
                     }
                 }
         }

@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.sesac.auth.presentation.FindAccountViewModel
 import com.sesac.auth.presentation.FindUiState
 import androidx.compose.foundation.text.KeyboardOptions // 키보드 옵션용
+import androidx.compose.material3.SecondaryTabRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +67,7 @@ fun FindAccountScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TabRow(selectedTabIndex = selectedTabIndex) {
+            SecondaryTabRow(selectedTabIndex) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTabIndex == index,
@@ -78,6 +79,7 @@ fun FindAccountScreen(
                     )
                 }
             }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             if (uiState is FindUiState.Loading) {

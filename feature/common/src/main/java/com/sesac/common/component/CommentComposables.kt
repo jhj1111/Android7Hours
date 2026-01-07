@@ -27,6 +27,7 @@ import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.domain.model.Comment
 import com.sesac.common.ui_state.ResponseUiState
+import com.sesac.common.utils.sampleIconImageUrl
 
 @Composable
 fun CommonCommentSection(
@@ -248,9 +249,9 @@ comment: Comment,
 fun CommentItemPreivew() {
     Android7HoursTheme {
         CommentItem(
-            comment = Comment.EMPTY,
+            comment = Comment.EMPTY.copy(authorNickName = "옹길동", authorImage = sampleIconImageUrl, content = "댓글"),
             isAuthor = true,
-            onUpdate = { String -> },
+            onUpdate = { _ -> },
             onDelete = {},
         )
     }

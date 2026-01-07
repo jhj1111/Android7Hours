@@ -1,4 +1,4 @@
-package com.sesac.home.presentation.ui
+package com.sesac.home.presentation.home_main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,11 +27,11 @@ import coil3.request.crossfade
 import coil3.size.Scale
 import com.sesac.common.R
 import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.ui.theme.Black
 import com.sesac.common.ui.theme.bannerHeight
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.utils.sampleBannerImageUrl
-import com.sesac.common.utils.samplePathUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +69,7 @@ fun CommunityCardView(
                         .fillMaxSize()
                         .background(
                             Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f))
+                                colors = listOf(Color.Transparent, Black.copy(alpha = 0.6f))
                             )
                         )
                 )
