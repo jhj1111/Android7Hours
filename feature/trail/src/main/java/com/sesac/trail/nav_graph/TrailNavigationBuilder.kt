@@ -6,13 +6,19 @@ import androidx.navigation.compose.composable
 import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.domain.model.Path
 import com.sesac.common.ui_state.AuthUiState
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.PlaceViewModel
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailFollowViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
 import com.sesac.trail.presentation.trail_create_screen.TrailCreateScreen
 import com.sesac.trail.presentation.trail_main_screen.TrailMainScreen
 
 
 fun NavGraphBuilder.trailRoute(
-    trailViewModel: TrailViewModel,
+    mainViewModel: TrailMainViewModel,
+    createViewModel: TrailCreateViewModel,
+    followViewModel: TrailFollowViewModel,
+    placeViewModel: PlaceViewModel,
     navController: NavController,
     uiState: AuthUiState,
     onStartFollowing: (Path) -> Unit,
@@ -20,7 +26,10 @@ fun NavGraphBuilder.trailRoute(
 ) {
     composable<TrailNavigationRoute.TrailMainTab> {
         TrailMainScreen(
-            viewModel = trailViewModel,
+            mainViewModel = mainViewModel,
+            createViewModel = createViewModel,
+            followViewModel = followViewModel,
+            placeViewModel = placeViewModel,
             navController = navController,
             uiState = uiState,
             commonMapLifecycle = commonMapLifecycle,
@@ -29,7 +38,8 @@ fun NavGraphBuilder.trailRoute(
     }
     composable<TrailNavigationRoute.TrailCreateTab> {
         TrailCreateScreen(
-            viewModel = trailViewModel,
+            createViewModel = createViewModel,
+            mainViewModel = mainViewModel,
             navController = navController,
 //            uiState = uiState
         )

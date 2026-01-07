@@ -6,35 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -47,33 +27,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.sesac.common.component.CommonCommentSection
-import com.sesac.common.ui.theme.Gray200
-import com.sesac.common.ui.theme.GrayTabText
-import com.sesac.common.ui.theme.PaddingSection
-import com.sesac.common.ui.theme.PrimaryGreenDark
-import com.sesac.common.ui.theme.PrimaryGreenLight
-import com.sesac.common.ui.theme.Purple600
-import com.sesac.common.ui.theme.Red500
-import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.model.Place
-import com.sesac.trail.presentation.TrailViewModel
-import com.sesac.trail.presentation.component.TagFlow
+import com.sesac.trail.presentation.PlaceViewModel
 import kotlinx.coroutines.launch
 
 
@@ -82,7 +47,7 @@ import kotlinx.coroutines.launch
 fun PlaceInfoDetailScreen(
     place: Place,
     onBackClick: () -> Unit = {},
-    viewModel: TrailViewModel
+    placeViewModel: PlaceViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     var isFavorite by remember(place.isBookmarked) { mutableStateOf(place.isBookmarked) }
@@ -90,13 +55,13 @@ fun PlaceInfoDetailScreen(
     val scope = rememberCoroutineScope()
 
     // ViewModel에서 댓글 상태 가져오기
-    val commentsState by viewModel.commentsState.collectAsStateWithLifecycle()
-    val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
+    val commentsState by placeViewModel.commentsState.collectAsStateWithLifecycle()
+    val userInfo by placeViewModel.userInfo.collectAsStateWithLifecycle()
 
     // 화면 진입 시 댓글 로드
     LaunchedEffect(place.id) {
-        viewModel.getCurrentUserInfo()
-        viewModel.loadPlaceComments(place.id)
+        placeViewModel.getCurrentUserInfo()
+        placeViewModel.loadPlaceComments(place.id)
     }
 
     // 즐겨찾기 핸들러
@@ -174,13 +139,13 @@ fun PlaceInfoDetailScreen(
                         commentsState = commentsState,
                         currentUserId = userInfo?.id ?: -1,
                         onPostComment = { content ->
-                            viewModel.postPlaceComment(place.id, content, CommentType.PATH)
+                            placeViewModel.postPlaceComment(place.id, content, CommentType.PATH)
                         },
                         onUpdateComment = { commentId, content ->
-                            viewModel.updatePlaceComment(place.id, commentId, content, CommentType.PATH)
+                            placeViewModel.updatePlaceComment(place.id, commentId, content, CommentType.PATH)
                         },
                         onDeleteComment = { commentId ->
-                            viewModel.deletePlaceComment(place.id, commentId, CommentType.PATH)
+                            placeViewModel.deletePlaceComment(place.id, commentId, CommentType.PATH)
                         }
                     )
 

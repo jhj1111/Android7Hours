@@ -42,7 +42,8 @@ import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.ValidationState
 import com.sesac.trail.nav_graph.NestedNavigationRoute
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
 import com.sesac.trail.presentation.component.TagFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -51,17 +52,20 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun TrailCreateScreen(
-    viewModel: TrailViewModel = hiltViewModel(),
+    createViewModel: TrailCreateViewModel = hiltViewModel(),
+    mainViewModel: TrailMainViewModel = hiltViewModel(),
     navController: NavController,
 //    uiState: AuthUiState,
 ) {
     val context = LocalContext.current
-    val selectedPath by viewModel.selectedPath.collectAsStateWithLifecycle()
-    val createState by viewModel.createState.collectAsStateWithLifecycle()
-    val updateState by viewModel.updateState.collectAsStateWithLifecycle()
-//    var isLoading by remember { mutableStateOf(false) }
+    val selectedPath by createViewModel.selectedPath.collectAsStateWithLifecycle()
+    val createState by createViewModel.createState.collectAsStateWithLifecycle()
+    val updateState by createViewModel.updateState.collectAsStateWithLifecycle()
+
     val isLoading = updateState is ResponseUiState.Loading || createState is ResponseUiState.Loading
-    val recordTime by viewModel.recordingTime.collectAsStateWithLifecycle()
+
+    val recordTime by mainViewModel.recordingTime.collectAsStateWithLifecycle()
+    val tempPathCoords by mainViewModel.tempPathCoords.collectAsStateWithLifecycle()
     Log.d("TAG-TrailCreateScree", "is loading : $isLoading")
 
     val scope = rememberCoroutineScope()
@@ -81,11 +85,11 @@ fun TrailCreateScreen(
                     }
                     launchSingleTop = true
                 }
-                viewModel.resetUpdateState()
+                createViewModel.resetUpdateState()
             }
             is ResponseUiState.Error -> {
                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-                viewModel.resetUpdateState()
+                createViewModel.resetUpdateState()
 //                isLoading = false
             }
             else -> {  }
@@ -100,13 +104,13 @@ fun TrailCreateScreen(
                 Toast.makeText(context, "산책로가 생성되었습니다!", Toast.LENGTH_SHORT).show()
                 Log.d("TAG-TrailCreateScreen", "created path : $createdPath")
                 // 수정 화면 스택에서 제거하고, 수정된 상세 화면으로 이동
-                viewModel.resetCreateState()
+                createViewModel.resetCreateState()
                 navController.popBackStack()
 
             }
             is ResponseUiState.Error -> {
                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-                viewModel.resetCreateState()
+                createViewModel.resetCreateState()
 
             }
             else -> {  }
@@ -114,7 +118,7 @@ fun TrailCreateScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.invalidToken.collectLatest { event ->
+        createViewModel.invalidToken.collectLatest { event ->
             if (event is UiEvent.ToastEvent) Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
         }
     }
@@ -140,7 +144,7 @@ fun TrailCreateScreen(
                     it.tags
                 }
             }
-            viewModel.updateSelectedPath(it.copy(tags = newTags))
+            createViewModel.updateSelectedPath(it.copy(tags = newTags))
         }
     }
 
@@ -160,19 +164,22 @@ fun TrailCreateScreen(
 
                 if (selected.id != -1) {
                     // 기존 경로 수정 -> ViewModel에 위임
-                    viewModel.updatePath()
+                    createViewModel.updatePath()
                 } else {
                     // 신규 경로: Draft 생성 → RoomDB 저장
                     val duration = if (recordTime == 0L) selected.duration else recordTime.toInt()
-                    val newDraft = viewModel.createDraftPath(selected.copy(duration = duration))
-                    viewModel.savePathAndUpload(newDraft)
-                    viewModel.resetCreateState()
+                    val newDraft = createViewModel.createDraftPath(
+                        selectedPath = selected.copy(duration = duration),
+                        tempPathCoords = tempPathCoords  // 파라미터 이름 명시
+                    )
+                    createViewModel.savePathAndUpload(newDraft)
+                    createViewModel.resetCreateState()
                     Toast.makeText(context, "산책로가 저장되었습니다!", Toast.LENGTH_SHORT).show()
                 }
 
                 // 🔥 저장 완료 후 마커 초기화
-                viewModel.clearMemoMarkers()
-                viewModel.clearTempPath()
+                createViewModel.clearMemoMarkers()
+                mainViewModel.clearTempPath()
             }
         }
     }
@@ -196,7 +203,7 @@ fun TrailCreateScreen(
                 Spacer(modifier = Modifier.fillMaxSize(0.8f))
                 Switch(
                     checked = !pathContent.isPrivate,
-                    onCheckedChange = { newIsPrivate -> viewModel.updateSelectedPath(pathContent.copy(isPrivate = !newIsPrivate)) },
+                    onCheckedChange = { newIsPrivate -> createViewModel.updateSelectedPath(pathContent.copy(isPrivate = !newIsPrivate)) },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = White,
                         checkedTrackColor = Primary,
@@ -209,7 +216,7 @@ fun TrailCreateScreen(
             FormTextField(
                 label = "산책로 이름",
                 value = pathContent.pathName,
-                onValueChange = { newValue -> viewModel.updateSelectedPath(pathContent.copy(pathName = newValue)) },
+                onValueChange = { newValue -> createViewModel.updateSelectedPath(pathContent.copy(pathName = newValue)) },
                 placeholder = "예: 한강공원 벚꽃길",
                 isRequired = true,
                 isError = validationState.isNameInvalid
@@ -218,7 +225,7 @@ fun TrailCreateScreen(
             FormTextField(
                 label = "산책로 소개",
                 value = pathContent.pathComment ?: "",
-                onValueChange = { newDescription -> viewModel.updateSelectedPath(pathContent.copy(pathComment = newDescription)) },
+                onValueChange = { newDescription -> createViewModel.updateSelectedPath(pathContent.copy(pathComment = newDescription)) },
                 placeholder = "이 산책로의 특징이나 추천 이유를 작성해주세요...",
                 minLines = 4
             )
@@ -232,7 +239,7 @@ fun TrailCreateScreen(
             CreateBottomActions(
                 onCancel = {
                     scope.launch {
-                        viewModel.clearSelectedPath()
+                        createViewModel.clearSelectedPath()
                         navController.popBackStack()
                     }
                 },

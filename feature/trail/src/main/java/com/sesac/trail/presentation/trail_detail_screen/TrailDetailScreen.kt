@@ -57,14 +57,14 @@ import com.sesac.domain.model.Path
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.trail.nav_graph.TrailNavigationRoute
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.TrailDetailViewModel
 import com.sesac.trail.presentation.component.TagFlow
 
 
 @Composable
 fun TrailDetailScreen(
     uiState: AuthUiState,
-    viewModel: TrailViewModel = hiltViewModel<TrailViewModel>(),
+    viewModel: TrailDetailViewModel = hiltViewModel(),
     navController: NavController,
     selectedDetailPath: Path?,
     onStartFollowing: (Path) -> Unit,

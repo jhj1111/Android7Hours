@@ -21,13 +21,22 @@ import com.sesac.mypage.nav_graph.mypageRoute
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.trail.nav_graph.trailNestedNavGraph
 import com.sesac.trail.nav_graph.trailRoute
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.PlaceViewModel
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailDetailViewModel
+import com.sesac.trail.presentation.TrailFollowViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
     paddingValues: PaddingValues,
-    trailViewModel: TrailViewModel,
+    trailMainViewModel: TrailMainViewModel,
+    trailCreateViewModel: TrailCreateViewModel,
+    trailDetailViewModel: TrailDetailViewModel,
+    placeViewModel: PlaceViewModel,
+    followViewModel: TrailFollowViewModel,
     communityViewModel: CommunityViewModel,
     mypageViewModel: MypageViewModel,
     navController: NavHostController,
@@ -60,7 +69,10 @@ fun AppNavHost(
             onNavigateToCommunity = onNavigateToCommunity,
         )
         trailRoute(
-            trailViewModel = trailViewModel,
+            mainViewModel = trailMainViewModel,
+            createViewModel = trailCreateViewModel,
+            placeViewModel = placeViewModel,
+            followViewModel = followViewModel,
             navController = navController,
             uiState = uiState,
             onStartFollowing = onStartFollowing,
@@ -68,7 +80,8 @@ fun AppNavHost(
             )
         trailNestedNavGraph(
             uiState = uiState,
-            trailViewModel = trailViewModel,
+            detailViewModel = trailDetailViewModel,
+            placeViewModel = placeViewModel,
             navController = navController,
             onStartFollowing = onStartFollowing,
         )
