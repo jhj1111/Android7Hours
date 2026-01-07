@@ -32,6 +32,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.sesac.common.component.CommonMapLifecycle
+import com.naver.maps.map.CameraUpdate
 import com.sesac.common.ui.theme.paddingLarge
 import kotlinx.coroutines.delay
 import com.sesac.domain.model.Coord
@@ -232,34 +233,32 @@ fun TrailMainScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             // 지도 영역
-            key(lifecycleState) {
-                if (lifecycleState.isAtLeast(Lifecycle.State.CREATED)) {
-                    TrailMap(
-                        modifier = Modifier.fillMaxSize(),
-                        commonMapLifecycle = commonMapLifecycle,
-                        locationSource = locationSource,
-                        isRecording = isRecording,
-                        onMapReady = { naverMap ->
-                            currentNaverMap = naverMap
+            if (lifecycleState.isAtLeast(Lifecycle.State.CREATED)) {
+                TrailMap(
+                    modifier = Modifier.fillMaxSize(),
+                    commonMapLifecycle = commonMapLifecycle,
+                    locationSource = locationSource,
+                    isRecording = isRecording,
+                    onMapReady = { naverMap ->
+                        currentNaverMap = naverMap
 
-                            // ✅ 폴리라인 초기화 (녹화용)
-                            if (mainViewModel.polylineOverlay.value == null) {
-                                val polyline = PolylineOverlay().apply {
-                                    color = android.graphics.Color.RED
-                                    width = 10
-                                }
-                                mainViewModel.setPolylineInstance(polyline)
-                                Log.d("TrailMainScreen", "✅ 폴리라인 생성 및 설정")
+                        // ✅ 폴리라인 초기화 (녹화용)
+                        if (mainViewModel.polylineOverlay.value == null) {
+                            val polyline = PolylineOverlay().apply {
+                                color = android.graphics.Color.RED
+                                width = 10
                             }
-                        },
-                        viewModel = mainViewModel,
-                        createViewModel = createViewModel,
-                        selectedCoordSetter = { selectedCoord = it },
-                        showMemoDialogSetter = { showMemoDialog = it },
-                        memoTextSetter = { memoText = it },
-                        onLocationChanged = { coord -> currentLocation = coord }
-                    )
-                }
+                            mainViewModel.setPolylineInstance(polyline)
+                            Log.d("TrailMainScreen", "✅ 폴리라인 생성 및 설정")
+                        }
+                    },
+                    viewModel = mainViewModel,
+                    createViewModel = createViewModel,
+                    selectedCoordSetter = { selectedCoord = it },
+                    showMemoDialogSetter = { showMemoDialog = it },
+                    memoTextSetter = { memoText = it },
+                    onLocationChanged = { coord -> currentLocation = coord }
+                )
             }
 
             // Place 마커 표시
@@ -312,6 +311,9 @@ fun TrailMainScreen(
                     onStopFollowing = {
                         followViewModel.stopFollowing()
                         followViewModel.clearUserLocationMarker()
+                        currentNaverMap?.let { map ->
+                            map.locationTrackingMode = LocationTrackingMode.Follow
+                        }
                     }
                 )
             }
