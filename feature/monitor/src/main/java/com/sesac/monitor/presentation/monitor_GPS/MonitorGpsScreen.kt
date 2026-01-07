@@ -39,9 +39,7 @@ fun MonitorGpsScreen (
     commonMapLifecycle: CommonMapLifecycle,
     petId: Int, // NEW ARGUMENT: petId
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val monitoredPetState by viewModel.monitoredPet.collectAsStateWithLifecycle() // NEW STATE
-    val activity = LocalActivity.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val lifecycleState by lifecycle.currentStateAsState()
     var currentNaverMap by remember { mutableStateOf<NaverMap?>(null) } // To hold NaverMap instance

@@ -23,10 +23,9 @@ import com.sesac.common.model.toPathParceler
 import com.sesac.common.ui.theme.cardWidth
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
-import com.sesac.common.ui_state.AuthUiState
 import com.sesac.home.presentation.HomeViewModel
 import kotlinx.coroutines.delay
-import com.sesac.common.R as cR
+import com.sesac.common.R
 
 
 // --- 4. HomePage ---
@@ -35,7 +34,6 @@ import com.sesac.common.R as cR
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    uiState: AuthUiState,
     onNavigateToPathDetail: (PathParceler?) -> Unit = {},
     onNavigateToCommunity: () -> Unit = {},
 ) {
@@ -75,7 +73,7 @@ fun HomeScreen(
 
             item {
                 CommonLazyRow(
-                    title = stringResource(cR.string.home_carousel_title_trail_recommendation),
+                    title = stringResource(R.string.home_carousel_title_trail_recommendation),
                     items = pathList,
                 ) { path ->
                     ContentCardView(
@@ -88,7 +86,7 @@ fun HomeScreen(
 
             item {
                 CommunityCardView(
-                    image = cR.drawable.community_banner,
+                    image = R.drawable.community_banner,
                     onClick = onNavigateToCommunity,
                     modifier = Modifier.padding(horizontal = paddingLarge, vertical = paddingMedium)
                 )
