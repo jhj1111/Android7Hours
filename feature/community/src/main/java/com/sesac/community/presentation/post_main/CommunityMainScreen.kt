@@ -282,15 +282,13 @@ fun CommunityMainScreen(
                 categories = postEditorCategories,
                 onDismiss = { viewModel.isCreateDialogOpen.value = false },
                 onSave = { title, content, postType, imageUri ->
-                    val newPost = Post(
-                        id = -1, title = title, content = content, image = null,
+                    val newPost = Post.EMPTY.copy(
+                        title = title, content = content,
                         postType = postType, userId = uiState.user?.id ?: -1,
-                        authUserNickname = uiState.user?.nickname ?: "", authUserProfileImageUrl = null,
-                        likeCount = 0, commentCount = 0, bookmarkCount = 0, viewCount = 0,
-                        isLiked = false, isBookmarked = false, comments = null,
+                        authUserNickname = uiState.user?.nickname ?: "",
                         createdAt = Date(), updatedAt = Date()
                     )
-                    viewModel.createPost(context, token, newPost, imageUri)
+                    viewModel.createPost(context, uiState, newPost, imageUri)
                     viewModel.isCreateDialogOpen.value = false
                 }
             )

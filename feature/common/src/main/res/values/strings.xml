@@ -184,6 +184,7 @@
     <string name="comment_delete_confirm_text">이 댓글을 정말로 삭제하시겠습니까?</string>
 
     <string name="common_empty_page">게시물이 없습니다.</string>
+    <string name="common_empty_comment">첫 댓글을 작성해보세요!</string>
     <string name="common_empty_page_submessage">게시물을 추가해보세요.</string>
     <string name="common_error_message_input_all">모든 정보를 입력해주세요.</string>
     <string name="common_select_date">날짜를 선택해주세요</string>
