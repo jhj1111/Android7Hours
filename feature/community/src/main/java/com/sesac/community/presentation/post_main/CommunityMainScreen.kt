@@ -67,6 +67,8 @@ import com.sesac.common.ui_state.ResponseUiState
 import java.util.Date
 import com.sesac.common.R
 import com.sesac.common.component.CommonPostCardView
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,6 +109,8 @@ fun CommunityMainScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    // 로그인 필요 다이얼로그
+    var showLoginDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -246,7 +250,25 @@ fun CommunityMainScreen(
                 viewModel.editingPost.value = (postDetail as ResponseUiState.Success<Post>).result
             }
         }
-        // endregion
+
+        if (showLoginDialog) {
+            AlertDialog(
+                onDismissRequest = { showLoginDialog = false },
+                title = { Text(stringResource(R.string.auth_login_require_title_message)) },
+                text = { Text("${stringResource(R.string.auth_comment_require_login)} ${stringResource(R.string.auth_login_switch_to_screen)}") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showLoginDialog = false
+                            nav2LoginScreen()
+                        }
+                    ) { Text(stringResource(R.string.common_action_move)) }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showLoginDialog = false }) { Text(stringResource(R.string.common_action_cancel)) }
+                }
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -282,15 +304,13 @@ fun CommunityMainScreen(
                 categories = postEditorCategories,
                 onDismiss = { viewModel.isCreateDialogOpen.value = false },
                 onSave = { title, content, postType, imageUri ->
-                    val newPost = Post(
-                        id = -1, title = title, content = content, image = null,
+                    val newPost = Post.EMPTY.copy(
+                        title = title, content = content,
                         postType = postType, userId = uiState.user?.id ?: -1,
-                        authUserNickname = uiState.user?.nickname ?: "", authUserProfileImageUrl = null,
-                        likeCount = 0, commentCount = 0, bookmarkCount = 0, viewCount = 0,
-                        isLiked = false, isBookmarked = false, comments = null,
+                        authUserNickname = uiState.user?.nickname ?: "",
                         createdAt = Date(), updatedAt = Date()
                     )
-                    viewModel.createPost(context, token, newPost, imageUri)
+                    viewModel.createPost(context, uiState, newPost, imageUri)
                     viewModel.isCreateDialogOpen.value = false
                 }
             )
@@ -323,8 +343,10 @@ fun CommunityMainScreen(
                 CommonCommentSheetContent(
                     comments = comments,
                     newCommentContent = newCommentContent,
+                    isLoggedIn = uiState.isLoggedIn,
                     onNewCommentChange = { viewModel.onNewCommentChange(it) },
-                    onAddComment = { viewModel.addComment(token, post.id) }
+                    onAddComment = { viewModel.addComment(token, post.id) },
+                    onLoginRequest = { showLoginDialog = true }
                 )
             }
         }

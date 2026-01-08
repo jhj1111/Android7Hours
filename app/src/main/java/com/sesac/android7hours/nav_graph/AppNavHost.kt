@@ -54,17 +54,8 @@ fun AppNavHost(
         modifier = Modifier.padding(paddingValues = paddingValues),
         navController = navController,
         startDestination = startDestination,
-//        contentAlignment = ,
-//        route = null,
-//        typeMap = emptyMap(),
-//        enterTransition = ,
-//        exitTransition = ,
-//        popEnterTransition = ,
-//        popExitTransition = ,
-//        sizeTransform = ,
     ) {
         homeRoute(
-            uiState = uiState,
             onNavigateToPathDetail = onNavigateToPathDetail,
             onNavigateToCommunity = onNavigateToCommunity,
         )
@@ -91,7 +82,7 @@ fun AppNavHost(
             viewModel = communityViewModel)
 
         monitorRoute(
-            navController = navController,
+            authorUiState = uiState,
             commonMapLifecycle = commonMapLifecycle,
         )
         mypageRoute(

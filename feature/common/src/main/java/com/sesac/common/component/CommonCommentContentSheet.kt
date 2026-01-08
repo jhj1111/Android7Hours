@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
@@ -23,12 +22,19 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.sesac.common.R
 import com.sesac.common.ui.theme.Android7HoursTheme
+import com.sesac.common.ui.theme.Gray500
+import com.sesac.common.ui.theme.paddingExtraLarge
+import com.sesac.common.ui.theme.paddingLarge
+import com.sesac.common.ui.theme.paddingMedium
+import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.utils.sampleIconImageUrl
 import com.sesac.domain.model.Comment
 
@@ -37,11 +43,14 @@ fun CommonCommentSheetContent(
     modifier: Modifier = Modifier,
     comments: List<Comment>,
     newCommentContent: String,
+    isLoggedIn: Boolean,
     onNewCommentChange: (String) -> Unit,
-    onAddComment: () -> Unit
+    onAddComment: () -> Unit,
+    onLoginRequest: () -> Unit
 ) {
-    // 최신순으로 정렬 (새 댓글이 위로)
+    // 최신 정렬 (새 댓글이 위로)
     val sortedComments = comments.sortedByDescending { it.createdAt }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = modifier
@@ -50,10 +59,9 @@ fun CommonCommentSheetContent(
     ) {
         // Header
         Text(
-            text = "댓글 (${comments.size})",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+            text = "${stringResource(R.string.common_comment)} (${comments.size})",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(paddingLarge)
         )
 
         // 댓글 리스트 (최신순)
@@ -61,18 +69,18 @@ fun CommonCommentSheetContent(
             modifier = Modifier
                 .weight(1f, fill = false) // 남은 공간만 차지
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(horizontal = paddingLarge),
+            verticalArrangement = Arrangement.spacedBy(paddingMedium)
         ) {
             if (sortedComments.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(32.dp),
+                            .padding(paddingExtraLarge),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("첫 댓글을 작성해보세요!", color = Color.Gray)
+                        Text(stringResource(R.string.common_empty_comment), color = Gray500)
                     }
                 }
             } else {
@@ -87,32 +95,45 @@ fun CommonCommentSheetContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(paddingLarge),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 value = newCommentContent,
                 onValueChange = onNewCommentChange,
-                placeholder = { Text("댓글 달기...") },
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(24.dp),
+                placeholder = {
+                    Text(
+                        if (isLoggedIn) stringResource(R.string.comment_placeholder_comment_write)
+                        else stringResource(R.string.auth_login_require_message)
+                    )
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .onFocusChanged {
+                        if (it.isFocused && !isLoggedIn) {
+                            onLoginRequest()
+                            focusManager.clearFocus()
+                        }
+                    },
+                readOnly = !isLoggedIn,
+                shape = MaterialTheme.shapes.extraLarge,
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(paddingSmall))
 
             IconButton(
                 onClick = onAddComment,
-                enabled = newCommentContent.isNotBlank()
+                enabled = newCommentContent.isNotBlank() && isLoggedIn
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.Send,
                     contentDescription = "댓글 작성",
-                    tint = if (newCommentContent.isNotBlank())
-                        MaterialTheme.colorScheme.primary else Color.Gray
+                    tint = if (newCommentContent.isNotBlank() && isLoggedIn)
+                        MaterialTheme.colorScheme.primary else Gray500
                 )
             }
         }
@@ -124,15 +145,49 @@ fun CommonCommentSheetContent(
 fun CommunityCommentSheetContentPreview() {
     Android7HoursTheme {
         CommonCommentSheetContent(
-            comments = listOf(Comment.EMPTY.copy(
-                authorNickName = "홍동길",
-                authorImage = sampleIconImageUrl,
-                content = "댓글1111",
-                timeAgo = "10년 전",
-            )),
-            newCommentContent = "입력",
+            comments = listOf(
+                Comment.EMPTY.copy(
+                    authorNickName = "홍동길",
+                    authorImage = sampleIconImageUrl,
+                    content = "댓글1111",
+                    timeAgo = "10년 전",
+                )
+            ),
+            newCommentContent = "댓글 입력 a a a a a",
+            isLoggedIn = true,
             onNewCommentChange = {},
             onAddComment = {},
+            onLoginRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CommunityCommentSheetContentEmptyPreview() {
+    Android7HoursTheme {
+        CommonCommentSheetContent(
+            comments = emptyList(),
+            newCommentContent = "",
+            isLoggedIn = true,
+            onNewCommentChange = {},
+            onAddComment = {},
+            onLoginRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CommunityCommentSheetContentLoggedOutPreview() {
+    Android7HoursTheme {
+        CommonCommentSheetContent(
+            comments = emptyList(),
+            newCommentContent = "",
+            isLoggedIn = false,
+            onNewCommentChange = {},
+            onAddComment = {},
+            onLoginRequest = {},
         )
     }
 }

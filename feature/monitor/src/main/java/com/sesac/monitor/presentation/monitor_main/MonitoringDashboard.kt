@@ -26,12 +26,14 @@ import com.sesac.common.R
 import com.sesac.common.component.CommonFilterTabs
 import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.common.ui.theme.paddingMedium
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.monitor.presentation.MonitorViewModel
 import com.sesac.monitor.presentation.monitor_cam.MonitorCamScreen
 import com.sesac.monitor.presentation.monitor_GPS.MonitorGpsScreen
 
 @Composable
 fun MonitoringDashboard(
+    authorUiState: AuthUiState,
     viewModel: MonitorViewModel,
     commonMapLifecycle: CommonMapLifecycle,
 ) {
@@ -46,7 +48,7 @@ fun MonitoringDashboard(
     // 카메라 탭이 활성화되면 자동으로 통화 시작
     LaunchedEffect(activeTab, currentPet) {
         if (activeTab == webCam) {
-            viewModel.startCall(currentPet)
+            viewModel.startCall(authorUiState, currentPet)
         }
     }
 
@@ -61,7 +63,7 @@ fun MonitoringDashboard(
                 .padding(horizontal = paddingMedium),
             verticalAlignment = Alignment.Companion.CenterVertically
         ) {
-            IconButton(onClick = { viewModel.selectPet(null) }) {
+            IconButton(onClick = { viewModel.selectPet(authorUiState, null) }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "펫 선택으로 돌아가기")
             }
             Spacer(modifier = Modifier.Companion.width(paddingMedium))
@@ -90,7 +92,10 @@ fun MonitoringDashboard(
             }
 
             else -> { // 기본값은 카메라
-                MonitorCamScreen(viewModel = viewModel)
+                MonitorCamScreen(
+                    authorUiState = authorUiState,
+                    viewModel = viewModel,
+                )
             }
         }
     }
