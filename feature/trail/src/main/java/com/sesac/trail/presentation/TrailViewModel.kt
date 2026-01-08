@@ -8,6 +8,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.sesac.common.model.UiEvent
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.BookmarkedPath
 import com.sesac.domain.model.Comment
 import com.sesac.domain.model.Coord
@@ -17,14 +18,12 @@ import com.sesac.domain.model.Place
 import com.sesac.domain.model.User
 import com.sesac.domain.result.AuthResult
 import com.sesac.domain.result.LocationFlowResult
-import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.usecase.bookmark.BookmarkUseCase
 import com.sesac.domain.usecase.comment.CommentUseCase
 import com.sesac.domain.usecase.location.LocationUseCase
 import com.sesac.domain.usecase.mypage.AddScheduleUseCase
-import com.sesac.domain.usecase.mypage.DiaryUseCase
 import com.sesac.domain.usecase.mypage.MypageUseCase
 import com.sesac.domain.usecase.path.PathUseCase
 import com.sesac.domain.usecase.place.PlaceUseCase
@@ -54,7 +53,7 @@ class TrailViewModel @Inject constructor(
     private val placeUseCases: PlaceUseCase,
     private val addScheduleUseCase: AddScheduleUseCase,
     private val mypageUseCase: MypageUseCase,
-    private val diaryUseCase: DiaryUseCase,
+//    private val diaryUseCase: DiaryUseCase,
 ) : ViewModel() {
     private val _invalidToken = Channel<UiEvent>()
     val invalidToken = _invalidToken.receiveAsFlow()
@@ -659,7 +658,7 @@ class TrailViewModel @Inject constructor(
                                         Log.d("TrailViewModel", "✅ Schedule 추가 성공: scheduleId=$scheduleId")
 
                                         // ✅ 4️⃣ 다이어리 생성
-                                        generateAndSaveDiary(scheduleId, result.resultData)
+//                                        generateAndSaveDiary(scheduleId, result.resultData)
 
                                         // ✅ 5️⃣ Schedule을 isCompleted = true로 업데이트
                                         completeSchedule(scheduleId)
@@ -706,7 +705,7 @@ class TrailViewModel @Inject constructor(
                                     addScheduleUseCase(newSchedule).collectLatest { success ->
                                         if (success) {
                                             Log.d("TrailViewModel", "✅ Schedule 추가 성공")
-                                            generateAndSaveDiary(scheduleId, savedPathWithId)
+//                                            generateAndSaveDiary(scheduleId, savedPathWithId)
                                             completeSchedule(scheduleId)
                                         }
                                     }
@@ -733,27 +732,27 @@ class TrailViewModel @Inject constructor(
         }
     }
 
-    // ✅ 다이어리 생성/저장
-    private fun generateAndSaveDiary(scheduleId: Long, path: Path) {
-        viewModelScope.launch {
-            try {
-                Log.d("TrailViewModel", "✅ [다이어리 생성 시작] scheduleId=$scheduleId, pathId=${path.id}")
-
-                val diary = diaryUseCase(path)
-
-                Log.d("TrailViewModel", "✅ [다이어리 생성 성공] ${diary.diary.take(50)}...")
-
-                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, path.id, diary.diary)
-
-                _diaryMap.value = _diaryMap.value + (scheduleId to diary.diary)
-
-                Log.d("TrailViewModel", "✅ [다이어리 저장 완료] scheduleId=$scheduleId")
-            } catch (e: Exception) {
-                Log.e("TrailViewModel", "❌ [다이어리 생성 실패]", e)
-                _diaryMap.value = _diaryMap.value + (scheduleId to "다이어리 생성 실패: ${e.message}")
-            }
-        }
-    }
+//    // ✅ 다이어리 생성/저장
+//    private fun generateAndSaveDiary(scheduleId: Long, path: Path) {
+//        viewModelScope.launch {
+//            try {
+//                Log.d("TrailViewModel", "✅ [다이어리 생성 시작] scheduleId=$scheduleId, pathId=${path.id}")
+//
+//                val diary = diaryUseCase(path)
+//
+//                Log.d("TrailViewModel", "✅ [다이어리 생성 성공] ${diary.diary.take(50)}...")
+//
+//                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, path.id, diary.diary)
+//
+//                _diaryMap.value = _diaryMap.value + (scheduleId to diary.diary)
+//
+//                Log.d("TrailViewModel", "✅ [다이어리 저장 완료] scheduleId=$scheduleId")
+//            } catch (e: Exception) {
+//                Log.e("TrailViewModel", "❌ [다이어리 생성 실패]", e)
+//                _diaryMap.value = _diaryMap.value + (scheduleId to "다이어리 생성 실패: ${e.message}")
+//            }
+//        }
+//    }
 
     // ✅ Schedule 완료 처리 (MypageUseCase 사용)
     private fun completeSchedule(scheduleId: Long) {
@@ -805,21 +804,21 @@ class TrailViewModel @Inject constructor(
         }
     }
 
-    fun saveDiaryForPath(scheduleId: Long, path: Path) {
-        viewModelScope.launch {
-            try {
-                // 1️⃣ 다이어리 생성
-                val diary = mypageUseCase.diaryUseCase(path)
-
-                // 2️⃣ RoomDB 저장
-                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, path.id, diary.diary)
-
-                Log.d("TrailViewModel", "✅ 다이어리 저장 완료: scheduleId=$scheduleId, pathId=${path.id}")
-            } catch (e: Exception) {
-                Log.e("TrailViewModel", "❌ 다이어리 저장 실패: ${e.message}", e)
-            }
-        }
-    }
+//    fun saveDiaryForPath(scheduleId: Long, path: Path) {
+//        viewModelScope.launch {
+//            try {
+//                // 1️⃣ 다이어리 생성
+//                val diary = mypageUseCase.diaryUseCase(path)
+//
+//                // 2️⃣ RoomDB 저장
+//                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, path.id, diary.diary)
+//
+//                Log.d("TrailViewModel", "✅ 다이어리 저장 완료: scheduleId=$scheduleId, pathId=${path.id}")
+//            } catch (e: Exception) {
+//                Log.e("TrailViewModel", "❌ 다이어리 저장 실패: ${e.message}", e)
+//            }
+//        }
+//    }
 
     // =================================================================
     // 📌 9. 댓글 관리

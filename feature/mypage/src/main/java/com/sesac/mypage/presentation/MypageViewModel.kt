@@ -5,6 +5,8 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.BookmarkedPath
 import com.sesac.domain.model.BookmarkedPost
 import com.sesac.domain.model.Breed
@@ -13,11 +15,10 @@ import com.sesac.domain.model.MypageSchedule
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.Pet
 import com.sesac.domain.result.AuthResult
-import com.sesac.common.ui_state.AuthUiState
-import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.usecase.bookmark.BookmarkUseCase
-import com.sesac.domain.usecase.mypage.DiaryUseCase
+import com.sesac.domain.usecase.mypage.GetDiaryFromLocalUseCase
+import com.sesac.domain.usecase.mypage.GetDiaryUseCase
 import com.sesac.domain.usecase.mypage.MypageUseCase
 import com.sesac.domain.usecase.path.PathUseCase
 import com.sesac.domain.usecase.pet.PetUseCase
@@ -47,7 +48,8 @@ class MypageViewModel @Inject constructor(
     private val bookmarkUseCase: BookmarkUseCase,
     private val petUseCase: PetUseCase,
     private val pathUseCase: PathUseCase,
-    private val diaryUseCase: DiaryUseCase,
+    private val getDiaryUseCase: GetDiaryUseCase,
+    private val getDiaryFromLocalUseCase: GetDiaryFromLocalUseCase,
     private val mypageUseCase: MypageUseCase,
     private val postUseCase: PostUseCase,
 ) : ViewModel() {
@@ -404,61 +406,93 @@ class MypageViewModel @Inject constructor(
                         .filter { it.isPath && it.isCompleted }
                         .forEach { schedule ->
                             if (!_diaryMap.value.containsKey(schedule.id)) {
-                                loadDiaryFromLocal(schedule.id)
+                                loadDiary(schedule.id, schedule.pathId)
                             }
                         }
                 }
         }
     }
 
-    // Room에서 다이어리 불러와 메모리에 저장
-    fun loadDiaryFromLocal(scheduleId: Long) {
+    fun loadDiary(scheduleId: Long, pathId: Int?) {
         viewModelScope.launch {
             try {
-                Log.d("MypageViewModel", "다이어리 로드 시도: scheduleId=$scheduleId")
-                val diary = mypageUseCase.getDiaryFromLocalUseCase(scheduleId)
-                if (diary != null) {
-                    _diaryMap.value = _diaryMap.value + (scheduleId to diary)
-                    Log.d("MypageViewModel", "다이어리 로드 성공: scheduleId=$scheduleId, diary=$diary")
+                if (pathId != null) {
+                    // 서버에서 다이어리 가져오기
+                    val serverDiary = mypageUseCase.getDiaryUseCase(scheduleId, pathId)
+                    _diaryMap.value = _diaryMap.value + (scheduleId to (serverDiary ?: ""))
+                    Log.d("MypageViewModel", "서버 다이어리 로드 성공: scheduleId=$scheduleId, diary=$serverDiary")
                 } else {
-                    Log.d("MypageViewModel", "다이어리 없음: scheduleId=$scheduleId")
+                    Log.d("MypageViewModel", "pathId 없음, 서버 요청 생략: scheduleId=$scheduleId")
                 }
             } catch (e: Exception) {
-                Log.e("MypageViewModel", "다이어리 로드 실패: scheduleId=$scheduleId", e)
+                Log.e("MypageViewModel", "서버 다이어리 로드 실패: scheduleId=$scheduleId", e)
+
+                // 서버 실패 시 로컬 fallback
+                val localDiary = try {
+                    mypageUseCase.getDiaryFromLocalUseCase(scheduleId) ?: ""
+                } catch (ex: Exception) {
+                    Log.e("MypageViewModel", "로컬 다이어리 로드 실패: scheduleId=$scheduleId", ex)
+                    null
+                }
+
+                if (localDiary != null) {
+                    _diaryMap.value = _diaryMap.value + (scheduleId to localDiary)
+                    Log.d("MypageViewModel", "로컬 다이어리 로드 성공: scheduleId=$scheduleId, diary=$localDiary")
+                } else {
+                    Log.d("MypageViewModel", "로컬 다이어리 없음: scheduleId=$scheduleId")
+                }
             }
         }
     }
 
-    // 산책로 일정 완료 후 다이어리 생성 및 저장
-    private fun loadPathAndGenerateDiary(scheduleId: Long, pathId: Int) {
-        viewModelScope.launch {
-            try {
-                pathUseCase.getPathById(pathId).collectLatest { result ->
-                    if (result is AuthResult.Success) {
-                        val path = result.resultData
-                        generateAndSaveDiary(scheduleId, pathId, path)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "Path 로드 실패", e)
-            }
-        }
-    }
-
-    private fun generateAndSaveDiary(scheduleId: Long, pathId: Int, path: Path) {
-        viewModelScope.launch {
-            try {
-                val diary = diaryUseCase(path)
-                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, pathId, diary.diary)
-                // ✅ Room뿐만 아니라 메모리에도 저장 -> Compose 재컴포즈
-                _diaryMap.value = _diaryMap.value + (scheduleId to diary.diary)
-                Log.d("MypageViewModel", "다이어리 저장 완료: scheduleId=$scheduleId")
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "다이어리 생성/저장 실패", e)
-                _diaryMap.value = _diaryMap.value + (scheduleId to "다이어리 생성 실패")
-            }
-        }
-    }
+//    // Room에서 다이어리 불러와 메모리에 저장
+//    fun loadDiaryFromLocal(scheduleId: Long) {
+//        viewModelScope.launch {
+//            try {
+//                Log.d("MypageViewModel", "다이어리 로드 시도: scheduleId=$scheduleId")
+//                val diary = mypageUseCase.getDiaryFromLocalUseCase(scheduleId)
+//                if (diary != null) {
+//                    _diaryMap.value = _diaryMap.value + (scheduleId to diary)
+//                    Log.d("MypageViewModel", "다이어리 로드 성공: scheduleId=$scheduleId, diary=$diary")
+//                } else {
+//                    Log.d("MypageViewModel", "다이어리 없음: scheduleId=$scheduleId")
+//                }
+//            } catch (e: Exception) {
+//                Log.e("MypageViewModel", "다이어리 로드 실패: scheduleId=$scheduleId", e)
+//            }
+//        }
+//    }
+//
+//    // 산책로 일정 완료 후 다이어리 생성 및 저장
+//    private fun loadPathAndGenerateDiary(scheduleId: Long, pathId: Int) {
+//        viewModelScope.launch {
+//            try {
+//                pathUseCase.getPathById(pathId).collectLatest { result ->
+//                    if (result is AuthResult.Success) {
+//                        val path = result.resultData
+//                        generateAndSaveDiary(scheduleId, pathId, path)
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                Log.e("MypageViewModel", "Path 로드 실패", e)
+//            }
+//        }
+//    }
+//
+//    private fun generateAndSaveDiary(scheduleId: Long, pathId: Int, path: Path) {
+//        viewModelScope.launch {
+//            try {
+//                val diary = diaryUseCase(path)
+//                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, pathId, diary.diary)
+//                // ✅ Room뿐만 아니라 메모리에도 저장 -> Compose 재컴포즈
+//                _diaryMap.value = _diaryMap.value + (scheduleId to diary.diary)
+//                Log.d("MypageViewModel", "다이어리 저장 완료: scheduleId=$scheduleId")
+//            } catch (e: Exception) {
+//                Log.e("MypageViewModel", "다이어리 생성/저장 실패", e)
+//                _diaryMap.value = _diaryMap.value + (scheduleId to "다이어리 생성 실패")
+//            }
+//        }
+//    }
 
     fun addSchedule(schedule: MypageSchedule) {
         viewModelScope.launch {
@@ -490,7 +524,7 @@ class MypageViewModel @Inject constructor(
                     getSchedules(schedule.date)
 
                     // ✅ 다이어리 생성 및 저장
-                    loadPathAndGenerateDiary(schedule.id, schedule.pathId!!)
+                    loadDiary(schedule.id, schedule.pathId)
                 }
             }
         }
@@ -549,8 +583,8 @@ class MypageViewModel @Inject constructor(
                                 // 메모리에 추가
                                 _diaryMap.value = _diaryMap.value + (scheduleId to existingDiary)
                             } else {
-                                Log.d("MypageViewModel", "⚠️ Room에 다이어리 없음 - 생성 시도")
-                                loadPathAndGenerateDiary(scheduleId, schedule.pathId!!)
+                                Log.d("MypageViewModel", "⚠️ Room에 다이어리 없음 - 서버 요청 시도")
+                                loadDiary(scheduleId, schedule.pathId)
                             }
                         }
                     } else {

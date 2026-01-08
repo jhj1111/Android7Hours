@@ -6,7 +6,7 @@ import javax.inject.Inject
 class SaveDiaryToLocalUseCase @Inject constructor(
     private val repository: MypageRepository
 ) {
-    suspend operator fun invoke(scheduleId: Long, pathId: Int, diary: String) {
-        repository.saveDiaryToLocal(scheduleId, pathId, diary)
+    suspend operator fun invoke(scheduleId: Long, pathId: Int, diary: String, isSynced: Boolean) {
+        repository.saveDiaryToLocal(scheduleId, pathId, diary, isSynced)
     }
 }

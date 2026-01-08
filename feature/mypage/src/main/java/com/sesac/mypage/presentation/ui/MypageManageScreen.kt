@@ -201,7 +201,9 @@ private fun ScheduleContent(
                     // Room에서 메모리에 없으면 불러오기
                     LaunchedEffect(schedule.id) {
                         if (diary.isNullOrEmpty()) {
-                            viewModel.loadDiaryFromLocal(schedule.id)
+                            viewModel.loadDiary(schedule.id, schedule.pathId)
+//                            viewModel.loadDiaryFromLocal(schedule.id)
+
                         }
                     }
 

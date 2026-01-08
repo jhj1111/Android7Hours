@@ -22,9 +22,9 @@ interface MypageRepository {
 //    fun getMypagePermissions(): Flow<List<MypagePermission>>
     fun updatePermissionStatus(key: String, isEnabled: Boolean): Flow<Boolean>
     fun updateSchedule(schedule: MypageSchedule): Flow<Boolean>
-    suspend fun generateDiary(path: Path): Diary
-    // ✅ Diary Room 관련 추가
-    suspend fun saveDiaryToLocal(scheduleId: Long, pathId: Int, diary: String)
+    suspend fun getDiary(scheduleId: Long, pathId: Int): String?
     suspend fun getDiaryFromLocal(scheduleId: Long): String?
-    suspend fun syncDiaryToServer(scheduleId: Long): Boolean
+    suspend fun saveDiaryToLocal(scheduleId: Long, pathId: Int, diary: String, isSynced: Boolean)
+//    suspend fun generateDiary(path: Path): Diary
+//    suspend fun syncDiaryToServer(scheduleId: Long): Boolean
 }
