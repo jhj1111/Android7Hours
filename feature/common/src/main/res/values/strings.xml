@@ -165,6 +165,7 @@
     <string name="common_action_cancel">취소</string>
     <string name="common_action_confirm">확인</string>
     <string name="common_action_post">게시</string>
+    <string name="common_action_move">이동</string>
     <string name="common_counts">개</string>
     <string name="common_counts_views">회</string>
     <string name="common_yes">예</string>
@@ -209,6 +210,10 @@
     <!-- ========= Auth ========= -->
     <string name="auth_join_welcome_title">환영합니다!</string>
     <string name="auth_join_welcome_message">아래 정보를 입력하여 회원가입을 완료하세요.</string>
+    <string name="auth_login_require_message">로그인이 필요한 기능입니다.</string>
+    <string name="auth_login_switch_to_screen">로그인 화면으로 이동하시겠습니까?</string>
+    <string name="auth_login_require_title_message">로그인이 필요한 기능입니다.</string>
+    <string name="auth_comment_require_login">댓글을 작성하려면 로그인이 필요합니다.</string>
     <string name="auth_join_email_label">이메일</string>
     <string name="auth_join_password_label">비밀번호</string>
     <string name="auth_login_succeeded">로그인 성공</string>

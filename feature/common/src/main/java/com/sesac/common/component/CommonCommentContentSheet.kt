@@ -22,7 +22,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,11 +43,14 @@ fun CommonCommentSheetContent(
     modifier: Modifier = Modifier,
     comments: List<Comment>,
     newCommentContent: String,
+    isLoggedIn: Boolean,
     onNewCommentChange: (String) -> Unit,
-    onAddComment: () -> Unit
+    onAddComment: () -> Unit,
+    onLoginRequest: () -> Unit
 ) {
     // 최신 정렬 (새 댓글이 위로)
     val sortedComments = comments.sortedByDescending { it.createdAt }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = modifier
@@ -96,8 +101,21 @@ fun CommonCommentSheetContent(
             TextField(
                 value = newCommentContent,
                 onValueChange = onNewCommentChange,
-                placeholder = { Text(stringResource(R.string.comment_placeholder_comment_write)) },
-                modifier = Modifier.weight(1f),
+                placeholder = {
+                    Text(
+                        if (isLoggedIn) stringResource(R.string.comment_placeholder_comment_write)
+                        else stringResource(R.string.auth_login_require_message)
+                    )
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .onFocusChanged {
+                        if (it.isFocused && !isLoggedIn) {
+                            onLoginRequest()
+                            focusManager.clearFocus()
+                        }
+                    },
+                readOnly = !isLoggedIn,
                 shape = MaterialTheme.shapes.extraLarge,
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
@@ -109,12 +127,12 @@ fun CommonCommentSheetContent(
 
             IconButton(
                 onClick = onAddComment,
-                enabled = newCommentContent.isNotBlank()
+                enabled = newCommentContent.isNotBlank() && isLoggedIn
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.Send,
                     contentDescription = "댓글 작성",
-                    tint = if (newCommentContent.isNotBlank())
+                    tint = if (newCommentContent.isNotBlank() && isLoggedIn)
                         MaterialTheme.colorScheme.primary else Gray500
                 )
             }
@@ -136,8 +154,10 @@ fun CommunityCommentSheetContentPreview() {
                 )
             ),
             newCommentContent = "댓글 입력 a a a a a",
+            isLoggedIn = true,
             onNewCommentChange = {},
             onAddComment = {},
+            onLoginRequest = {}
         )
     }
 }
@@ -149,8 +169,25 @@ fun CommunityCommentSheetContentEmptyPreview() {
         CommonCommentSheetContent(
             comments = emptyList(),
             newCommentContent = "",
+            isLoggedIn = true,
             onNewCommentChange = {},
             onAddComment = {},
+            onLoginRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CommunityCommentSheetContentLoggedOutPreview() {
+    Android7HoursTheme {
+        CommonCommentSheetContent(
+            comments = emptyList(),
+            newCommentContent = "",
+            isLoggedIn = false,
+            onNewCommentChange = {},
+            onAddComment = {},
+            onLoginRequest = {},
         )
     }
 }
