@@ -31,7 +31,7 @@ import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.Black
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMicro
-import com.sesac.common.utils.sampleBannerImageUrl
+import com.sesac.common.config.sampleBannerImageUrl
 import com.sesac.domain.model.BannerData
 
 @Composable

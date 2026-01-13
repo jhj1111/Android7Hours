@@ -35,7 +35,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.sesac.common.R
 import com.sesac.common.component.CommonExpandableText
@@ -61,11 +60,11 @@ import com.sesac.common.ui.theme.primaryContainer
 import com.sesac.common.ui.theme.shapeCard
 import com.sesac.common.ui.theme.shapeImage
 import com.sesac.common.ui.theme.star
-import com.sesac.common.utils.samplePathUrl
+import com.sesac.common.config.samplePathUrl
 import com.sesac.domain.model.BookmarkedPath
 import com.sesac.domain.model.BookmarkedPost
 import com.sesac.common.ui_state.AuthUiState
-import com.sesac.common.utils.sampleIconImageUrl
+import com.sesac.common.config.sampleIconImageUrl
 import com.sesac.domain.type.BookmarkType
 import java.util.Locale
 

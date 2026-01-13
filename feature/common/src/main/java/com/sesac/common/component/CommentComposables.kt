@@ -27,7 +27,7 @@ import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.domain.model.Comment
 import com.sesac.common.ui_state.ResponseUiState
-import com.sesac.common.utils.sampleIconImageUrl
+import com.sesac.common.config.sampleIconImageUrl
 
 @Composable
 fun CommonCommentSection(

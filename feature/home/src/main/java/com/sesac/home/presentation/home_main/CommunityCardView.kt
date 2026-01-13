@@ -31,7 +31,7 @@ import com.sesac.common.ui.theme.Black
 import com.sesac.common.ui.theme.bannerHeight
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
-import com.sesac.common.utils.sampleBannerImageUrl
+import com.sesac.common.config.sampleBannerImageUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

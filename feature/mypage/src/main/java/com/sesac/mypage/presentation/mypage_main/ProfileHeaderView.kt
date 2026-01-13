@@ -34,7 +34,7 @@ import com.sesac.common.ui.theme.borderSmall
 import com.sesac.common.ui.theme.iconSize
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
-import com.sesac.common.utils.sampleIconImageUrl
+import com.sesac.common.config.sampleIconImageUrl
 
 @Composable
 fun ProfileHeaderView(

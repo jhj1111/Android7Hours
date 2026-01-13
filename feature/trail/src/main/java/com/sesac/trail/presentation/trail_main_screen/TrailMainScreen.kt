@@ -74,7 +74,6 @@ fun TrailMainScreen(
     // ViewModel State 수집
     val recommendedPaths by mainViewModel.recommendedPaths.collectAsStateWithLifecycle()
     val myPaths by mainViewModel.myPaths.collectAsStateWithLifecycle()
-    val userInfo by mainViewModel.userInfo.collectAsStateWithLifecycle()
     val isRecording by mainViewModel.isRecording.collectAsStateWithLifecycle()
     val recordingTime by mainViewModel.recordingTime.collectAsStateWithLifecycle()
     val activeTab by mainViewModel.activeTab.collectAsStateWithLifecycle()
@@ -147,8 +146,7 @@ fun TrailMainScreen(
         }
 
         createViewModel.loadDrafts()
-        mainViewModel.getMyPaths()
-        mainViewModel.getCurrentUserInfo()
+        mainViewModel.getMyPaths(uiState)
     }
 
     // 위치 변경 시 PlaceViewModel에서 장소 로드
@@ -206,7 +204,7 @@ fun TrailMainScreen(
         recommendedPathsState = recommendedPaths,
         myPathsState = myPaths,
         uiState = uiState,
-        currentUser = userInfo,
+        currentUser = uiState.user,
         onSheetOpenToggle = { },
         onStartRecording = {
             mainViewModel.startRecording()
@@ -225,8 +223,8 @@ fun TrailMainScreen(
             navController.navigate(TrailNavigationRoute.TrailCreateTab)
         },
         onDeleteClick = { pathId: Int ->
-            createViewModel.deletePath(pathId)
-            mainViewModel.getMyPaths()
+            createViewModel.deletePath(uiState, pathId)
+            mainViewModel.getMyPaths(uiState)
         }
     ) { innerPadding ->
         Box(

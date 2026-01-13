@@ -1,6 +1,5 @@
 package com.sesac.common.component
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -59,8 +58,8 @@ import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.ui.theme.postImageExtremeLarge
 import com.sesac.common.utils.getTimeAgo
-import com.sesac.common.utils.sampleBannerImageUrl
-import com.sesac.common.utils.sampleIconImageUrl
+import com.sesac.common.config.sampleBannerImageUrl
+import com.sesac.common.config.sampleIconImageUrl
 import com.sesac.domain.model.Post
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

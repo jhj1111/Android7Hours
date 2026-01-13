@@ -8,6 +8,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.sesac.common.model.UiEvent
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.domain.model.Coord
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.User
@@ -160,19 +161,10 @@ class TrailMainViewModel @Inject constructor(
     private val _myPaths = MutableStateFlow<ResponseUiState<List<Path>>>(ResponseUiState.Idle)
     val myPaths = _myPaths.asStateFlow()
 
-    private val _userInfo = MutableStateFlow<User?>(null)
-    val userInfo = _userInfo.asStateFlow()
-
     fun loadInitialPaths(coord: Coord) {
         if (areInitialPathsLoaded) return
         getRecommendedPaths(coord)
         areInitialPathsLoaded = true
-    }
-
-    fun getCurrentUserInfo() {
-        viewModelScope.launch {
-            _userInfo.value = sessionUseCase.getUserInfo().first()
-        }
     }
 
     fun getRecommendedPaths(coord: Coord, radius: Float = 5000f) {
@@ -197,10 +189,10 @@ class TrailMainViewModel @Inject constructor(
         }
     }
 
-    fun getMyPaths() {
+    fun getMyPaths(uiState: AuthUiState) {
         viewModelScope.launch {
             _myPaths.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _myPaths.value = ResponseUiState.Error("로그인이 필요합니다.")
                 return@launch

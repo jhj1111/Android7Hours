@@ -23,7 +23,7 @@ import com.sesac.common.ui.theme.Primary
 import com.sesac.common.ui.theme.borderMicro
 import com.sesac.common.ui.theme.cardHeightSmall
 import com.sesac.common.ui.theme.iconSizeLarge
-import com.sesac.common.utils.samplePathUrl
+import com.sesac.common.config.samplePathUrl
 
 /**
 * @param modifier : galleryLauncher.launch("type") 설정

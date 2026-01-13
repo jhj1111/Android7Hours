@@ -35,7 +35,7 @@ import com.sesac.common.ui.theme.paddingExtraLarge
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.common.utils.sampleIconImageUrl
+import com.sesac.common.config.sampleIconImageUrl
 import com.sesac.domain.model.Comment
 
 @Composable

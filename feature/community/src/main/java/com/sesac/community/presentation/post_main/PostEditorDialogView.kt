@@ -54,7 +54,7 @@ import com.sesac.common.ui.theme.cardHeightSmall
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMicro
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.common.utils.sampleBannerImageUrl
+import com.sesac.common.config.sampleBannerImageUrl
 import com.sesac.domain.model.Post
 import com.sesac.domain.type.PostType
 import com.sesac.domain.type.toKoreanString

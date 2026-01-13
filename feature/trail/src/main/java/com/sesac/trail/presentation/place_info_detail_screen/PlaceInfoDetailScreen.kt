@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,13 +30,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sesac.common.component.CommonCommentSection
+import com.sesac.common.ui.theme.PaddingSection
 import com.sesac.common.ui.theme.paddingLarge
-import com.sesac.domain.type.CommentType
+import com.sesac.common.ui.theme.paddingSmall
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.config.sampleLocationImageUrl
 import com.sesac.domain.model.Place
+import com.sesac.domain.type.CommentType
 import com.sesac.trail.presentation.PlaceViewModel
 import kotlinx.coroutines.launch
 
@@ -45,6 +48,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaceInfoDetailScreen(
+    uiState: AuthUiState,
     place: Place,
     onBackClick: () -> Unit = {},
     placeViewModel: PlaceViewModel = hiltViewModel()
@@ -53,14 +57,11 @@ fun PlaceInfoDetailScreen(
     var isFavorite by remember(place.isBookmarked) { mutableStateOf(place.isBookmarked) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-
     // ViewModel에서 댓글 상태 가져오기
     val commentsState by placeViewModel.commentsState.collectAsStateWithLifecycle()
-    val userInfo by placeViewModel.userInfo.collectAsStateWithLifecycle()
 
     // 화면 진입 시 댓글 로드
     LaunchedEffect(place.id) {
-        placeViewModel.getCurrentUserInfo()
         placeViewModel.loadPlaceComments(place.id)
     }
 
@@ -76,15 +77,14 @@ fun PlaceInfoDetailScreen(
     // 전화걸기 핸들러
     val handleCall = {
         val phoneNumber = "02-123-4567" // 실제 데이터 연결 필요
-        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
+        val intent = Intent(Intent.ACTION_DIAL, "tel:$phoneNumber".toUri())
         context.startActivity(intent)
     }
 
     // 주소 복사 핸들러
     val handleCopyAddress: () -> Unit = {
         place.address?.let { address ->
-            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE)
-                    as ClipboardManager
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("address", address)
             clipboard.setPrimaryClip(clip)
             Toast.makeText(context, "주소가 복사되었습니다.", Toast.LENGTH_SHORT).show()
@@ -112,7 +112,7 @@ fun PlaceInfoDetailScreen(
                     isFavorite = isFavorite,
                     onFavoriteClick = handleFavorite,
                     imageUrl = place.imageUrl
-                        ?: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80"
+                        ?: sampleLocationImageUrl
                 )
             }
 
@@ -132,24 +132,24 @@ fun PlaceInfoDetailScreen(
                         text = "방문자 리뷰",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(vertical = paddingSmall)
                     )
 
                     CommonCommentSection(
                         commentsState = commentsState,
-                        currentUserId = userInfo?.id ?: -1,
+                        currentUserId = uiState.user?.id ?: -1,
                         onPostComment = { content ->
-                            placeViewModel.postPlaceComment(place.id, content, CommentType.PATH)
+                            placeViewModel.postPlaceComment(uiState, place.id, content, CommentType.PATH)
                         },
                         onUpdateComment = { commentId, content ->
-                            placeViewModel.updatePlaceComment(place.id, commentId, content, CommentType.PATH)
+                            placeViewModel.updatePlaceComment(uiState, place.id, commentId, content, CommentType.PATH)
                         },
                         onDeleteComment = { commentId ->
-                            placeViewModel.deletePlaceComment(place.id, commentId, CommentType.PATH)
+                            placeViewModel.deletePlaceComment(uiState, place.id, commentId, CommentType.PATH)
                         }
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(PaddingSection))
                 }
             }
         }

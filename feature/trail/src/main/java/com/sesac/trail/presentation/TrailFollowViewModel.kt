@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.naver.maps.geometry.LatLng
 import com.sesac.common.model.UiEvent
+import com.sesac.domain.model.MemoMarker
 import com.sesac.domain.model.Path
 import com.sesac.domain.result.LocationFlowResult
 import com.sesac.domain.usecase.location.LocationUseCase
@@ -32,7 +33,7 @@ class TrailFollowViewModel @Inject constructor(
     private val _selectedPath = MutableStateFlow<Path?>(null)
     val selectedPath get() = _selectedPath.asStateFlow()
 
-    private val _memoMarkers = MutableStateFlow<List<com.sesac.domain.model.MemoMarker>>(emptyList())
+    private val _memoMarkers = MutableStateFlow<List<MemoMarker>>(emptyList())
     val memoMarkers = _memoMarkers.asStateFlow()
 
     private val _isFollowing = MutableStateFlow(false)

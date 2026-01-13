@@ -43,8 +43,8 @@ import com.sesac.common.ui.theme.iconSizeExtremeLarge
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.common.utils.defaultProfileImageUrl
-import com.sesac.common.utils.sampleBannerImageUrl
+import com.sesac.common.config.defaultProfileImageUrl
+import com.sesac.common.config.sampleBannerImageUrl
 
 @Composable
 fun MypageDetailHeader(

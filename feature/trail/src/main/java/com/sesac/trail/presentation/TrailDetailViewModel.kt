@@ -3,6 +3,7 @@ package com.sesac.trail.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.BookmarkedPath
 import com.sesac.domain.model.Comment
@@ -13,20 +14,17 @@ import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.usecase.bookmark.BookmarkUseCase
 import com.sesac.domain.usecase.comment.CommentUseCase
-import com.sesac.domain.usecase.session.SessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TrailDetailViewModel @Inject constructor(
-    private val sessionUseCase: SessionUseCase,
     private val bookmarkUseCase: BookmarkUseCase,
     private val commentUseCase: CommentUseCase,
 ) : ViewModel() {
@@ -53,12 +51,6 @@ class TrailDetailViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUserInfo() {
-        viewModelScope.launch {
-            _userInfo.value = sessionUseCase.getUserInfo().first()
-        }
-    }
-
     // =================================================================
     // 📌 2. 북마크 관리
     // =================================================================
@@ -67,8 +59,9 @@ class TrailDetailViewModel @Inject constructor(
         MutableStateFlow<ResponseUiState<List<BookmarkedPath>>>(ResponseUiState.Idle)
     val bookmarkedPaths = _bookmarkedPaths.asStateFlow()
 
-    fun getUserBookmarkedPaths(token: String?) {
+    fun getUserBookmarkedPaths(uiState: AuthUiState) {
         viewModelScope.launch {
+            val token = uiState.token
             _bookmarkedPaths.value = ResponseUiState.Loading
             if (token == null) {
                 _bookmarkedPaths.value = ResponseUiState.Error("로그인이 필요합니다.")
@@ -94,8 +87,9 @@ class TrailDetailViewModel @Inject constructor(
         }
     }
 
-    fun toggleBookmark(token: String?, id: Int) {
+    fun toggleBookmark(uiState: AuthUiState, id: Int) {
         viewModelScope.launch {
+            val token = uiState.token
             if (token == null) {
                 Log.e("TrailDetailViewModel", "Toggle bookmark failed: token is null")
                 return@launch
@@ -103,7 +97,7 @@ class TrailDetailViewModel @Inject constructor(
             bookmarkUseCase.toggleBookmarkUseCase(token, id, BookmarkType.PATH)
                 .collectLatest { bookmarkResponse ->
                     if (bookmarkResponse is AuthResult.Success) {
-                        getUserBookmarkedPaths(token)
+                        getUserBookmarkedPaths(uiState)
                         _selectedPath.value = _selectedPath.value?.copy(bookmarkCount = bookmarkResponse.resultData.bookmarkCount)
                     } else if (bookmarkResponse is AuthResult.NetworkError) {
                         Log.e("TrailDetailViewModel", "Toggle bookmark failed: ${bookmarkResponse.exception}")
@@ -183,9 +177,9 @@ class TrailDetailViewModel @Inject constructor(
     // 📌 4. 경로 삭제
     // =================================================================
 
-    fun deletePath(pathId: Int) {
+    fun deletePath(uiState: AuthUiState, pathId: Int) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 Log.e("TrailDetailViewModel", "Delete path failed: token is null")
                 return@launch

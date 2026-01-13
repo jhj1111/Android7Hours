@@ -35,13 +35,6 @@ fun NavGraphBuilder.trailNestedNavGraph(
             navController = navController,
             selectedDetailPath = selectedDetailPath,
             onStartFollowing = onStartFollowing,
-            onEditClick = { path ->
-                navController.navigate(TrailNavigationRoute.TrailCreateTab)
-            },
-            onDeleteClick = { path ->
-                detailViewModel.deletePath(path.id)
-                navController.popBackStack()
-            }
         )
     }
     // ===== 2. Place Detail =====
@@ -54,6 +47,7 @@ fun NavGraphBuilder.trailNestedNavGraph(
         val loadedPlace = args.placeParceler.toPlace()
 
         PlaceInfoDetailScreen(
+            uiState = uiState,
             place = loadedPlace,
             onBackClick = { navController.popBackStack() },
             placeViewModel = placeViewModel

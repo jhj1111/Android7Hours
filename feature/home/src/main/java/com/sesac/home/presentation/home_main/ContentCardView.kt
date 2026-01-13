@@ -29,7 +29,7 @@ import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.cardHeight
 import com.sesac.common.ui.theme.cardRound
 import com.sesac.common.ui.theme.paddingMedium
-import com.sesac.common.utils.samplePathUrl
+import com.sesac.common.config.samplePathUrl
 import com.sesac.domain.model.Path
 
 @OptIn(ExperimentalMaterial3Api::class)

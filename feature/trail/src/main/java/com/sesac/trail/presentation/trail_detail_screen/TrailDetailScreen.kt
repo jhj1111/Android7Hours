@@ -37,14 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.sesac.common.component.CommonCommentSection
-import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.GrayTabText
 import com.sesac.common.ui.theme.PaddingSection
 import com.sesac.common.ui.theme.Purple600
@@ -52,7 +50,7 @@ import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMicro
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.common.utils.samplePathUrl
+import com.sesac.common.config.samplePathUrl
 import com.sesac.domain.model.Path
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
@@ -68,14 +66,11 @@ fun TrailDetailScreen(
     navController: NavController,
     selectedDetailPath: Path?,
     onStartFollowing: (Path) -> Unit,
-    onEditClick: (Path) -> Unit,
-    onDeleteClick: (Path) -> Unit,
 ) {
     val context = LocalContext.current
     val selectedDetailPathState by viewModel.selectedPath.collectAsStateWithLifecycle()
     val bookmarkedPathsState by viewModel.bookmarkedPaths.collectAsStateWithLifecycle()
     val commentsState by viewModel.commentsState.collectAsStateWithLifecycle()
-    val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
 
     val isBookmarked by remember(bookmarkedPathsState, selectedDetailPathState) {
         derivedStateOf {
@@ -85,20 +80,17 @@ fun TrailDetailScreen(
         }
     }
 
-
-
     LaunchedEffect(selectedDetailPath) {
         selectedDetailPath?.let { selected ->
-            viewModel.getCurrentUserInfo()
             viewModel.updateSelectedPath(selected)
             viewModel.getComments(selected.id)
-            viewModel.getUserBookmarkedPaths(uiState.token)
+            viewModel.getUserBookmarkedPaths(uiState)
         }
     }
 
     selectedDetailPathState?.let { selected ->
         val handleBookmark: () -> Unit = {
-            viewModel.toggleBookmark(uiState.token, selected.id)
+            viewModel.toggleBookmark(uiState, selected.id)
             val message = if (isBookmarked) "즐겨찾기에서 제거합니다." else "즐겨찾기에 추가합니다."
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
@@ -161,7 +153,7 @@ fun TrailDetailScreen(
                                 TextButton(
 //                                    onClick = { onDeleteClick(selected) },
                                     onClick = {
-                                        viewModel.deletePath(selected.id)
+                                        viewModel.deletePath(uiState, selected.id)
                                         navController.popBackStack()
                                     },
                                     modifier = Modifier.height(32.dp)
@@ -250,7 +242,7 @@ fun TrailDetailScreen(
                 PathSection(title = "이용자 후기") {
                     CommonCommentSection(
                         commentsState = commentsState,
-                        currentUserId = userInfo?.id ?: -1,
+                        currentUserId = uiState.user?.id ?: -1,
                         onPostComment = { content ->
                             uiState.token?.let { token ->
                                 viewModel.createComment(token, selected.id, content)

@@ -39,6 +39,7 @@ import com.sesac.common.ui.theme.PaddingSection
 import com.sesac.common.ui.theme.Primary
 import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.paddingLarge
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.ValidationState
 import com.sesac.trail.nav_graph.NestedNavigationRoute
@@ -52,6 +53,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun TrailCreateScreen(
+    uiState: AuthUiState,
     createViewModel: TrailCreateViewModel = hiltViewModel(),
     mainViewModel: TrailMainViewModel = hiltViewModel(),
     navController: NavController,
@@ -106,7 +108,6 @@ fun TrailCreateScreen(
                 // 수정 화면 스택에서 제거하고, 수정된 상세 화면으로 이동
                 createViewModel.resetCreateState()
                 navController.popBackStack()
-
             }
             is ResponseUiState.Error -> {
                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
@@ -164,7 +165,7 @@ fun TrailCreateScreen(
 
                 if (selected.id != -1) {
                     // 기존 경로 수정 -> ViewModel에 위임
-                    createViewModel.updatePath()
+                    createViewModel.updatePath(uiState)
                 } else {
                     // 신규 경로: Draft 생성 → RoomDB 저장
                     val duration = if (recordTime == 0L) selected.duration else recordTime.toInt()
@@ -172,9 +173,9 @@ fun TrailCreateScreen(
                         selectedPath = selected.copy(duration = duration),
                         tempPathCoords = tempPathCoords  // 파라미터 이름 명시
                     )
-                    createViewModel.savePathAndUpload(newDraft)
+                    createViewModel.savePathAndUpload(uiState, newDraft)
                     createViewModel.resetCreateState()
-                    Toast.makeText(context, "산책로가 저장되었습니다!", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, "산책로가 저장되었습니다!", Toast.LENGTH_SHORT).show()
                 }
 
                 // 🔥 저장 완료 후 마커 초기화

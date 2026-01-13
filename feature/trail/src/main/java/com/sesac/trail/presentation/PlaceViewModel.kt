@@ -3,30 +3,26 @@ package com.sesac.trail.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sesac.common.model.UiEvent
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.Comment
 import com.sesac.domain.model.Place
-import com.sesac.domain.model.User
 import com.sesac.domain.result.AuthResult
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.usecase.comment.CommentUseCase
 import com.sesac.domain.usecase.place.PlaceUseCase
-import com.sesac.domain.usecase.session.SessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlaceViewModel @Inject constructor(
-    private val sessionUseCase: SessionUseCase,
     private val placeUseCases: PlaceUseCase,
     private val commentUseCase: CommentUseCase,
 ) : ViewModel() {
@@ -40,15 +36,6 @@ class PlaceViewModel @Inject constructor(
 
     private val _placesState = MutableStateFlow<ResponseUiState<List<Place>>>(ResponseUiState.Idle)
     val placesState: StateFlow<ResponseUiState<List<Place>>> = _placesState
-
-    private val _userInfo = MutableStateFlow<User?>(null)
-    val userInfo = _userInfo.asStateFlow()
-
-    fun getCurrentUserInfo() {
-        viewModelScope.launch {
-            _userInfo.value = sessionUseCase.getUserInfo().first()
-        }
-    }
 
     fun loadPlaces(
         categoryId: Int? = null,
@@ -111,9 +98,9 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
-    fun postPlaceComment(placeId: Int, content: String, type: CommentType) {
+    fun postPlaceComment(uiState: AuthUiState, placeId: Int, content: String, type: CommentType) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _invalidToken.send(UiEvent.ToastEvent("로그인이 필요합니다."))
                 return@launch
@@ -138,9 +125,9 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
-    fun updatePlaceComment(placeId: Int, commentId: Int, content: String, type: CommentType) {
+    fun updatePlaceComment(uiState: AuthUiState, placeId: Int, commentId: Int, content: String, type: CommentType) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _invalidToken.send(UiEvent.ToastEvent("로그인이 필요합니다."))
                 return@launch
@@ -166,9 +153,9 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
-    fun deletePlaceComment(placeId: Int, commentId: Int, type: CommentType) {
+    fun deletePlaceComment(uiState: AuthUiState, placeId: Int, commentId: Int, type: CommentType) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _invalidToken.send(UiEvent.ToastEvent("로그인이 필요합니다."))
                 return@launch

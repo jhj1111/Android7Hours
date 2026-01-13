@@ -35,7 +35,7 @@ import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
-import com.sesac.common.utils.defaultProfileImageUrl
+import com.sesac.common.config.defaultProfileImageUrl
 import com.sesac.domain.model.MypageMenuItem
 import com.sesac.mypage.nav_graph.MypageNavigationRoute
 import com.sesac.mypage.presentation.MypageViewModel

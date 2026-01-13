@@ -38,6 +38,7 @@ fun NavGraphBuilder.trailRoute(
     }
     composable<TrailNavigationRoute.TrailCreateTab> {
         TrailCreateScreen(
+            uiState = uiState,
             createViewModel = createViewModel,
             mainViewModel = mainViewModel,
             navController = navController,

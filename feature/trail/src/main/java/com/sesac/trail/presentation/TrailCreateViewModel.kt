@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.naver.maps.geometry.LatLng
 import com.sesac.common.model.UiEvent
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.Coord
-import com.sesac.domain.model.MemoMarker
 import com.sesac.domain.model.MypageSchedule
 import com.sesac.domain.model.Path
 import com.sesac.domain.result.AuthResult
@@ -15,7 +15,6 @@ import com.sesac.domain.usecase.mypage.AddScheduleUseCase
 import com.sesac.domain.usecase.mypage.DiaryUseCase
 import com.sesac.domain.usecase.mypage.MypageUseCase
 import com.sesac.domain.usecase.path.PathUseCase
-import com.sesac.domain.usecase.session.SessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +30,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrailCreateViewModel @Inject constructor(
-    private val sessionUseCase: SessionUseCase,
     private val pathUseCase: PathUseCase,
     private val addScheduleUseCase: AddScheduleUseCase,
     private val mypageUseCase: MypageUseCase,
@@ -174,9 +172,9 @@ class TrailCreateViewModel @Inject constructor(
         }
     }
 
-    fun updatePath() {
+    fun updatePath(uiState: AuthUiState) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token.isNullOrEmpty()) {
                 _invalidToken.send(UiEvent.ToastEvent("유저 정보가 없습니다."))
                 return@launch
@@ -214,9 +212,9 @@ class TrailCreateViewModel @Inject constructor(
         }
     }
 
-    fun deletePath(pathId: Int) {
+    fun deletePath(uiState: AuthUiState, pathId: Int) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token.isNullOrEmpty()) {
                 _invalidToken.send(UiEvent.ToastEvent("유저 정보가 없습니다."))
                 return@launch
@@ -233,10 +231,10 @@ class TrailCreateViewModel @Inject constructor(
     // 📌 4. RoomDB 저장 & 서버 업로드
     // =================================================================
 
-    fun savePathAndUpload(path: Path) {
+    fun savePathAndUpload(uiState: AuthUiState, path: Path) {
         viewModelScope.launch {
             _createState.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             try {
                 // 1️⃣ RoomDB에 저장
                 val savedPathWithId = saveDraft(path)
@@ -329,6 +327,8 @@ class TrailCreateViewModel @Inject constructor(
 
                         else -> {}
                     }
+                } ?: let {
+                    _createState.value = ResponseUiState.Error("로그인이 필요합니다.")
                 }
             } catch (e: Exception) {
                 Log.e("TrailCreateViewModel", "An exception occurred in savePathAndUpload: ${e.message}", e)
