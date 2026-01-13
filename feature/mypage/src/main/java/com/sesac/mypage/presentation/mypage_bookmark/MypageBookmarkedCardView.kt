@@ -73,9 +73,8 @@ import java.util.Locale
 fun BookmarkedPathCard(
     uiState: AuthUiState,
     path: BookmarkedPath,
-//    viewModel: MypageViewModel,
     onPathClick: () -> Unit,
-    onRemoveClick: (String?, Int, BookmarkType) -> Unit,
+    onRemoveClick: (AuthUiState, Int, BookmarkType) -> Unit,
 ) {
     Card(
         onClick = onPathClick,
@@ -147,7 +146,7 @@ fun BookmarkedPathCard(
             }
             IconButton(
 //                onClick = { viewModel.deleteFavoriteWalkPath(path) },
-                onClick = { onRemoveClick(uiState.token, path.id, BookmarkType.PATH) },
+                onClick = { onRemoveClick(uiState, path.id, BookmarkType.PATH) },
                 modifier = Modifier.align(Alignment.Top)
             ) {
                 Icon(
@@ -166,7 +165,7 @@ fun BookmarkedPostCard(
     uiState: AuthUiState,
     bookmarkedPost: BookmarkedPost,
     onPostClick: () -> Unit,
-    onRemoveClick: (String?, Int, BookmarkType) -> Unit,
+    onRemoveClick: (AuthUiState, Int, BookmarkType) -> Unit,
 ) {
     Card(
         onClick = onPostClick,
@@ -195,7 +194,7 @@ fun BookmarkedPostCard(
                 }
                 IconButton(
 //                    onClick = { viewModel.deleteFavoriteCommunityPost(post) },
-                    onClick = { onRemoveClick(uiState.token, bookmarkedPost.id, BookmarkType.POST) },
+                    onClick = { onRemoveClick(uiState, bookmarkedPost.id, BookmarkType.POST) },
                 ) {
                     Icon(
                         Icons.Default.Delete,
@@ -248,9 +247,10 @@ fun BookmarkedPostCard(
                 ) {
                     Text(
                         text = bookmarkedPost.postType.toString(),
-                        color = OnPrimaryContainer,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = OnPrimaryContainer,
+                            fontWeight = FontWeight.Medium
+                        ),
                         modifier = Modifier.padding(horizontal = paddingSmall, vertical = paddingMicro)
                     )
                 }
@@ -306,7 +306,7 @@ fun BookmarkedPathCardPreview() {
                 bookmarkCount = 99,
             ),
             onPathClick = {},
-            onRemoveClick = { String, Int, BookmarkType -> },
+            onRemoveClick = { _, _, _ -> },
         )
     }
 }
@@ -326,7 +326,7 @@ fun BookmarkedPostCardPreview() {
 
                 ),
             onPostClick = {},
-            onRemoveClick = { String, Int, BookmarkType -> }
+            onRemoveClick = { _, _, _ -> }
         )
     }
 }

@@ -76,14 +76,14 @@ fun MypageDetailScreen(
             val imagePart = FileUtils.createMultipartBody(context, uri, "profile_image")
             // 2. 서버로 전송 (토큰이 있을 때만)
             if (imagePart != null) {
-                viewModel.updateProfileImage(imagePart)
+                viewModel.updateProfileImage(uiState, imagePart)
             }
         }
     }
 
     LaunchedEffect(uiState) {
         if (uiState.user?.id != -1) {
-            viewModel.getAllUserPets()
+            viewModel.getAllUserPets(uiState)
             viewModel.clearSelectedPet()
         }
     }
@@ -173,7 +173,7 @@ fun MypageDetailScreen(
                         onEditClicked = {
                             navController.navigate(MypageNavigationRoute.AddPetScreen(petId = pet.id))
                         },
-                        onDeleteClicked = { viewModel.deletePet(pet.id) }
+                        onDeleteClicked = { viewModel.deletePet(uiState, pet.id) }
                     )
 
                 }
@@ -202,7 +202,7 @@ fun MypageDetailScreen(
                 },
                 onInviteUser = {
                     showAddPetOptionsDialog = false
-                    viewModel.generateInvitationCode() // Trigger code generation
+                    viewModel.generateInvitationCode(uiState) // Trigger code generation
                 }
             )
         }

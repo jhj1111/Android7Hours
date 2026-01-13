@@ -269,9 +269,9 @@ fun AddPetScreen(
                         lastLocation = PetLocation.EMPTY,
                     )
                     if (isEditMode) {
-                        viewModel.updatePet(context, pet, imageUri)
+                        viewModel.updatePet(uiState, context, pet, imageUri)
                     } else {
-                        viewModel.addPet(context, pet, imageUri)
+                        viewModel.addPet(uiState, context, pet, imageUri)
                     }
                 }
             },

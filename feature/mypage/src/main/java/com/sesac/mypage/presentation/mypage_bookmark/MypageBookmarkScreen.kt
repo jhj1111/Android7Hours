@@ -19,13 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sesac.common.R
 import com.sesac.common.component.CommonFilterTabs
 import com.sesac.common.component.CommonListContainer
 import com.sesac.common.model.PathParceler
 import com.sesac.common.model.toPathParceler
+import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.mypage.presentation.MypageViewModel
@@ -47,7 +50,7 @@ fun MypageBookmarkScreen(
 
     LaunchedEffect(uiStatus) {
         if (uiStatus.isLoggedIn) {
-            viewModel.getMyBookmarks(uiStatus.token)
+            viewModel.getMyBookmarks(uiStatus)
         }
     }
 
@@ -74,7 +77,7 @@ fun MypageBookmarkScreen(
             selectedFilter = activeFilter,
             onFilterSelected = viewModel::onFilterChange,
             fiterIcons = listOf(Icons.TwoTone.Bookmarks, Icons.AutoMirrored.Filled.Chat),
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(paddingMedium, Alignment.CenterHorizontally)
         )
 
         if (isLoadingPath) {
@@ -92,10 +95,10 @@ fun MypageBookmarkScreen(
                         is ResponseUiState.Success -> {
                             CommonListContainer(
                                 modifier = Modifier.verticalScroll(rememberScrollState()),
-                                title = "즐겨찾는 산책로",
+                                title = stringResource(R.string.mypage_favorite_path),
                                 itemList = state.result,
-                                emptyStateMessage = "즐겨찾는 산책로가 없습니다",
-                                emptyStateSubMessage = "산책로 페이지에서 ⭐를 눌러 추가해보세요",
+                                emptyStateMessage = stringResource(R.string.mypage_favorite_path_empty),
+                                emptyStateSubMessage = stringResource(R.string.mypage_favorite_path_empty_submessage),
                                 itemContent = { path ->
                                     BookmarkedPathCard(
                                         uiState = uiStatus,
@@ -116,10 +119,10 @@ fun MypageBookmarkScreen(
                         is ResponseUiState.Success -> {
                             CommonListContainer(
                                 modifier = Modifier.verticalScroll(rememberScrollState()),
-                                title = "즐겨찾는 게시글",
+                                title = stringResource(R.string.mypage_favorite_post),
                                 itemList = state.result,
-                                emptyStateMessage = "즐겨찾는 게시글이 없습니다",
-                                emptyStateSubMessage = "커뮤니티에서 ♥를 눌러 추가해보세요",
+                                emptyStateMessage = stringResource(R.string.mypage_favorite_post_empty),
+                                emptyStateSubMessage = stringResource(R.string.mypage_favorite_post_empty_submessage),
                                 itemContent = { bookmarkedPost ->
                                     BookmarkedPostCard(
                                         uiState = uiStatus,
@@ -138,26 +141,3 @@ fun MypageBookmarkScreen(
         }
     }
 }
-
-// BookmarkedPost를 Post로 변환하는 임시 확장 함수
-// 이상적으로는 data layer의 mapper에 위치해야 함
-//private fun BookmarkedPost.toPost(): com.sesac.domain.model.Post {
-//    return com.sesac.domain.model.Post(
-//        id = this.id,
-//        userId = this.userId,
-//        authUserNickname = this.authUserNickname,
-//        authUserProfileImageUrl = this.authUserProfileImageUrl,
-//        postType = this.postType,
-//        title = this.title,
-//        image = this.image,
-//        viewCount = this.viewCount,
-//        commentCount = this.commentCount,
-//        likeCount = this.likeCount,
-//        bookmarkCount = this.bookmarkCount,
-//        isLiked = this.isLiked,
-//        isBookmarked = this.isBookmarked,
-//        createdAt = java.util.Date(), // Mapper에서 실제 Date로 변환 필요
-//        updatedAt = java.util.Date(), // Mapper에서 실제 Date로 변환 필요
-//        content = "" // BookmarkedPost에는 content가 없으므로 빈 문자열로 처리
-//    )
-//}

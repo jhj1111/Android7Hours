@@ -132,6 +132,14 @@
     <string name="mypage_manage_schedules_create_in_selected_date">선택한 날짜에 새로운 일정을 추가하세요</string>
     <string name="mypage_schedules_created_succeed">일정이 추가되었습니다</string>
 
+    <string name="mypage_favorite_post">즐겨찾는 게시글</string>
+    <string name="mypage_favorite_post_empty">즐겨찾는 게시글이 없습니다.</string>
+    <string name="mypage_favorite_post_empty_submessage">커뮤니티에서 ⭐를 눌러 추가해보세요</string>
+
+    <string name="mypage_favorite_path">즐겨찾는 산책로</string>
+    <string name="mypage_favorite_path_empty">즐겨찾는 산책로가 없습니다.</string>
+    <string name="mypage_favorite_path_empty_submessage">산책로 페이지에서 *를 눌러 추가해보세요</string>
+
     <!-- ========= Mypage Setting ========= -->
     <string name="mypage_setting_title">권한 설정</string>
     <string name="mypage_setting_subtitle">앱 기능 사용을 위한 권한을 관리합니다</string>
@@ -148,6 +156,8 @@
     <string name="mypage_permission_gps_desc">위치 기반 산책로 추천 및 기록</string>
     <string name="mypage_permission_notification_label">알림</string>
     <string name="mypage_permission_notification_desc">산책 알림 및 커뮤니티 소식</string>
+
+    <string name="mypage_pet_input_name">이름을 입력해주세요.</string>
 
     <!-- ========= Common ========= -->
     <string name="common_see_all">전체보기</string>

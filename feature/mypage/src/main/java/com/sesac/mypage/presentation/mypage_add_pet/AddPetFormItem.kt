@@ -9,8 +9,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.sesac.common.R
 import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.common.ui.theme.Typography
 import com.sesac.common.ui.theme.paddingMedium
@@ -39,7 +41,7 @@ fun AddPetFormItemPreview(){
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("이름을 입력해주세요") },
+                placeholder = { Text(stringResource(R.string.mypage_pet_input_name)) },
             )
         }
     }
