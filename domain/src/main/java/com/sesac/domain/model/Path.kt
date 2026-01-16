@@ -1,5 +1,7 @@
 package com.sesac.domain.model
 
+import java.util.Date
+
 data class RecommendedPath(
     val id: Int,
     val name: String,
@@ -12,6 +14,8 @@ data class RecommendedPath(
 
 data class Path(
     val id: Int = -1,
+    val createdAt: String? = null,
+    val updatedAt: String? = null,
     val uploader: String,
     val pathName: String,
     val pathComment: String? = null,

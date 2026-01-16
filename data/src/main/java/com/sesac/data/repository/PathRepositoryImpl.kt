@@ -4,6 +4,7 @@ import android.util.Log
 import com.naver.maps.geometry.LatLng
 import com.sesac.data.mapper.toBookmarkResponse
 import com.sesac.data.dao.PathDao
+import com.sesac.data.mapper.toDiary
 import com.sesac.data.mapper.toDomain
 import com.sesac.data.mapper.toPathCreateRequestDTO
 import com.sesac.data.mapper.toPathEntity
@@ -15,6 +16,7 @@ import com.sesac.data.source.api.PathApi
 import com.sesac.data.util.PolylineEncoder
 import com.sesac.domain.model.BookmarkResponse
 import com.sesac.domain.model.Coord
+import com.sesac.domain.model.Diary
 import com.sesac.domain.model.Like
 import com.sesac.domain.model.Path
 import com.sesac.domain.repository.PathRepository
@@ -71,15 +73,6 @@ class PathRepositoryImpl @Inject constructor(
 
         // 🔹 DTO 생성 시 polyline 필드에 적용
         val request = path.toPathCreateRequestDTO()
-//            .copy(polyline = encodedPolyline)
-
-//        Log.d("PathRepository", "📤 === Request Details ===")
-//        Log.d("PathRepository", "  id: ${request.id}")  // null이어야 함
-//        Log.d("PathRepository", "  pathName: ${request.pathName}")
-//        Log.d("PathRepository", "  level: ${request.level}")
-//        Log.d("PathRepository", "  distance: ${request.distance}")
-//        Log.d("PathRepository", "  polyline length: ${request.polyline.length}")
-//        Log.d("PathRepository", "  markers: ${request.markers?.size}")
         Log.d("PathRepository", "  path create request: $request")
 
         val createdPath = pathApi.createPath(
@@ -87,9 +80,6 @@ class PathRepositoryImpl @Inject constructor(
             request = request
         )
         Log.d("PathRepository", "  path create response: $createdPath")
-//        Log.d("PathRepository", "📥 === Response Details ===")
-//        Log.d("PathRepository", "  Server assigned id: ${createdPath.id}")
-//        Log.d("PathRepository", "  pathName: ${createdPath.pathName}")
         emit(AuthResult.Success(createdPath.toPath()))
     }.catch { e ->
         Log.e("PathRepository", "❌ Error: ${e.javaClass.simpleName}")
@@ -112,6 +102,15 @@ class PathRepositoryImpl @Inject constructor(
         emit(AuthResult.Success(Unit))
     }.catch {
         Log.d("TAG-PathRepository", "Delete Path error : $it")
+        emit(AuthResult.NetworkError(it))
+    }
+
+    override suspend fun getDiary(pathId: Int): Flow<AuthResult<Diary>> = flow {
+        emit(AuthResult.Loading)
+        val result = pathApi.getDiary(pathId).toDiary()
+        emit(AuthResult.Success(result))
+    }.catch {
+        Log.d("TAG-PathRepository", "get Diary error : $it")
         emit(AuthResult.NetworkError(it))
     }
 

@@ -2,16 +2,12 @@ package com.sesac.data.repository
 
 import android.util.Log
 import com.sesac.data.dao.DiaryDao
-import com.sesac.data.dto.DiaryRequestDTO
 import com.sesac.data.entity.DiaryEntity
-import com.sesac.data.source.api.DiaryApi
 import com.sesac.data.source.local.datasource.MockMypage
-import com.sesac.domain.model.Diary
 import com.sesac.domain.model.FavoriteCommunityPost
 import com.sesac.domain.model.FavoriteWalkPath
 import com.sesac.domain.model.MypageSchedule
 import com.sesac.domain.model.MypageStat
-import com.sesac.domain.model.Path
 import com.sesac.domain.repository.MypageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,7 +15,6 @@ import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 class MypageRepositoryImpl @Inject constructor(
-    private val diaryApi: DiaryApi,
     private val diaryDao: DiaryDao
 ) : MypageRepository {
     override fun getMypageStats(): Flow<List<MypageStat>> = flow {
@@ -83,22 +78,6 @@ class MypageRepositoryImpl @Inject constructor(
         }
     }
 
-    // 다이어리 생성
-    override suspend fun generateDiary(path: Path): Diary {
-        try {
-            val request = DiaryRequestDTO(
-                distance = path.distance,
-                duration = path.duration,
-                pathName = path.pathName
-            )
-
-            val dto = diaryApi.generateDiary(request)
-            return Diary(diary = dto.diary)
-        } catch (e: Exception) {
-            Log.e("MypageRepository", "다이어리 생성 실패", e)
-            throw e
-        }
-    }
     // ✅ Room에 다이어리 저장
     override suspend fun saveDiaryToLocal(scheduleId: Long, pathId: Int, diary: String) {
         val entity = DiaryEntity(

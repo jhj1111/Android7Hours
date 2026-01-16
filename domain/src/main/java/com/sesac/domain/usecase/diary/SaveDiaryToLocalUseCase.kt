@@ -1,4 +1,4 @@
-package com.sesac.domain.usecase.mypage
+package com.sesac.domain.usecase.diary
 
 import com.sesac.domain.repository.MypageRepository
 import javax.inject.Inject

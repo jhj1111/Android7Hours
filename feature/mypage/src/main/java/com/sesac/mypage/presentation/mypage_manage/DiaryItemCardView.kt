@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Route
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -33,38 +34,37 @@ import com.sesac.common.ui.theme.paddingSmall
 @Composable
 fun DiaryItemCardView(pathName: String, diaryText: String) {
     Card(
-        modifier = Modifier.Companion.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(paddingMedium),
         colors = CardDefaults.cardColors(
-//            containerColor = Color(0xFFF0F4FF) // 연한 보라색 배경
             containerColor = PurpleLight // 연한 보라색 배경
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = elevationSmall)
     ) {
-        Column(modifier = Modifier.Companion.padding(paddingMedium)) {
+        Column(modifier = Modifier.padding(paddingMedium)) {
             // ✅ 산책로 제목
             Row(
-                verticalAlignment = Alignment.Companion.CenterVertically,
-                modifier = Modifier.Companion.padding(bottom = paddingSmall)
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = paddingSmall)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add, // 아이콘 추가 필요
+                    imageVector = Icons.Filled.Add, // 아이콘 추가 필요
                     contentDescription = "산책로",
                     tint = PrimaryPurple,
-                    modifier = Modifier.Companion.size(iconSizeMedium)
+                    modifier = Modifier.size(iconSizeMedium)
                 )
-                Spacer(Modifier.Companion.width(paddingSmall))
+                Spacer(Modifier.width(paddingSmall))
                 Text(
                     text = pathName,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Companion.Bold,
+                    fontWeight = FontWeight.Bold,
                     color = PrimaryPurple
                 )
             }
 
             // ✅ 구분선
             HorizontalDivider(
-                modifier = Modifier.Companion.padding(vertical = paddingSmall),
+                modifier = Modifier.padding(vertical = paddingSmall),
                 thickness = paddingMicro,
                 color = MaterialTheme.colorScheme.outlineVariant
             )

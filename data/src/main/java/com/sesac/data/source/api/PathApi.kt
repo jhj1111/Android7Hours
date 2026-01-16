@@ -3,6 +3,7 @@ package com.sesac.data.source.api
 import com.sesac.data.dto.BookmarkResponseDTO
 import com.sesac.data.dto.CommentDTO
 import com.sesac.data.dto.CommentRequestDTO
+import com.sesac.data.dto.DiaryDTO
 import com.sesac.data.dto.LikeResponseDTO
 import com.sesac.data.dto.PathDTO
 import com.sesac.data.dto.PathCreateRequestDTO
@@ -41,18 +42,6 @@ interface PathApi {
         @Body request: PathCreateRequestDTO
     ): PathDTO
 
-    @POST("paths/{id}/bookmark_toggle/")
-    suspend fun bookmarkToggle(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int,
-    ): BookmarkResponseDTO
-
-    @POST("paths/{id}/like_toggle/")
-    suspend fun likeToggle(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int,
-    ): LikeResponseDTO
-
     @PATCH("paths/{id}/")
     suspend fun updatePath(
         @Header("Authorization") token: String,
@@ -65,6 +54,23 @@ interface PathApi {
         @Header("Authorization") token: String,
         @Path("id") id: Int
     )
+
+    @GET("paths/{pathId}/diary/")
+    suspend fun getDiary(
+        @Path("pathId") pathId: Int
+    ): DiaryDTO
+
+    @POST("paths/{id}/bookmark_toggle/")
+    suspend fun bookmarkToggle(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): BookmarkResponseDTO
+
+    @POST("paths/{id}/like_toggle/")
+    suspend fun likeToggle(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): LikeResponseDTO
 
     // ========== Comments ==========
 

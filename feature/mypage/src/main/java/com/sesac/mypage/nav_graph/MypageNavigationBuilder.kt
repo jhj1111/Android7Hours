@@ -31,7 +31,10 @@ fun NavGraphBuilder.mypageRoute(
         )
     }
     composable<MypageNavigationRoute.ManageTab> {
-        MypageManageScreen()
+        MypageManageScreen(
+            uiState = uiState,
+            viewModel = mypageViewModel,
+        )
     }
     composable<MypageNavigationRoute.FavoriteTab> {
         MypageBookmarkScreen(uiStatus = uiState, onNavigateToPathDetail = onNavigateToPathDetail)

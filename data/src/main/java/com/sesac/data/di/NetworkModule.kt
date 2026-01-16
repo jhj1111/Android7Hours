@@ -8,7 +8,6 @@ import com.sesac.data.repository.SessionRepositoryImpl
 import com.sesac.data.source.api.AuthApi
 import com.sesac.data.source.api.BookmarkApi
 import com.sesac.data.source.api.LikeApi
-import com.sesac.data.source.api.DiaryApi
 import com.sesac.data.source.api.PathApi
 import com.sesac.data.source.api.PetsApi
 import com.sesac.data.source.api.PlaceApi
@@ -36,7 +35,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = BuildConfig.SERVER_URL
-    private const val DIARY_BASE_URL = BuildConfig.DIARY_SERVER_URL // fastapi 전용
+//    private const val DIARY_BASE_URL = BuildConfig.DIARY_SERVER_URL
 
     @Provides
     @Singleton
@@ -154,25 +153,6 @@ object NetworkModule {
         @DefaultRetrofit retrofit: Retrofit
     ): LikeApi =
         retrofit.create(LikeApi::class.java)
-
-    // 👉 FastAPI Diary 전용 Retrofit 추가
-    @Provides
-    @DiaryRetrofit
-    @Singleton
-    fun provideDiaryRetrofit(
-        okHttpClient: OkHttpClient,
-        moshi: Moshi
-    ): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(DIARY_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-
-    @Provides
-    @Singleton
-    fun provideDiaryApi(@DiaryRetrofit diaryRetrofit: Retrofit): DiaryApi =
-        diaryRetrofit.create(DiaryApi::class.java)
 
 }
 

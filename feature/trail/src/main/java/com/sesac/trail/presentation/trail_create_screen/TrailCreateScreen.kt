@@ -173,7 +173,7 @@ fun TrailCreateScreen(
                         selectedPath = selected.copy(duration = duration),
                         tempPathCoords = tempPathCoords  // 파라미터 이름 명시
                     )
-                    createViewModel.savePathAndUpload(uiState, newDraft)
+                    createViewModel.postPath(uiState, newDraft)
                     createViewModel.resetCreateState()
 //                    Toast.makeText(context, "산책로가 저장되었습니다!", Toast.LENGTH_SHORT).show()
                 }

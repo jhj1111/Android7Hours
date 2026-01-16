@@ -1,5 +1,6 @@
 package com.sesac.mypage.presentation.mypage_manage
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,20 +29,17 @@ import com.sesac.common.ui.theme.paddingBottom
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.domain.model.MypageSchedule
-import org.threeten.bp.LocalDate
+import com.sesac.common.ui_state.ResponseUiState
+import com.sesac.domain.model.Diary
+import com.sesac.domain.model.Path
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleContentView(
-    modifier: Modifier = Modifier.Companion,
-    selectedDate: LocalDate,
-    schedules: List<MypageSchedule>,
+    modifier: Modifier = Modifier,
     datePickerState: DatePickerState,
-    onAddClick: () -> Unit,
-    loadDiaryFromLocal: (Long) -> Unit,
-    onDeleteClick: (MypageSchedule) -> Unit,
-    diaryMap: Map<Long, String>
+    paths: List<Path>,
+    diariesState: Map<Int, ResponseUiState<Diary>>,
 ) {
     LazyColumn(
         modifier = modifier
@@ -53,84 +51,81 @@ fun ScheduleContentView(
             ScheduleCalendarView(
                 datePickerState = datePickerState,
             )
-            Spacer(Modifier.Companion.height(paddingLarge))
+            Spacer(Modifier.height(paddingLarge))
         }
 
         item {
-            ScheduleListSectionView(
-                selectedDate = selectedDate,
-                schedules = schedules,
-                onAddClick = onAddClick
+            Text(
+                text = stringResource(R.string.mypage_manage_schedules_today),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = PrimaryPurple,
+                modifier = Modifier.padding(vertical = paddingSmall)
             )
-            Spacer(Modifier.Companion.height(paddingMedium))
         }
 
-        if (schedules.isNotEmpty()) {
-            items(schedules, key = { it.id }) { schedule ->
-
-                // ✅ 완료된 산책로 일정이면 ScheduleItemCard 렌더링하지 않음
-                if (!(schedule.isPath && schedule.isCompleted)) {
-                    ScheduleItemCardView(
-                        schedule = schedule,
-                        onDeleteClick = { onDeleteClick(schedule) }
+        if (paths.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillParentMaxWidth()
+                        .padding(vertical = paddingLarge),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "이 날짜에 산책 기록이 없습니다.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(Modifier.Companion.height(paddingSmall))
                 }
-
-                // ✅ 산책로 일정 완료하면 다이어리 보여주기
-                if (schedule.isPath && schedule.isCompleted) {
-                    val diary = diaryMap[schedule.id]
-
-                    // Room에서 메모리에 없으면 불러오기
-                    LaunchedEffect(schedule.id) {
-                        if (diary.isNullOrEmpty()) {
-                            loadDiaryFromLocal(schedule.id)
-                        }
+            }
+        } else {
+            items(paths, key = { it.id }) { path ->
+                val diaryState = diariesState[path.id]
+                when (diaryState) {
+                    is ResponseUiState.Success -> {
+                        DiaryItemCardView(
+                            pathName = path.pathName,
+                            diaryText = diaryState.result.diary ?: "작성된 일기가 없습니다."
+                        )
                     }
 
-                    Spacer(Modifier.Companion.height(paddingMedium))
-
-                    // 다이어리 섹션 헤더
-                    Text(
-                        text = stringResource(R.string.mypage_manage_schedules_today),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Companion.Bold,
-                        color = PrimaryPurple,
-                        modifier = Modifier.Companion.padding(vertical = paddingSmall)
-                    )
-
-                    if (!diary.isNullOrEmpty()) {
+                    is ResponseUiState.Error -> {
                         DiaryItemCardView(
-                            pathName = schedule.title,
-                            diaryText = diary
+                            pathName = path.pathName,
+                            diaryText = "일기를 불러오는데 실패했습니다: ${diaryState.message}"
                         )
-                    } else {
+                    }
+
+                    is ResponseUiState.Loading, is ResponseUiState.Idle, null -> {
                         CommonLoading(
                             modifier = Modifier.size(iconSize),
                             text = stringResource(R.string.mypage_manage_schedules_loading),
                             backgroundColor = PrimaryPurple,
                         )
                     }
-
-                    Spacer(Modifier.Companion.height(paddingSmall))
                 }
+                Spacer(Modifier.height(paddingSmall))
             }
         }
     }
 }
 
-@Preview
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
 @Composable
-fun ScheduleContentPreview(){
+fun ScheduleContentPreview() {
     Android7HoursTheme {
         ScheduleContentView(
-            selectedDate = LocalDate.of(2000, 2, 1),
-            schedules = listOf(MypageSchedule.Empty),
             datePickerState = rememberDatePickerState(),
-            onAddClick = {},
-            loadDiaryFromLocal = { _ -> Unit },
-            onDeleteClick = { _ -> Unit },
-            diaryMap = mapOf(Pair(0L, "")),
+            paths = listOf(
+                Path.EMPTY.copy(id = 1, pathName = "한강 공원 산책", pathComment = ""),
+                Path.EMPTY.copy(id = 2, pathName = "서울숲 강아지랑", pathComment = "")
+            ),
+            diariesState = mapOf(
+                1 to ResponseUiState.Success("Success", Diary(diary = "오늘 한강공원에 다녀왔다. 날씨가 정말 좋아서 강아지도 신나게 뛰어놀았다. 다음에도 또 와야지!")),
+                2 to ResponseUiState.Loading
+            )
         )
     }
 }

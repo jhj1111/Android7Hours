@@ -13,6 +13,8 @@ import com.sesac.domain.model.Path
 
 fun PathDTO.toPath() = Path(
     id = this.id,
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt,
     uploader = this.authUserNickname ?: "",
     pathName = this.pathName,
     pathComment = this.pathComment,
@@ -101,6 +103,7 @@ fun Path.toPathUpdateRequestDTO(): PathUpdateRequestDTO {
         isPrivate = this.isPrivate,
     )
 }
+
 fun List<PathDTO>.toPathList() =
     this.map { it.toPath() }.toList()
 
