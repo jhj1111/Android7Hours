@@ -90,7 +90,6 @@ dependencies {
 
     // --- Debug ---
     implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.compose.ui.tooling.preview)

@@ -44,6 +44,7 @@ import com.sesac.android7hours.nav_graph.AppBottomBarItem
 import com.sesac.android7hours.nav_graph.AppNavHost
 import com.sesac.auth.nav_graph.AuthNavigationRoute
 import com.sesac.common.CommonViewModel
+import com.sesac.common.FirebaseAnalyticsHelper
 import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.common.component.CommonMapView
 import com.sesac.common.service.CurrentLocationService
@@ -85,7 +86,7 @@ class MainActivity : ComponentActivity() {
         }
     }
     // firebase analystics 객체 생성
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+//    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private fun checkAndRequestPermissions() {
         val requiredPermissions = mutableListOf(
@@ -156,7 +157,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Obtain the FirebaseAnalytics instance.
-        firebaseAnalytics = Firebase.analytics
+//        firebaseAnalytics = Firebase.analytics
 
         // 앱 시작 시 권한 요청
         checkAndRequestPermissions()
@@ -181,6 +182,16 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val startDestination = HomeNavigationRoute.HomeTab
             val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+            // Add this LaunchedEffect to track screen views
+            LaunchedEffect(navController) {
+                navController.currentBackStackEntryFlow.collect { backStackEntry ->
+                    val route = backStackEntry.destination.route
+                    route?.let {
+                        FirebaseAnalyticsHelper.logScreenView(it, it)
+                    }
+                }
+            }
 
             // 서비스 실행 로직 중앙화
             LaunchedEffect(uiState, isLocationServiceRunning) {

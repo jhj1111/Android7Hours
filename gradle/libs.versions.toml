@@ -52,8 +52,10 @@ kakaoSdk = "2.20.1"
 roomKtx = "2.8.4"
 firebaseCrashlytics = "20.0.4"
 firebaseAnalytics = "23.0.0"
+firebasePerf = "21.0.5"
 googleGmsGoogleServices = "4.4.4"
 googleFirebaseCrashlytics = "3.0.6"
+googleFirebasePerf = "2.0.2"
 playServicesMeasurementApi = "23.0.0"
 
 [libraries]
@@ -115,6 +117,7 @@ kakao-sdk-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakaoSdk" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
+firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerf" }
 play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" }
 
 [plugins]
@@ -130,6 +133,7 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin",  version.ref = "secretsGradlePlugin" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }    # secret 설정 시 해당 내용 추가
+google-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "googleFirebasePerf" }
 
 [bundles]
 compose = [ "androidx-activity-compose", "androidx-compose-runtime", "androidx-compose-ui", "androidx-compose-ui-graphics", "androidx-compose-material3"]

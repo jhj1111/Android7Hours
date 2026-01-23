@@ -83,6 +83,7 @@ dependencies {
     // WebRTC
     implementation(libs.stream.webrtc.android)
 
+    implementation(libs.firebase.analytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

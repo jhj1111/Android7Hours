@@ -9,6 +9,7 @@ plugins {
 
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
+    alias(libs.plugins.google.firebase.perf)
 }
 
 android {
@@ -86,6 +87,8 @@ dependencies {
     implementation(libs.bundles.coil)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.perf)
     implementation(libs.play.services.measurement.api)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.appcompat)
