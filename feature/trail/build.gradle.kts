@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
+//    alias(libs.plugins.google.gms.google.services)
+//    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -87,6 +89,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
     // --- Debug ---
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.compose.ui.tooling.preview)

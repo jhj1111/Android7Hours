@@ -35,6 +35,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.sesac.android7hours.common.AppTopBarData
 import com.sesac.android7hours.common.topBarAsRouteName
 import com.sesac.android7hours.nav_graph.AppBottomBarItem
@@ -81,6 +84,8 @@ class MainActivity : ComponentActivity() {
             showPermissionDeniedDialog()
         }
     }
+    // firebase analystics 객체 생성
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private fun checkAndRequestPermissions() {
         val requiredPermissions = mutableListOf(
@@ -149,6 +154,9 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
 
         // 앱 시작 시 권한 요청
         checkAndRequestPermissions()
