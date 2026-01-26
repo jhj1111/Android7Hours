@@ -178,6 +178,8 @@ fun TrailMainScreen(
         onDispose {
             currentNaverMap?.locationSource = null
             locationSource.deactivate()
+            commonMapLifecycle.mapView?.onPause()
+            commonMapLifecycle.mapView?.onStop()
         }
     }
 

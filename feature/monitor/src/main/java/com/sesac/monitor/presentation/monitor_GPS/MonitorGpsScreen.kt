@@ -136,7 +136,9 @@ fun MonitorGpsScreen (
         onDispose {
             petMarker?.map = null // 지도에서 마커 제거
             petMarker = null     // Compose 상태에서 마커 참조 제거
-            Log.d("TAG-MonitorGpsScreen", "Map marker cleared on screen exit.")
+            commonMapLifecycle.mapView?.onPause()
+            commonMapLifecycle.mapView?.onStop()
+            Log.d("TAG-MonitorGpsScreen", "Map marker cleared and MapView paused on screen exit.")
         }
     }
 }
