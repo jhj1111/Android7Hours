@@ -87,8 +87,10 @@ dependencies {
     implementation(libs.bundles.coil)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.perf)
+    implementation(libs.androidx.compose.runtime.tracing)
     implementation(libs.play.services.measurement.api)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.appcompat)
