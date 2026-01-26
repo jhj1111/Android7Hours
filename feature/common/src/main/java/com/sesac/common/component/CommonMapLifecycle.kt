@@ -6,60 +6,72 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.naver.maps.map.MapView
 
+/**
+ * MapView의 생명주기(onResume, onPause 등)를 관리하는 LifecycleObserver.
+ * 이 클래스는 MapView 인스턴스를 소유하거나 파괴하지 않으며, 오직 생명주기 이벤트만 전달합니다.
+ * 싱글턴으로 관리되는 CommonMapView와 함께 사용하는 것을 전제로 합니다.
+ */
 class CommonMapLifecycle(
-    private val screenTag: String = "MapLifecycle"
+    private val screenTag: String
 ) : DefaultLifecycleObserver {
 
     private var _mapView: MapView? = null
-    val mapView: MapView?
-        get() = _mapView
+    private var currentLifecycle: Lifecycle? = null
 
-    // 🔥 이미 등록된 lifecycle을 추적하여 중복 등록 방지
-    private var registeredLifecycle: Lifecycle? = null
+    /**
+     * MapView와 Lifecycle을 이 Observer에 연결합니다.
+     */
+    fun onStart(mapView: MapView, lifecycle: Lifecycle) {
+        Log.d("[$screenTag-Lifecycle]", "onStart: linking MapView and Lifecycle.")
+        this._mapView = mapView
 
-    fun setMapView(view: MapView, lifecycle: Lifecycle) {
-        _mapView = view
-
-        // 🔥 핵심: 같은 lifecycle에 이미 등록되었으면 무시
-        if (registeredLifecycle == lifecycle) {
-            Log.d(screenTag, "✅ Already registered with this lifecycle, skipping")
-            return
+        // 다른 Lifecycle에 등록되어 있었다면 제거
+        if (currentLifecycle != lifecycle) {
+            currentLifecycle?.removeObserver(this)
         }
 
-        // 이전 lifecycle에서 제거
-        registeredLifecycle?.removeObserver(this)
-        Log.d(screenTag, "🧹 Removed observer from previous lifecycle")
-
-        // 새 lifecycle에 등록
-        registeredLifecycle = lifecycle
+        // 새 Lifecycle에 등록
+        currentLifecycle = lifecycle
         lifecycle.addObserver(this)
-        Log.d(screenTag, "✅ MapView set and registered to lifecycle")
+    }
+
+    /**
+     * Composable이 dispose될 때 호출됩니다.
+     * Lifecycle observer를 제거하여 메모리 누수를 방지합니다.
+     */
+    fun onDispose() {
+        Log.d("[$screenTag-Lifecycle]", "onDispose: unregistering lifecycle observer.")
+        currentLifecycle?.removeObserver(this)
+        currentLifecycle = null
+        _mapView = null
     }
 
     override fun onResume(owner: LifecycleOwner) {
-        Log.d(screenTag, "🟢 onResume - mapView?.onResume()")
+        Log.d("[$screenTag-Lifecycle]", "🟢 onResume")
         _mapView?.onResume()
-        _mapView?.postInvalidate()
     }
 
     override fun onPause(owner: LifecycleOwner) {
-        Log.d(screenTag, "🟡 onPause - mapView?.onPause()")
+        Log.d("[$screenTag-Lifecycle]", "🟡 onPause")
         _mapView?.onPause()
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
-        Log.d(screenTag, "💀 onDestroy - cleanup")
-        owner.lifecycle.removeObserver(this)
-        registeredLifecycle = null
-        // MapView 자체는 유지 (재사용)
-        _mapView = null
+    override fun onStart(owner: LifecycleOwner) {
+        Log.d("[$screenTag-Lifecycle]", "▶️ onStart")
+        _mapView?.onStart()
     }
 
-    // 화면 이동 시 cleanup용 함수
-    fun detachMapView() {
-        Log.d(screenTag, "🧹 detachMapView called")
-        registeredLifecycle?.removeObserver(this)
-        registeredLifecycle = null
-        _mapView = null
+    override fun onStop(owner: LifecycleOwner) {
+        Log.d("[$screenTag-Lifecycle]", "🛑 onStop")
+        _mapView?.onStop()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        Log.d("[$screenTag-Lifecycle]", "💀 onDestroy: unregistering observer.")
+        // MapView 자체를 파괴하지 않고, observer 등록만 해제합니다.
+        owner.lifecycle.removeObserver(this)
+        if (currentLifecycle == owner.lifecycle) {
+            currentLifecycle = null
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.sesac.trail.presentation.trail_main_screen
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ fun TrailMap(
     onMapReady: (NaverMap) -> Unit,
     viewModel: TrailMainViewModel,
     createViewModel: TrailCreateViewModel,
+    commonMapLifecycle: CommonMapLifecycle,
     selectedCoordSetter: (coord: LatLng?) -> Unit,
     showMemoDialogSetter: (Boolean) -> Unit,
     memoTextSetter: (String) -> Unit,
@@ -33,60 +36,65 @@ fun TrailMap(
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycle = lifecycleOwner.lifecycle
 
-    AndroidView(
-        modifier = modifier,
-        factory = { context ->
-            Log.d(SCREEN_TAG, "🏗️ AndroidView factory called")
+    Box(modifier = modifier.fillMaxSize()) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                Log.d(SCREEN_TAG, "🏗️ AndroidView factory called")
 
-            // ✅ 공통 MapView 가져오기
-            CommonMapView.getMapView(context, SCREEN_TAG).apply {
-                getMapAsync { naverMap ->
-                    Log.d(SCREEN_TAG, "✅ NaverMap 준비 완료")
+                // 1. 싱글턴 MapView 가져오기
+                val mapView = CommonMapView.getMapView(context, SCREEN_TAG)
 
-                    // ✅ 지도 기본 설정
-                    naverMap.locationSource = locationSource
-                    naverMap.locationTrackingMode = LocationTrackingMode.Follow
-                    naverMap.uiSettings.isLocationButtonEnabled = true
+                // 2. MapView와 Lifecycle 연결
+                commonMapLifecycle.onStart(mapView, lifecycle)
 
-                    // ✅ 롱클릭 리스너 (메모 추가)
-                    naverMap.setOnMapLongClickListener { _, coord ->
-                        if (isRecording) {
-                            selectedCoordSetter(coord)
-                            showMemoDialogSetter(true)
-                            memoTextSetter("")
-                            Log.d(SCREEN_TAG, "📍 메모 추가 위치: $coord")
+                mapView.apply {
+                    getMapAsync { naverMap ->
+                        try {
+                            Log.d(SCREEN_TAG, "✅ NaverMap 준비 완료")
+                            naverMap.locationSource = locationSource
+                            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                            naverMap.uiSettings.isLocationButtonEnabled = true
+                            naverMap.setOnMapLongClickListener { _, coord ->
+                                if (isRecording) {
+                                    selectedCoordSetter(coord)
+                                    showMemoDialogSetter(true)
+                                    memoTextSetter("")
+                                    Log.d(SCREEN_TAG, "📍 메모 추가 위치: $coord")
+                                }
+                            }
+                            naverMap.addOnLocationChangeListener { location ->
+                                onLocationChanged(Coord(location.latitude, location.longitude))
+                            }
+                            onMapReady(naverMap)
+                        } catch (e: Exception) {
+                            Log.e(SCREEN_TAG, "❌ NaverMap 초기화 실패: ${e.message}", e)
                         }
                     }
-
-                    // ✅ 위치 변경 리스너
-                    naverMap.addOnLocationChangeListener { location ->
-                        onLocationChanged(Coord(location.latitude, location.longitude))
-                    }
-
-                    // ✅ 지도 준비 완료 콜백
-                    onMapReady(naverMap)
                 }
+            },
+            update = { mapView ->
+                Log.d(SCREEN_TAG, "🔄 AndroidView update called - requestLayout")
+                mapView.requestLayout()
             }
-        },
-        update = { mapView ->
-            Log.d(SCREEN_TAG, "🔄 AndroidView update called - requestLayout")
-            // 🔥 화면 크기 변경 시 레이아웃 강제 갱신
-            mapView.requestLayout()
-        }
-    )
+        )
+    }
 
     /* -----------------------------------
      * 화면 이탈 시 정리
      * ----------------------------------- */
     DisposableEffect(Unit) {
-        Log.d(SCREEN_TAG, "🎬 DisposableEffect registered")
         onDispose {
-            Log.d(SCREEN_TAG, "🧹 DisposableEffect executing onDispose")
-
-            // 🔥 MapView detach
-            CommonMapView.detachMapView(SCREEN_TAG)
-
-            Log.d(SCREEN_TAG, "🧹 TrailMap disposed complete")
+            Log.d(SCREEN_TAG, "🧹 TrailMap onDispose executing")
+            try {
+                // 1. Lifecycle Observer 정리
+                commonMapLifecycle.onDispose()
+                // 2. MapView 부모 View에서 분리
+                CommonMapView.detachMapView(SCREEN_TAG)
+                Log.d(SCREEN_TAG, "🧹 TrailMap disposed complete")
+            } catch (e: Exception) {
+                Log.e(SCREEN_TAG, "❌ Dispose 실패: ${e.message}", e)
+            }
         }
     }
 }

@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.sesac.auth.nav_graph.authRoute
-import com.sesac.common.component.CommonMapLifecycle
+import com.sesac.common.component.CommonMapView
 import com.sesac.common.model.PathParceler
 import com.sesac.community.nav_graph.communityRoute
 import com.sesac.community.presentation.CommunityViewModel
@@ -48,7 +49,14 @@ fun AppNavHost(
     uiState: AuthUiState,
     onStartFollowing: (Path) -> Unit,
     permissionState: SnapshotStateMap<String, Boolean>,
-    ) {
+) {
+    // 앱 종료 시 MapView 리소스를 완전히 해제하기 위한 Effect
+    DisposableEffect(Unit) {
+        onDispose {
+            CommonMapView.clear()
+        }
+    }
+
     NavHost(
         modifier = Modifier.padding(paddingValues = paddingValues),
         navController = navController,
@@ -66,7 +74,7 @@ fun AppNavHost(
             navController = navController,
             uiState = uiState,
             onStartFollowing = onStartFollowing,
-            )
+        )
         trailNestedNavGraph(
             uiState = uiState,
             detailViewModel = trailDetailViewModel,

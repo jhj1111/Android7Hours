@@ -43,7 +43,6 @@ import com.sesac.android7hours.nav_graph.AppNavHost
 import com.sesac.auth.nav_graph.AuthNavigationRoute
 import com.sesac.common.CommonViewModel
 import com.sesac.common.component.CommonMapLifecycle
-import com.sesac.common.component.CommonMapView
 import com.sesac.common.service.CurrentLocationService
 import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.community.nav_graph.CommunityNavigationRoute
@@ -61,7 +60,6 @@ import com.sesac.trail.presentation.TrailCreateViewModel
 import com.sesac.trail.presentation.TrailDetailViewModel
 import com.sesac.trail.presentation.TrailFollowViewModel
 import com.sesac.trail.presentation.TrailMainViewModel
-//import com.sesac.trail.presentation.TrailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.sesac.common.R as cR
 
@@ -70,10 +68,6 @@ import com.sesac.common.R as cR
 class MainActivity : ComponentActivity() {
 
     private val commonViewModel: CommonViewModel by viewModels()
-
-    // ✅ [추가] Activity 생명주기에 귀속되는 MapLifecycle
-    private lateinit var commonMapLifecycle: CommonMapLifecycle
-
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
