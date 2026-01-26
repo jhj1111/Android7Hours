@@ -1,5 +1,6 @@
 package com.sesac.trail.presentation.trail_main_screen
 
+import android.os.Trace
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,6 +9,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.util.FusedLocationSource
 import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.domain.model.Coord
@@ -32,14 +34,20 @@ fun TrailMap(
     AndroidView(
         modifier = modifier,
         factory = { context ->
-            MapView(context).also { mapView ->
+            Trace.beginSection("TrailMap.AndroidView.factory")
+            val options = NaverMapOptions()
+                .useTextureView(true)
+            MapView(context, options).also { mapView ->
                 commonMapLifecycle.setMapView(mapView)
                 mapView.onCreate(null)
                 Log.d("TrailMap", "✅ MapView 생성")
+                Trace.endSection()
             }
         },
         update = { mapView ->
+            Trace.beginSection("TrailMap.AndroidView.update")
             mapView.getMapAsync { naverMap ->
+                Trace.beginSection("TrailMap.onMapReadyCallback")
                 Log.d("TrailMap", "✅ NaverMap 준비 완료")
 
                 // ✅ 지도 기본 설정
@@ -64,7 +72,9 @@ fun TrailMap(
 
                 // ✅ 지도 준비 완료 콜백
                 onMapReady(naverMap)
+                Trace.endSection()
             }
+            Trace.endSection()
         }
     )
 }
