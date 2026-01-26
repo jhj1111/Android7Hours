@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -69,6 +70,9 @@ import com.sesac.common.R as cR
 class MainActivity : ComponentActivity() {
 
     private val commonViewModel: CommonViewModel by viewModels()
+
+    // ✅ [추가] Activity 생명주기에 귀속되는 MapLifecycle
+    private lateinit var commonMapLifecycle: CommonMapLifecycle
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -150,19 +154,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 앱 시작 시 권한 요청
         checkAndRequestPermissions()
-
         enableEdgeToEdge()
+
         setContent {
             val context = LocalContext.current
+            val lifecycleOwner = LocalLifecycleOwner.current
+            val lifecycle = lifecycleOwner.lifecycle
             val uiState by commonViewModel.uiState.collectAsStateWithLifecycle()
             val isLocationServiceRunning by commonViewModel.isLocationServiceRunning.collectAsStateWithLifecycle()
 
-            // 🔹 공통 MapView + 공통 LifecycleHelper 생성 (앱 전체 공유)
-            val commonMapView = remember { CommonMapView.getMapView(context) }
-            val lifecycle = LocalLifecycleOwner.current.lifecycle
-            val commonMapLifecycle = remember { CommonMapLifecycle(lifecycle) }
+            // 🔥 더 이상 필요 없음! 각 화면에서 독립적으로 생성함
+
             val trailMainViewModel = hiltViewModel<TrailMainViewModel>()
             val trailCreateViewModel = hiltViewModel<TrailCreateViewModel>()
             val trailDetailViewModel = hiltViewModel<TrailDetailViewModel>()
@@ -196,7 +199,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
             val topBarActions = if (uiState.isLoggedIn) {
                 listOf(
                     TopBarAction.TextAction(text = uiState.user?.nickname ?: "User"),
@@ -215,6 +217,7 @@ class MainActivity : ComponentActivity() {
                     )
                 )
             }
+
             val loginRequiredScreen = listOf(
                 stringResource(cR.string.mypage_main),
                 stringResource(cR.string.mypage_myinfo),
@@ -242,6 +245,7 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(AuthNavigationRoute.LoginTab)
                     }
                 }
+
                 EntryPointScreen(
                     isRecording = isRecording,
                     navController = navController,
@@ -262,7 +266,7 @@ class MainActivity : ComponentActivity() {
                     appTopBarData = finalTopBarData,
                     appBottomBarItem = appBottomBarItem,
                     isSearchOpen = isSearchOpen,
-                    screensWithCustomTopBar = listOf(stringResource(cR.string.community)), // New parameter
+                    screensWithCustomTopBar = listOf(stringResource(cR.string.community)),
                     navHost = { paddingValues ->
                         AppNavHost(
                             trailMainViewModel = trailMainViewModel,
@@ -285,11 +289,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = startDestination,
                             uiState = uiState,
                             onStartFollowing = { path ->
-                                followViewModel.startFollowing(path) // ✅ ViewModel 함수 호출
-                                trailMainViewModel.updateIsSheetOpen(false) // 시트 닫기
+                                followViewModel.startFollowing(path)
+                                trailMainViewModel.updateIsSheetOpen(false)
                                 Log.d("Tag-MainActivity", "Following path: ${path.pathName}")
                             },
-                            commonMapLifecycle = commonMapLifecycle,
                             permissionState = permissionStates,
                         )
                     }
@@ -297,7 +300,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             val cF = currentFocus

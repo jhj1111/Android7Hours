@@ -22,7 +22,7 @@ fun NavGraphBuilder.trailRoute(
     navController: NavController,
     uiState: AuthUiState,
     onStartFollowing: (Path) -> Unit,
-    commonMapLifecycle : CommonMapLifecycle,
+
 ) {
     composable<TrailNavigationRoute.TrailMainTab> {
         TrailMainScreen(
@@ -32,7 +32,6 @@ fun NavGraphBuilder.trailRoute(
             placeViewModel = placeViewModel,
             navController = navController,
             uiState = uiState,
-            commonMapLifecycle = commonMapLifecycle,
             onStartFollowing = onStartFollowing,
         )
     }

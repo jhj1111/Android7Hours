@@ -35,7 +35,6 @@ import com.sesac.monitor.presentation.monitor_GPS.MonitorGpsScreen
 fun MonitoringDashboard(
     authorUiState: AuthUiState,
     viewModel: MonitorViewModel,
-    commonMapLifecycle: CommonMapLifecycle,
 ) {
     val webCam = stringResource(R.string.monitor_button_webcam)
     val GPS = stringResource(R.string.monitor_button_GPS)
@@ -87,7 +86,6 @@ fun MonitoringDashboard(
             GPS -> {
                 MonitorGpsScreen(
                     petId = currentPet.id,
-                    commonMapLifecycle = commonMapLifecycle
                 )
             }
 

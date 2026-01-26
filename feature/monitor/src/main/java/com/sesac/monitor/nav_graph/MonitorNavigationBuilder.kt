@@ -9,12 +9,10 @@ import com.sesac.monitor.presentation.monitor_main.MonitorMainScreen
 
 fun NavGraphBuilder.monitorRoute(
     authorUiState: AuthUiState,
-    commonMapLifecycle: CommonMapLifecycle,
 ) {
     composable<MonitorNavigationRoute.MainTab> {
         MonitorMainScreen(
             authorUiState = authorUiState,
-            commonMapLifecycle = commonMapLifecycle,
         )
     }
 }

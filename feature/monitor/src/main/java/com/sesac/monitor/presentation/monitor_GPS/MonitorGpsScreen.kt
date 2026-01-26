@@ -30,113 +30,108 @@ import com.sesac.common.utils.EffectPauseStop
 import com.sesac.monitor.presentation.MonitorViewModel
 import com.naver.maps.geometry.LatLng
 import com.sesac.common.ui_state.ResponseUiState // NEW IMPORT
+import kotlinx.coroutines.delay
 
+private const val SCREEN_TAG = "MonitorGpsScreen"
 
 @Composable
 fun MonitorGpsScreen (
     modifier: Modifier = Modifier,
     viewModel: MonitorViewModel = hiltViewModel(),
-    commonMapLifecycle: CommonMapLifecycle,
-    petId: Int, // NEW ARGUMENT: petId
+    petId: Int,
 ) {
-    val monitoredPetState by viewModel.monitoredPet.collectAsStateWithLifecycle() // NEW STATE
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val lifecycleState by lifecycle.currentStateAsState()
-    var currentNaverMap by remember { mutableStateOf<NaverMap?>(null) } // To hold NaverMap instance
-    var petMarker by remember { mutableStateOf<Marker?>(null) } // NEW: To manage the pet's marker
+    Log.d(SCREEN_TAG, "🔴 MonitorGpsScreen composing...")
 
-    // NEW: Start monitoring the pet
+    val monitoredPetState by viewModel.monitoredPet.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycle = lifecycleOwner.lifecycle
 
-    LaunchedEffect(true) {
-        viewModel.startMonitoringPetLocation(petId)
-    }
+    Log.d(SCREEN_TAG, "📋 lifecycle owner: ${lifecycleOwner.javaClass.simpleName}")
 
-    // NEW: Update map marker when pet location changes
-    LaunchedEffect(monitoredPetState, currentNaverMap) {
-        Log.d("TAG-MonitorGpsScreen", "pet state : $monitoredPetState")
-        val naverMap = currentNaverMap ?: return@LaunchedEffect
-        when (val state = monitoredPetState) {
-            is ResponseUiState.Success -> {
-                val pet = state.result
-                pet.lastLocation?.let { petLocation ->
-                    val latLng = LatLng(petLocation.latitude, petLocation.longitude)
+    var currentNaverMap by remember { mutableStateOf<NaverMap?>(null) }
+    var petMarker by remember { mutableStateOf<Marker?>(null) }
+    var isMapReady by remember { mutableStateOf(false) }
 
-                    // Clear previous marker if exists
-                    petMarker?.map = null
-
-                    // Create and set new marker
-                    val newMarker = Marker().apply {
-                        position = latLng
-                        captionText = pet.name
-                        map = naverMap
-                    }
-                    petMarker = newMarker // Store reference to the new marker
-
-                    // Move camera to pet's location
-                    Log.d("TAG-MonitorGpsScreen", "camera positon : $latLng")
-                    val cameraUpdate = CameraUpdate.scrollTo(latLng)
-                    naverMap.moveCamera(cameraUpdate)
-                }
-            }
-            is ResponseUiState.Error -> {
-                Log.e("MonitorGpsScreen", "Error monitoring pet: ${state.message}")
-                // Optionally show a Toast or error message
-            }
-            else -> { Log.e("MonitorGpsScreen", "Unknown Error monitoring pet: $state") }
+    LaunchedEffect(petId, isMapReady) {
+        if (isMapReady) {
+            delay(300)
+            Log.d(SCREEN_TAG, "🚀 Map ready → start monitoring")
+            viewModel.startMonitoringPetLocation(petId)
         }
     }
 
+    LaunchedEffect(monitoredPetState) {
+        val naverMap = currentNaverMap ?: return@LaunchedEffect
 
-    // 🔴 중요!! 화면이 Pause 또는 Stop 될 때 MapView 반응하도록 설정
-    lifecycle.EffectPauseStop {
-        commonMapLifecycle.mapView?.onPause()
-        commonMapLifecycle.mapView?.onStop()
-        Log.d("Tag-MonitorGpsScreen", "📌 Monitor GPS Paused → MapView pause/stop 호출됨")
+        when (val state = monitoredPetState) {
+            is ResponseUiState.Success -> {
+                state.result.lastLocation?.let { location ->
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    petMarker?.map = null
+
+                    petMarker = Marker().apply {
+                        position = latLng
+                        captionText = state.result.name
+                        map = naverMap
+                    }
+
+                    Log.d(SCREEN_TAG, "📍 camera move → $latLng")
+                    delay(100)
+                    naverMap.moveCamera(CameraUpdate.scrollTo(latLng))
+                }
+            }
+
+            is ResponseUiState.Error -> {
+                Log.e(SCREEN_TAG, "❌ Monitoring error: ${state.message}")
+            }
+
+            is ResponseUiState.Idle,
+            is ResponseUiState.Loading -> Unit
+        }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        key(lifecycleState) {
-            if (lifecycleState.isAtLeast(Lifecycle.State.CREATED)) {
-                AndroidView(
-                    modifier = modifier.fillMaxSize(),
-                    factory = { context ->
-                        CommonMapView.getMapView(context).apply {
-                            // 🔹 이미 부모가 붙어있다면 제거
-                            (parent as? ViewGroup)?.removeView(this)
+    Box(modifier = Modifier.fillMaxSize()) {
+        key(SCREEN_TAG) {
+            AndroidView(
+                modifier = modifier.fillMaxSize(),
+                factory = { context ->
+                    Log.d(SCREEN_TAG, "🏗️ AndroidView factory START")
 
-                            // 🔵 MapView 공유 객체에 등록
-                            commonMapLifecycle.setMapView(this)
+                    CommonMapView.getMapView(context, SCREEN_TAG).apply {
+                        getMapAsync { naverMap ->
+                            Log.d(SCREEN_TAG, "✅ Map ready")
+                            currentNaverMap = naverMap
 
-                            // 🔵 Compose에서 MapView 재사용 시 resume/start 호출
-                            this.onStart()
-                            this.onResume()
-
-                            getMapAsync { naverMap ->
-                                currentNaverMap = naverMap // Store NaverMap instance
-
-                                // UI
-                                naverMap.uiSettings.isLocationButtonEnabled = true
-                                naverMap.uiSettings.isZoomControlEnabled = false
-
-                                Log.d("Tag-MonitorGpsScreen", "gps 지도 준비 완료")
+                            naverMap.uiSettings.apply {
+                                isLocationButtonEnabled = true
+                                isZoomControlEnabled = false
                             }
+
+                            isMapReady = true
                         }
-                    },
-                    update = { view ->
-                        view.requestLayout()
                     }
-                )
-            }
+                },
+                update = {
+                    Log.d(SCREEN_TAG, "🔄 AndroidView update - requestLayout")
+                    // 🔥 화면 크기 변경 시 레이아웃 강제 갱신
+                    it.requestLayout()
+                }
+            )
         }
     }
 
     DisposableEffect(Unit) {
+        Log.d(SCREEN_TAG, "🎬 DisposableEffect registered")
         onDispose {
-            petMarker?.map = null // 지도에서 마커 제거
-            petMarker = null     // Compose 상태에서 마커 참조 제거
-            Log.d("TAG-MonitorGpsScreen", "Map marker cleared on screen exit.")
+            Log.d(SCREEN_TAG, "🧹 DisposableEffect executing onDispose")
+            petMarker?.map = null
+            petMarker = null
+            isMapReady = false
+            currentNaverMap = null
+
+            CommonMapView.detachMapView(SCREEN_TAG)
+
+            Log.d(SCREEN_TAG, "🧹 MonitorGpsScreen disposed complete")
         }
     }
 }

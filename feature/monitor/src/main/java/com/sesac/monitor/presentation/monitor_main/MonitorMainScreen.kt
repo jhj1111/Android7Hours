@@ -27,7 +27,6 @@ fun MonitorMainScreen(
     modifier: Modifier = Modifier,
     authorUiState: AuthUiState,
     viewModel: MonitorViewModel = hiltViewModel(),
-    commonMapLifecycle: CommonMapLifecycle,
 ) {
     val monitorUiState by viewModel.monitorUiState.collectAsStateWithLifecycle()
 
@@ -86,7 +85,6 @@ fun MonitorMainScreen(
                     MonitoringDashboard(
                         authorUiState = authorUiState,
                         viewModel = viewModel,
-                        commonMapLifecycle = commonMapLifecycle,
                     )
                 }
             }

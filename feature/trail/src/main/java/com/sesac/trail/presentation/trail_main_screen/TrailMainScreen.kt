@@ -63,7 +63,7 @@ fun TrailMainScreen(
     placeViewModel: PlaceViewModel = hiltViewModel(),
     navController: NavController,
     uiState: AuthUiState,
-    commonMapLifecycle: CommonMapLifecycle,
+
     onStartFollowing: (Path) -> Unit,
 ) {
     val context = LocalContext.current
@@ -168,12 +168,6 @@ fun TrailMainScreen(
         }
     }
 
-    // effectPauseStop 적용
-    lifecycle.EffectPauseStop {
-        commonMapLifecycle.mapView?.onPause()
-        commonMapLifecycle.mapView?.onStop()
-    }
-
     DisposableEffect(Unit) {
         onDispose {
             currentNaverMap?.locationSource = null
@@ -234,7 +228,6 @@ fun TrailMainScreen(
             if (lifecycleState.isAtLeast(Lifecycle.State.CREATED)) {
                 TrailMap(
                     modifier = Modifier.fillMaxSize(),
-                    commonMapLifecycle = commonMapLifecycle,
                     locationSource = locationSource,
                     isRecording = isRecording,
                     onMapReady = { naverMap ->

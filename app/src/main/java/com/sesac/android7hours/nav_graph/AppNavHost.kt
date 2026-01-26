@@ -47,7 +47,6 @@ fun AppNavHost(
     startDestination: Any,
     uiState: AuthUiState,
     onStartFollowing: (Path) -> Unit,
-    commonMapLifecycle: CommonMapLifecycle,
     permissionState: SnapshotStateMap<String, Boolean>,
     ) {
     NavHost(
@@ -67,7 +66,6 @@ fun AppNavHost(
             navController = navController,
             uiState = uiState,
             onStartFollowing = onStartFollowing,
-            commonMapLifecycle = commonMapLifecycle,
             )
         trailNestedNavGraph(
             uiState = uiState,
@@ -83,7 +81,6 @@ fun AppNavHost(
 
         monitorRoute(
             authorUiState = uiState,
-            commonMapLifecycle = commonMapLifecycle,
         )
         mypageRoute(
             mypageViewModel = mypageViewModel,
