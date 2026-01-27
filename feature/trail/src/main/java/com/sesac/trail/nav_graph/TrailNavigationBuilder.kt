@@ -3,6 +3,7 @@ package com.sesac.trail.nav_graph
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.compose.runtime.remember
 import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.domain.model.Path
 import com.sesac.common.ui_state.AuthUiState
@@ -22,9 +23,10 @@ fun NavGraphBuilder.trailRoute(
     navController: NavController,
     uiState: AuthUiState,
     onStartFollowing: (Path) -> Unit,
-    commonMapLifecycle : CommonMapLifecycle,
+
 ) {
     composable<TrailNavigationRoute.TrailMainTab> {
+        val commonMapLifecycle = remember { CommonMapLifecycle("TrailMainScreen") }
         TrailMainScreen(
             mainViewModel = mainViewModel,
             createViewModel = createViewModel,
@@ -32,8 +34,8 @@ fun NavGraphBuilder.trailRoute(
             placeViewModel = placeViewModel,
             navController = navController,
             uiState = uiState,
-            commonMapLifecycle = commonMapLifecycle,
             onStartFollowing = onStartFollowing,
+            commonMapLifecycle = commonMapLifecycle,
         )
     }
     composable<TrailNavigationRoute.TrailCreateTab> {
@@ -45,12 +47,4 @@ fun NavGraphBuilder.trailRoute(
 //            uiState = uiState
         )
     }
-//    composable<TrailNavigationRoute.TrailDetailTab> {
-//        TrailDetailScreen(
-//            viewModel = trailViewModel,
-//            uiState = uiState,
-//            navController = navController,
-//            onStartFollowing = onStartFollowing,
-//        )
-//    }
 }

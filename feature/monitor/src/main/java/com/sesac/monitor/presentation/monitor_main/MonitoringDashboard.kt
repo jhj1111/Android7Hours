@@ -87,7 +87,7 @@ fun MonitoringDashboard(
             GPS -> {
                 MonitorGpsScreen(
                     petId = currentPet.id,
-                    commonMapLifecycle = commonMapLifecycle
+                    commonMapLifecycle = commonMapLifecycle,
                 )
             }
 

@@ -31,16 +31,14 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
-import com.sesac.common.component.CommonMapLifecycle
-import com.naver.maps.map.CameraUpdate
 import com.sesac.common.ui.theme.paddingLarge
 import kotlinx.coroutines.delay
 import com.sesac.domain.model.Coord
-import com.sesac.common.utils.EffectPauseStop
 import com.sesac.domain.model.Path
 import com.sesac.trail.nav_graph.TrailNavigationRoute
 import androidx.compose.runtime.DisposableEffect
 import com.naver.maps.map.overlay.PolylineOverlay
+import com.sesac.common.component.CommonMapLifecycle
 import com.sesac.common.model.toPathParceler
 import com.sesac.common.ui_state.AuthUiState
 import com.sesac.trail.nav_graph.NestedNavigationRoute
@@ -168,18 +166,10 @@ fun TrailMainScreen(
         }
     }
 
-    // effectPauseStop 적용
-    lifecycle.EffectPauseStop {
-        commonMapLifecycle.mapView?.onPause()
-        commonMapLifecycle.mapView?.onStop()
-    }
-
     DisposableEffect(Unit) {
         onDispose {
             currentNaverMap?.locationSource = null
             locationSource.deactivate()
-            commonMapLifecycle.mapView?.onPause()
-            commonMapLifecycle.mapView?.onStop()
         }
     }
 
@@ -236,7 +226,6 @@ fun TrailMainScreen(
             if (lifecycleState.isAtLeast(Lifecycle.State.CREATED)) {
                 TrailMap(
                     modifier = Modifier.fillMaxSize(),
-                    commonMapLifecycle = commonMapLifecycle,
                     locationSource = locationSource,
                     isRecording = isRecording,
                     onMapReady = { naverMap ->
@@ -254,6 +243,7 @@ fun TrailMainScreen(
                     },
                     viewModel = mainViewModel,
                     createViewModel = createViewModel,
+                    commonMapLifecycle = commonMapLifecycle,
                     selectedCoordSetter = { selectedCoord = it },
                     showMemoDialogSetter = { showMemoDialog = it },
                     memoTextSetter = { memoText = it },

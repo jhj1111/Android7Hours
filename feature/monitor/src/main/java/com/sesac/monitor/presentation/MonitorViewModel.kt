@@ -204,6 +204,8 @@ class MonitorViewModel @Inject constructor(
 
     fun startMonitoringPetLocation(petId: Int) {
         viewModelScope.launch {
+            // 🔑 WebRTC 초기화를 지연시킴
+            delay(500)  // 지도가 먼저 렌더링되도록
             _monitoredPet.value = ResponseUiState.Loading
             while (true) {
                 petUseCase.getPetInfoUseCase(petId).collectLatest { result ->

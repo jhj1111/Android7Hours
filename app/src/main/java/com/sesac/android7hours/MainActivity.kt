@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -35,9 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
 import com.sesac.android7hours.common.AppTopBarData
 import com.sesac.android7hours.common.topBarAsRouteName
 import com.sesac.android7hours.nav_graph.AppBottomBarItem
@@ -46,7 +44,6 @@ import com.sesac.auth.nav_graph.AuthNavigationRoute
 import com.sesac.common.CommonViewModel
 import com.sesac.common.FirebaseAnalyticsHelper
 import com.sesac.common.component.CommonMapLifecycle
-import com.sesac.common.component.CommonMapView
 import com.sesac.common.service.CurrentLocationService
 import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.community.nav_graph.CommunityNavigationRoute
@@ -85,8 +82,6 @@ class MainActivity : ComponentActivity() {
             showPermissionDeniedDialog()
         }
     }
-    // firebase analystics 객체 생성
-//    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private fun checkAndRequestPermissions() {
         val requiredPermissions = mutableListOf(
@@ -156,22 +151,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Obtain the FirebaseAnalytics instance.
-//        firebaseAnalytics = Firebase.analytics
-
         // 앱 시작 시 권한 요청
         checkAndRequestPermissions()
 
         enableEdgeToEdge()
         setContent {
             val context = LocalContext.current
+            val lifecycleOwner = LocalLifecycleOwner.current
+            val lifecycle = lifecycleOwner.lifecycle
             val uiState by commonViewModel.uiState.collectAsStateWithLifecycle()
             val isLocationServiceRunning by commonViewModel.isLocationServiceRunning.collectAsStateWithLifecycle()
 
-            // 🔹 공통 MapView + 공통 LifecycleHelper 생성 (앱 전체 공유)
-            val commonMapView = remember { CommonMapView.getMapView(context) }
-            val lifecycle = LocalLifecycleOwner.current.lifecycle
-            val commonMapLifecycle = remember { CommonMapLifecycle(lifecycle) }
+            // 🔥 더 이상 필요 없음! 각 화면에서 독립적으로 생성함
+
             val trailMainViewModel = hiltViewModel<TrailMainViewModel>()
             val trailCreateViewModel = hiltViewModel<TrailCreateViewModel>()
             val trailDetailViewModel = hiltViewModel<TrailDetailViewModel>()
@@ -215,7 +207,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
             val topBarActions = if (uiState.isLoggedIn) {
                 listOf(
                     TopBarAction.TextAction(text = uiState.user?.nickname ?: "User"),
@@ -234,6 +225,7 @@ class MainActivity : ComponentActivity() {
                     )
                 )
             }
+
             val loginRequiredScreen = listOf(
                 stringResource(cR.string.mypage_main),
                 stringResource(cR.string.mypage_myinfo),
@@ -261,6 +253,7 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(AuthNavigationRoute.LoginTab)
                     }
                 }
+
                 EntryPointScreen(
                     isRecording = isRecording,
                     navController = navController,
@@ -281,7 +274,7 @@ class MainActivity : ComponentActivity() {
                     appTopBarData = finalTopBarData,
                     appBottomBarItem = appBottomBarItem,
                     isSearchOpen = isSearchOpen,
-                    screensWithCustomTopBar = listOf(stringResource(cR.string.community)), // New parameter
+                    screensWithCustomTopBar = listOf(stringResource(cR.string.community)),
                     navHost = { paddingValues ->
                         AppNavHost(
                             trailMainViewModel = trailMainViewModel,
@@ -308,7 +301,6 @@ class MainActivity : ComponentActivity() {
                                 trailMainViewModel.updateIsSheetOpen(false) // 시트 닫기
                                 Log.d("Tag-MainActivity", "Following path: ${path.pathName}")
                             },
-                            commonMapLifecycle = commonMapLifecycle,
                             permissionState = permissionStates,
                         )
                     }
@@ -316,7 +308,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             val cF = currentFocus
