@@ -10,7 +10,7 @@ fun fixImageUrl(url: String?): String? {
     serverIp = serverIp.replace("http://", "")
     serverIp = serverIp.replace(":8000/", "")
 //    Log.d("TAG-fixImageUrl", "serverIp : $serverIp")
-    Log.d("TAG-fixImageUrl", "url : $url")
+//    Log.d("TAG-fixImageUrl", "url : $url")
 
     return url.replace(Regex("(http://|https://)(127\\.0\\.0\\.1|localhost|minio)"), "$1$serverIp")
 }

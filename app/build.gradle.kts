@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.secrets.gradle.plugin)  // secret 설정 시 해당 내용 추가
+
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
+    alias(libs.plugins.google.firebase.perf)
 }
 
 android {
@@ -83,6 +87,11 @@ dependencies {
     implementation(libs.bundles.coil)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.perf)
+    implementation(libs.androidx.compose.runtime.tracing)
+    implementation(libs.play.services.measurement.api)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

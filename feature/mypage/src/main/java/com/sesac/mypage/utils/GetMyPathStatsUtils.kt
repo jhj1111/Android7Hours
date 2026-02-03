@@ -35,7 +35,7 @@ fun getMyPathStatsUtils(stats: List<BookmarkedPath>): List<MyPathStats> {
     val totalCount = stats.size
 
     val values = listOf(
-        String.format(Locale.US, "%.1f km", totalDistance),
+        String.format(Locale.KOREA, "%.1f km", totalDistance),
         "${totalDuration}분",
         "${totalCount}회"
     )
@@ -56,7 +56,7 @@ fun getMyPathStatsUtils(stats: List<Path>): List<MyPathStats> {
     val totalCount = stats.size
 
     val values = listOf(
-        String.format(Locale.US, "%.1f km", totalDistance),
+        String.format(Locale.KOREA, "%.1f km", totalDistance),
         "${totalDuration/60}분",
         "${totalCount}회"
     )

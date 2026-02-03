@@ -5,42 +5,35 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sesac.domain.model.BookmarkedItem
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.model.BookmarkedPath
 import com.sesac.domain.model.BookmarkedPost
 import com.sesac.domain.model.Breed
+import com.sesac.domain.model.Diary
 import com.sesac.domain.model.InvitationCode
-import com.sesac.domain.model.MypageSchedule
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.Pet
-import com.sesac.domain.model.Post
-import com.sesac.domain.model.User
 import com.sesac.domain.result.AuthResult
-import com.sesac.domain.result.AuthUiState
-import com.sesac.domain.result.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.usecase.bookmark.BookmarkUseCase
-import com.sesac.domain.usecase.mypage.DiaryUseCase
+import com.sesac.domain.usecase.diary.DiaryUseCase
 import com.sesac.domain.usecase.mypage.MypageUseCase
 import com.sesac.domain.usecase.path.PathUseCase
 import com.sesac.domain.usecase.pet.PetUseCase
-import com.sesac.domain.usecase.post.PostUseCase
 import com.sesac.domain.usecase.session.SessionUseCase
 import com.sesac.domain.usecase.user.UserUseCase
 import com.sesac.mypage.model.MyPathStats
 import com.sesac.mypage.utils.getMyPathStatsUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +45,6 @@ class MypageViewModel @Inject constructor(
     private val pathUseCase: PathUseCase,
     private val diaryUseCase: DiaryUseCase,
     private val mypageUseCase: MypageUseCase,
-    private val postUseCase: PostUseCase,
 ) : ViewModel() {
     val tabLabels = listOf("산책로", "커뮤니티")
     private val _activeFilter = MutableStateFlow<String>(tabLabels[0])
@@ -90,13 +82,10 @@ class MypageViewModel @Inject constructor(
     val bookmarkedPosts = _bookmarkedPosts.asStateFlow()
 
     // MypageManageScreen
-    private val _schedules = MutableStateFlow<List<MypageSchedule>>(emptyList())
-    val schedules get() = _schedules.asStateFlow()
-
-    // 다이어리 상태 - Map으로 여러 일정의 다이어리 관리
-    private var currentScheduleId: Long? = null
-    private val _diaryMap = MutableStateFlow<Map<Long, String>>(emptyMap())
-    val diaryMap: StateFlow<Map<Long, String>> = _diaryMap.asStateFlow()
+    private val _myPathList = MutableStateFlow<ResponseUiState<List<Path>>>(ResponseUiState.Idle)
+    val myPathList = _myPathList.asStateFlow()
+    private val _diariesState = MutableStateFlow<Map<Int, ResponseUiState<Diary>>>(emptyMap())
+    val diariesState = _diariesState.asStateFlow()
 
     // Invite Code
     private val _invitationCode = MutableStateFlow<ResponseUiState<InvitationCode>>(ResponseUiState.Idle)
@@ -106,10 +95,10 @@ class MypageViewModel @Inject constructor(
         _activeFilter.value = filter
     }
 
-    fun generateInvitationCode() {
+    fun generateInvitationCode(uiState: AuthUiState) {
         viewModelScope.launch {
             _invitationCode.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _invitationCode.value = ResponseUiState.Error("로그인이 필요합니다.")
                 return@launch
@@ -133,6 +122,25 @@ class MypageViewModel @Inject constructor(
 
     fun resetInvitationCodeState() {
         _invitationCode.value = ResponseUiState.Idle
+    }
+
+    fun getMyPathList(uiState: AuthUiState) {
+        viewModelScope.launch {
+            _myPathList.value = ResponseUiState.Loading
+            pathUseCase.getMyPaths(uiState.token!!)
+                .catch { e ->
+                    _myPathList.value = ResponseUiState.Error(e.message ?: "알 수 없는 오류가 발생했습니다.")
+                }
+                .collectLatest { result ->
+                    when (result) {
+                        is AuthResult.Success -> {
+                            _myPathList.value = ResponseUiState.Success("산책로 불러오기 성공", result.resultData)
+                        }
+                        is AuthResult.NetworkError -> _selectedPath.value = ResponseUiState.Error(result.exception.message ?: "unknown")
+                        else -> {}
+                    }
+                }
+        }
     }
 
     fun getPathInfo(pathId: Int) {
@@ -159,6 +167,37 @@ class MypageViewModel @Inject constructor(
         _selectedPath.value = ResponseUiState.Idle
     }
 
+    fun getDiaries(pathIds: List<Int>) {
+        _diariesState.value = emptyMap()
+
+        val loadingMap = pathIds.associateWith { ResponseUiState.Loading }
+        _diariesState.value = loadingMap
+
+        viewModelScope.launch {
+            pathIds.forEach { pathId ->
+                launch {
+                    diaryUseCase.getDiaryUseCase(pathId)
+                        .catch { e ->
+                            _diariesState.value = _diariesState.value.toMutableMap().also {
+                                it[pathId] = ResponseUiState.Error(e.message ?: "알 수 없는 오류가 발생했습니다.")
+                            }
+                        }
+                        .collect { result ->
+                            val newState = when (result) {
+                                is AuthResult.Success -> ResponseUiState.Success("다이어리 로딩 성공", result.resultData)
+                                is AuthResult.NetworkError -> ResponseUiState.Error(result.exception.message ?: "네트워크 오류")
+                                is AuthResult.Loading -> ResponseUiState.Loading
+                                is AuthResult.NoConstructor -> ResponseUiState.Idle
+                            }
+                            _diariesState.value = _diariesState.value.toMutableMap().also {
+                                it[pathId] = newState
+                            }
+                        }
+                }
+            }
+        }
+    }
+
     fun loadPetForEditing(petId: Int) {
         val petToEdit = _userPets.value.find { it.id == petId }
         _selectedPet.value = petToEdit
@@ -168,9 +207,9 @@ class MypageViewModel @Inject constructor(
         _selectedPet.value = null
     }
 
-    fun getAllUserPets() {
+    fun getAllUserPets(uiState: AuthUiState) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first() ?: return@launch
+            val token = uiState.token ?: return@launch
             petUseCase.getUserPetsUseCase(token).collectLatest { result ->
                 if (result is AuthResult.Success) {
                     _userPets.value = result.resultData
@@ -191,10 +230,10 @@ class MypageViewModel @Inject constructor(
         }
     }
 
-    fun addPet(context: Context, pet: Pet, imageUri: Uri?) {
+    fun addPet(uiState: AuthUiState, context: Context, pet: Pet, imageUri: Uri?) {
         viewModelScope.launch {
             _addPetState.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _addPetState.value = ResponseUiState.Error("로그인이 필요합니다.")
                 return@launch
@@ -207,12 +246,11 @@ class MypageViewModel @Inject constructor(
             petUseCase.postUserPetUseCase(token, imagePart, pet).collectLatest { result ->
                 when (result) {
                     is AuthResult.Success -> {
-                        getAllUserPets()
+                        getAllUserPets(uiState)
                         _addPetState.value = ResponseUiState.Success("반려견이 추가되었습니다.", Unit)
                     }
                     is AuthResult.NetworkError -> {
-                        _addPetState.value =
-                            ResponseUiState.Error(result.exception.message ?: "오류가 발생했습니다.")
+                        _addPetState.value = ResponseUiState.Error(result.exception.message ?: "오류가 발생했습니다.")
                     }
                     else -> {
                         _addPetState.value = ResponseUiState.Error("알 수 없는 오류가 발생했습니다.")
@@ -222,10 +260,10 @@ class MypageViewModel @Inject constructor(
         }
     }
 
-    fun updatePet(context: Context, pet: Pet, imageUri: Uri?) {
+    fun updatePet(uiState: AuthUiState, context: Context, pet: Pet, imageUri: Uri?) {
         viewModelScope.launch {
             _updatePetState.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _updatePetState.value = ResponseUiState.Error("로그인이 필요합니다.")
                 return@launch
@@ -238,7 +276,7 @@ class MypageViewModel @Inject constructor(
             petUseCase.updatePetUseCase(token, pet.id, imagePart, pet).collectLatest { result ->
                 when (result) {
                     is AuthResult.Success -> {
-                        getAllUserPets()
+                        getAllUserPets(uiState)
                         _updatePetState.value = ResponseUiState.Success("반려견 정보가 수정되었습니다.", Unit)
                     }
                     else -> _updatePetState.value = ResponseUiState.Error("수정에 실패했습니다.")
@@ -265,10 +303,10 @@ class MypageViewModel @Inject constructor(
         }
     }
 
-    fun deletePet(petId: Int) {
+    fun deletePet(uiState: AuthUiState, petId: Int) {
         viewModelScope.launch {
             _deletePetState.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _deletePetState.value = ResponseUiState.Error("로그인이 필요합니다.")
                 return@launch
@@ -277,7 +315,7 @@ class MypageViewModel @Inject constructor(
             petUseCase.deletePetUseCase(token, petId).collectLatest { result ->
                 when (result) {
                     is AuthResult.Success -> {
-                        getAllUserPets()
+                        getAllUserPets(uiState)
                         _deletePetState.value = ResponseUiState.Success("반려견이 삭제되었습니다.", Unit)
                     }
 
@@ -300,10 +338,12 @@ class MypageViewModel @Inject constructor(
         _deletePetState.value = ResponseUiState.Idle
     }
 
-    fun getMyBookmarks(token: String?) {
+    fun getMyBookmarks(uiState: AuthUiState) {
         viewModelScope.launch {
+            val token = uiState.token
             _bookmarkedPaths.value = ResponseUiState.Loading
             _bookmarkedPosts.value = ResponseUiState.Loading
+
             if (token == null) {
                 val error = "로그인이 필요합니다."
                 _bookmarkedPaths.value = ResponseUiState.Error(error)
@@ -341,7 +381,7 @@ class MypageViewModel @Inject constructor(
     fun getStats(uiState: AuthUiState) {
         viewModelScope.launch {
             _stats.value = ResponseUiState.Loading
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             if (token == null) {
                 _stats.value = ResponseUiState.Error("로그인이 필요합니다.")
                 return@launch
@@ -374,8 +414,10 @@ class MypageViewModel @Inject constructor(
         }
     }
 
-    fun toggleBookmark(token: String?, id: Int, type: BookmarkType) {
+    fun toggleBookmark(uiState: AuthUiState, id: Int, type: BookmarkType) {
         viewModelScope.launch {
+            val token = uiState.token
+
             if (token == null) {
                 Log.e("MypageViewModel", "Toggle bookmark failed: token is null")
                 return@launch
@@ -384,7 +426,7 @@ class MypageViewModel @Inject constructor(
                 .collectLatest { bookmarkResponse ->
                     if (bookmarkResponse is AuthResult.Success) {
                         // Refresh the list on success
-                        getMyBookmarks(token)
+                        getMyBookmarks(uiState)
                     } else if (bookmarkResponse is AuthResult.NetworkError) {
                         Log.e(
                             "MypageViewModel",
@@ -394,178 +436,6 @@ class MypageViewModel @Inject constructor(
                 }
         }
     }
-
-    fun getSchedules(date: LocalDate) {
-        viewModelScope.launch {
-            mypageUseCase.getSchedulesUseCase(date)
-                .catch { e -> Log.e("MypageViewModel", "일정 로드 실패", e) }
-                .collectLatest { scheduleList ->
-                    _schedules.value = scheduleList
-
-                    // 완료된 산책로 일정의 다이어리 로드
-                    scheduleList
-                        .filter { it.isPath && it.isCompleted }
-                        .forEach { schedule ->
-                            if (!_diaryMap.value.containsKey(schedule.id)) {
-                                loadDiaryFromLocal(schedule.id)
-                            }
-                        }
-                }
-        }
-    }
-
-    // Room에서 다이어리 불러와 메모리에 저장
-    fun loadDiaryFromLocal(scheduleId: Long) {
-        viewModelScope.launch {
-            try {
-                Log.d("MypageViewModel", "다이어리 로드 시도: scheduleId=$scheduleId")
-                val diary = mypageUseCase.getDiaryFromLocalUseCase(scheduleId)
-                if (diary != null) {
-                    _diaryMap.value = _diaryMap.value + (scheduleId to diary)
-                    Log.d("MypageViewModel", "다이어리 로드 성공: scheduleId=$scheduleId, diary=$diary")
-                } else {
-                    Log.d("MypageViewModel", "다이어리 없음: scheduleId=$scheduleId")
-                }
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "다이어리 로드 실패: scheduleId=$scheduleId", e)
-            }
-        }
-    }
-
-    // 산책로 일정 완료 후 다이어리 생성 및 저장
-    private fun loadPathAndGenerateDiary(scheduleId: Long, pathId: Int) {
-        viewModelScope.launch {
-            try {
-                pathUseCase.getPathById(pathId).collectLatest { result ->
-                    if (result is AuthResult.Success) {
-                        val path = result.resultData
-                        generateAndSaveDiary(scheduleId, pathId, path)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "Path 로드 실패", e)
-            }
-        }
-    }
-
-    private fun generateAndSaveDiary(scheduleId: Long, pathId: Int, path: Path) {
-        viewModelScope.launch {
-            try {
-                val diary = diaryUseCase(path)
-                mypageUseCase.saveDiaryToLocalUseCase(scheduleId, pathId, diary.diary)
-                // ✅ Room뿐만 아니라 메모리에도 저장 -> Compose 재컴포즈
-                _diaryMap.value = _diaryMap.value + (scheduleId to diary.diary)
-                Log.d("MypageViewModel", "다이어리 저장 완료: scheduleId=$scheduleId")
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "다이어리 생성/저장 실패", e)
-                _diaryMap.value = _diaryMap.value + (scheduleId to "다이어리 생성 실패")
-            }
-        }
-    }
-
-    fun addSchedule(schedule: MypageSchedule) {
-        viewModelScope.launch {
-//            mypageUseCase.addScheduleUseCase(schedule).collectLatest { success ->
-//                if (success) {
-//                    getSchedules(schedule.date) // Reload schedules for the date
-//                }
-//            }
-        }
-    }
-
-    fun deleteSchedule(schedule: MypageSchedule) {
-        viewModelScope.launch {
-            mypageUseCase.deleteScheduleUseCase(schedule.id).collectLatest { success ->
-                if (success) {
-                    // 다이어리도 함께 삭제
-                    _diaryMap.value = _diaryMap.value - schedule.id
-                    getSchedules(schedule.date)
-                }
-            }
-        }
-    }
-    fun completeSchedule(schedule: MypageSchedule) {
-        viewModelScope.launch {
-            val completedSchedule = schedule.copy(isCompleted = true)
-
-            mypageUseCase.updateScheduleUseCase(completedSchedule).collectLatest { success ->
-                if (success && schedule.isPath && schedule.pathId != null) {
-                    getSchedules(schedule.date)
-
-                    // ✅ 다이어리 생성 및 저장
-                    loadPathAndGenerateDiary(schedule.id, schedule.pathId!!)
-                }
-            }
-        }
-    }
-
-    // ✅ 서버 동기화 (서버 준비되면 호출)
-    fun syncDiariesToServer() {
-        viewModelScope.launch {
-            try {
-                // TODO: 미동기화 다이어리들 서버로 전송
-                Log.d("MypageViewModel", "다이어리 서버 동기화 시작")
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "동기화 실패", e)
-            }
-        }
-    }
-
-    // ✅ completeScheduleById 함수 추가
-    fun completeScheduleById(scheduleId: Long) {
-        viewModelScope.launch {
-            try {
-                Log.d("MypageViewModel", "✅ [1단계] completeScheduleById 호출: scheduleId=$scheduleId")
-
-                // 1. 현재 일정 목록에서 해당 일정 찾기
-                val schedule = _schedules.value.find { it.id == scheduleId }
-
-                if (schedule == null) {
-                    Log.e("MypageViewModel", "❌ 일정을 찾을 수 없음: scheduleId=$scheduleId")
-                    Log.d("MypageViewModel", "현재 일정 목록: ${_schedules.value.map { it.id }}")
-                    return@launch
-                }
-
-                Log.d("MypageViewModel", "✅ [2단계] 일정 찾음: ${schedule.title}, isPath=${schedule.isPath}, pathId=${schedule.pathId}")
-
-                // 2. 일정을 완료 상태로 업데이트
-                val completedSchedule = schedule.copy(isCompleted = true)
-
-                Log.d("MypageViewModel", "✅ [3단계] 일정 완료 상태로 변경 시도")
-
-                mypageUseCase.updateScheduleUseCase(completedSchedule).collectLatest { success ->
-                    if (success) {
-                        Log.d("MypageViewModel", "✅ [4단계] 일정 업데이트 성공 - isCompleted=true")
-
-                        // 3. 일정 목록 새로고침
-                        getSchedules(schedule.date)
-
-                        // 4. 산책로 일정이면 다이어리 생성
-                        if (schedule.isPath && schedule.pathId != null) {
-                            Log.d("MypageViewModel", "✅ [5단계] 산책로 일정 확인 완료")
-
-                            // Room에 다이어리가 있는지 확인
-                            val existingDiary = mypageUseCase.getDiaryFromLocalUseCase(scheduleId)
-
-                            if (existingDiary != null) {
-                                Log.d("MypageViewModel", "✅ [6단계] 이미 다이어리 존재: ${existingDiary.take(30)}...")
-                                // 메모리에 추가
-                                _diaryMap.value = _diaryMap.value + (scheduleId to existingDiary)
-                            } else {
-                                Log.d("MypageViewModel", "⚠️ Room에 다이어리 없음 - 생성 시도")
-                                loadPathAndGenerateDiary(scheduleId, schedule.pathId!!)
-                            }
-                        }
-                    } else {
-                        Log.e("MypageViewModel", "❌ 일정 업데이트 실패")
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("MypageViewModel", "❌ completeScheduleById 실패", e)
-            }
-        }
-    }
-
 
     fun updatePermission(key: String, isEnabled: Boolean) {
         viewModelScope.launch {
@@ -587,9 +457,9 @@ class MypageViewModel @Inject constructor(
         }
     }
 
-    fun updateProfileImage(imagePart: MultipartBody.Part) {
+    fun updateProfileImage(uiState: AuthUiState, imagePart: MultipartBody.Part) {
         viewModelScope.launch {
-            val token = sessionUseCase.getAccessToken().first()
+            val token = uiState.token
             // [수정] authUseCase 안에 있는 updateProfile 호출
             token?.let {
                 userUseCase.updateProfile(token, imagePart, null)
@@ -607,7 +477,7 @@ class MypageViewModel @Inject constructor(
                                 )
                                 // 성공 후 유저 정보 갱신
                                 sessionUseCase.saveUser(updatedUser)
-                                getAllUserPets()
+                                getAllUserPets(uiState)
                             }
 
                             is AuthResult.NetworkError -> {

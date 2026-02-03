@@ -12,6 +12,10 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.kakao.sdk.common.KakaoSdk
 import com.sesac.android7hours.R // app 모듈의 R 클래스
 import com.sesac.android7hours.BuildConfig
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.Firebase
+import com.sesac.common.FirebaseAnalyticsHelper // Import the helper
 
 //Default Memory Size = 0.15 ~ 0.2
 const val COIL_MEMORY_CACHE_SIZE_PERCENT = 0.3
@@ -25,9 +29,15 @@ const val COIL_DISK_CACHE_MAX_SIZE = 1024 * 1024 * 100
 class A7HApplication(): Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
+        val appStartTime = System.currentTimeMillis()
+
         // ✅ ThreeTenABP 초기화 (LocalDate 등 사용 가능하게 함)
         AndroidThreeTen.init(this)
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
+
+        // Initialize Firebase Analytics
+        FirebaseAnalyticsHelper.initialize(Firebase.analytics)
+
         // ✅ 기존 전역 참조 유지
         a7HApp = this
     }

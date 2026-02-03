@@ -58,7 +58,7 @@ fun BookmarkedPathDTO.toDomain(): BookmarkedPath {
         distance = this.distance,
         duration = this.duration,
         isPrivate = this.isPrivate,
-        thumbnailUrl = fixImageUrl(this.thumbnailUrl),
+        thumbnail = fixImageUrl(this.thumbnail),
         bookmarkCount = this.bookmarksCount,
         isBookmarked = this.isBookmarked
     )
@@ -78,7 +78,6 @@ fun BookmarkedPostDTO.toDomain(): BookmarkedPost = BookmarkedPost(
     title = this.title,
     content = this.content,
     image = fixImageUrl(this.image),
-    imageUrl = fixImageUrl(this.imageUrl),
     viewCount = this.viewCount,
     commentCount = this.commentCount,
     likeCount = this.likeCount,

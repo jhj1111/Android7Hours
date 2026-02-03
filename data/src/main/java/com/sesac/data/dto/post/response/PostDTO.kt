@@ -27,8 +27,6 @@ data class PostDTO(
     val content: String,
     // 5. 썸네일 이미지 URL
     val image: String?,
-    @Json(name = "image_url")
-    val imageUrl: String? = null,
     // 7. 카운트 정보
     @Json(name = "view_count")
     val viewCount: Int = 0,

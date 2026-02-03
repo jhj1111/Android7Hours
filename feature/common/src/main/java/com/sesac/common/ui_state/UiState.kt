@@ -1,4 +1,4 @@
-package com.sesac.domain.result
+package com.sesac.common.ui_state
 
 import com.sesac.domain.model.User
 

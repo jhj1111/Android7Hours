@@ -1,26 +1,21 @@
 package com.sesac.monitor.nav_graph
 
-import androidx.navigation.NavController
+import androidx.compose.runtime.remember
+import com.sesac.common.component.CommonMapLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.sesac.common.component.CommonMapLifecycle
-import com.sesac.monitor.presentation.ui.MonitorGpsScreen
-import com.sesac.monitor.presentation.ui.MonitorMainScreen
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.monitor.presentation.monitor_main.MonitorMainScreen
 
 
 fun NavGraphBuilder.monitorRoute(
-    navController: NavController,
-    commonMapLifecycle: CommonMapLifecycle,
+    authorUiState: AuthUiState,
 ) {
     composable<MonitorNavigationRoute.MainTab> {
+        val commonMapLifecycle = remember { CommonMapLifecycle("MonitorMainScreen") }
         MonitorMainScreen(
-            navController = navController,
+            authorUiState = authorUiState,
             commonMapLifecycle = commonMapLifecycle,
         )
     }
-//    composable<MonitorNavigationRoute.GpsTab> {
-//        MonitorGpsScreen(
-//            commonMapLifecycle = commonMapLifecycle,
-//        )
-//    }
 }

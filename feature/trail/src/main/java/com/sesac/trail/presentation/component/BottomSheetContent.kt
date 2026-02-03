@@ -1,7 +1,5 @@
 package com.sesac.trail.presentation.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -32,17 +29,14 @@ import com.sesac.common.ui.theme.GrayTabText
 import com.sesac.common.ui.theme.PrimaryGreenDark
 import com.sesac.common.ui.theme.PrimaryGreenLight
 import com.sesac.common.ui.theme.Purple600
-import com.sesac.common.ui.theme.SheetHandle
-import com.sesac.common.ui.theme.SheetHandleHeight
-import com.sesac.common.ui.theme.SheetHandleWidth
 import com.sesac.common.ui.theme.White
 import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMicro
 import com.sesac.common.ui.theme.paddingSmall
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.User
-import com.sesac.domain.result.AuthUiState
-import com.sesac.trail.presentation.ui.WalkPathTab
+import com.sesac.common.ui_state.AuthUiState
+import com.sesac.trail.presentation.trail_main_screen.WalkPathTab
 
 @Composable
 fun BottomSheetContent(

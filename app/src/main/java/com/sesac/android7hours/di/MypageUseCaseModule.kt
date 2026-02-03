@@ -5,14 +5,11 @@ import com.sesac.domain.usecase.mypage.AddScheduleUseCase
 import com.sesac.domain.usecase.mypage.DeleteFavoriteCommunityPostUseCase
 import com.sesac.domain.usecase.mypage.DeleteFavoriteWalkPathsUseCase
 import com.sesac.domain.usecase.mypage.DeleteScheduleUseCase
-import com.sesac.domain.usecase.mypage.DiaryUseCase
-import com.sesac.domain.usecase.mypage.GetDiaryFromLocalUseCase
 import com.sesac.domain.usecase.mypage.GetFavoriteCommunityPostsUseCase
 import com.sesac.domain.usecase.mypage.GetFavoriteWalkPathsUseCase
 import com.sesac.domain.usecase.mypage.GetMypageStatsUseCase
 import com.sesac.domain.usecase.mypage.GetSchedulesUseCase
 import com.sesac.domain.usecase.mypage.MypageUseCase
-import com.sesac.domain.usecase.mypage.SaveDiaryToLocalUseCase
 import com.sesac.domain.usecase.mypage.UpdatePermissionStatusUseCase
 import com.sesac.domain.usecase.mypage.UpdateScheduleUseCase
 import dagger.Module
@@ -20,8 +17,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -39,10 +34,7 @@ object MypageUseCaseModule {
             getMypageStatsUseCase = GetMypageStatsUseCase(repository),
             getSchedulesUseCase = GetSchedulesUseCase(repository),
             updatePermissionStatusUseCase = UpdatePermissionStatusUseCase(repository),
-            diaryUseCase = DiaryUseCase(repository),
             updateScheduleUseCase = UpdateScheduleUseCase(repository),
-            saveDiaryToLocalUseCase = SaveDiaryToLocalUseCase(repository),
-            getDiaryFromLocalUseCase = GetDiaryFromLocalUseCase(repository)
         )
     }
 }

@@ -5,4 +5,13 @@ data class BannerData(
     val image: String,
     val title: String,
     val subtitle: String
-)
+){
+    companion object{
+        val EMPTY = BannerData(
+            id = -1,
+            image = "",
+            title = "",
+            subtitle = "",
+        )
+    }
+}

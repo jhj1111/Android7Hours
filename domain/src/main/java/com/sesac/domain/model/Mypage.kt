@@ -1,6 +1,8 @@
 package com.sesac.domain.model
 
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 
 /**
  * 마이페이지 메인 화면의 메뉴 아이템을 나타내는 데이터 클래스
@@ -60,7 +62,20 @@ data class MypageSchedule(
     val isPath: Boolean = false,
     val pathId: Int? = null,
     val isCompleted: Boolean = false
-)
+) {
+
+    companion object {
+        val Empty = MypageSchedule(
+            id = -1,
+            date = LocalDate.of(2000, 1, 1),
+            title = "",
+            memo = "",
+            isPath = false,
+            pathId = -1,
+            isCompleted = false
+        )
+    }
+}
 
 /**
  * 설정 화면의 권한 항목을 나타내는 데이터 클래스

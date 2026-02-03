@@ -6,6 +6,7 @@
     <!-- ========= Home ========== -->
     <string name="home_carousel_title_trail_recommendation" >산책로 추천</string>
     <string name="home_carousel_title_community_recommendation">커뮤니티</string>
+    <string name="home_banner_empty">배너 없음</string>
     <string name="home_tab_trail">산책로</string>
     <string name="home_tab_trip">여행지</string>
     <string name="home_tab_hospital">병원</string>
@@ -18,12 +19,15 @@
     <string name="community_button_register">등록하기</string>
     <string name="community_placeholder_title">My Post</string>
     <string name="community_placeholder_post_content">게시글 내용</string>
+    <string name="community_placeholder_input_title">제목을 입력하세요</string>
+    <string name="community_placeholder_post_content_empty">무슨 생각을 하고 계신가요?</string>
     <string name="community_placeholder_post_empty">게시물이 없습니다.</string>
+    <string name="community_post_create">게시글 작성</string>
+    <string name="community_post_edit">게시글 수정</string>
+    <string name="community_post_delete">게시글 삭제</string>
     <string name="community_snackbar_post_create">게시글이 작성되었습니다.</string>
     <string name="community_snackbar_post_delecte">게시글이 삭제되었습니다.</string>
     <string name="community_snackbar_post_update">게시글이 수정되었습니다.</string>
-    <string name="community_title_like">좋아요</string>
-    <string name="community_title_comment">댓글</string>
     <string name="community_title_list">목록</string>
     <string name="community_title_share">공유하기</string>
     <string name="community_title_create_auth">작성자</string>
@@ -31,8 +35,18 @@
     <string name="community_title_post_image">게시글 이미지</string>
 
     <!-- ========= Monitor ========== -->
+    <string name="monitoring">모니터링</string>
+    <string name="monitor_ready">모니터링 대기</string>
+    <string name="monitor_pet_stream_message">보호자가 모니터링을 시작할 수 있도록 준비합니다.</string>
+    <string name="monitor_permissions">카메라와 마이크 권한이 필요합니다.</string>
     <string name="monitor_button_webcam">영상</string>
     <string name="monitor_button_GPS">GPS</string>
+    <string name="monitor_pet_list_loading">펫 목록을 불러오는 중…</string>
+    <string name="monitor_pet_list_load_failed">펫 목록 로드 실패</string>
+    <string name="monitor_pet_connecting_now_message">에게 연결 중…</string>
+    <string name="monitor_pet_select_pet_target">모니터링할 펫을 선택하세요</string>
+    <string name="monitor_pet_list_empty">등록된 펫이 없습니다.</string>
+    <string name="monitor_ready_set">준비 완료</string>
 
     <!-- ========= Trail ========== -->
     <string name="trail_create_page">산책로 생성</string>
@@ -80,34 +94,140 @@
     <string name="mypage_setting">설정</string>
     <string name="mypage_main">마이페이지</string>
     <string name="mypage_myinfo">내 프로필</string>
+    <string name="mypage_menu_email">이메일</string>
+    <string name="mypage_menu_phone">전화번호</string>
+    <string name="mypage_menu_address">주소</string>
     <string name="mypage_register_pet">반려견 등록</string>
-    <string name="mypage_like">좋아요</string>
     <string name="mypage_create_list">작성목록</string>
     <string name="mypage_stats_title">내 산책 기록</string>
+    <string name="mypage_detail_header_message">반려견과 함께하는 즐거운 산책</string>
+
+    <string name="mypage_pet_info">반려견 정보</string>
+    <string name="mypage_select_breed">품종을 선택해주세요</string>
+    <string name="mypage_pet_neutering">중성화</string>
+    <string name="mypage_pet_code">반려견 초대 코드</string>
+    <string name="mypage_pet_code_creating">코드 생성 중…</string>
+    <string name="mypage_pet_code_created">초대 코드가 생성되었습니다. 기기를 등록하여 위치 추적을 시작하세요.</string>
+    <string name="mypage_select_pet_options">반려견 추가 옵션 선택</string>
+    <string name="mypage_select_pet_massage">어떤 방식으로 펫을 추가하시겠습니까?</string>
+    <string name="mypage_create_new_pet">반려견 정보 등록</string>
+    <string name="mypage_input_pet_name">이름을 입력해주세요.</string>
+    <string name="mypage_edit_pet">반려견 정보 수정</string>
+    <string name="mypage_create_pet_code">반려견 기기 등록 코드 생성</string>
+    <string name="mypage_pet_code_create_failed">코드 생성에 실패했습니다: </string>
+    <string name="mypage_pet_code_pasted">코드가 클립보드에 복사되었습니다.</string>
+    <string name="mypage_pet_code_info_text">회원가입 시 코드를 입력해주세요!</string>
+    <string name="mypage_pet_empty_list">등록된 반려견이 없어요</string>
+    <string name="mypage_pet_empty_list_subtitle">우측 하단의 \'+\' 버튼으로\n반려견을 추가하고 산책을 기록해보세요</string>
+    <string name="mypage_pet_delete_confirm_message">정말 이 반려견의 정보를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.</string>
+
+    <string name="mypage_manage_schedules_today">🐕 오늘의 산책로 일기</string>
+    <string name="mypage_manage_schedules_date_of">의 일정</string>
+    <string name="mypage_manage_schedules_loading">일기를 불러오는 중…</string>
+    <string name="mypate_manage_no_schedules">일정이 없습니다.</string>
+    <string name="mypage_manage_schedules_text_create">일정 추가</string>
+    <string name="mypage_manage_schedules_title">일정 제목</string>
+    <string name="mypage_manage_schedules_input_title">일정 제목을 입력하세요</string>
+    <string name="mypage_manage_schedules_create">일정 추가하기</string>
+    <string name="mypage_manage_schedules_create_in_selected_date">선택한 날짜에 새로운 일정을 추가하세요</string>
+    <string name="mypage_schedules_created_succeed">일정이 추가되었습니다</string>
+
+    <string name="mypage_favorite_post">즐겨찾는 게시글</string>
+    <string name="mypage_favorite_post_empty">즐겨찾는 게시글이 없습니다.</string>
+    <string name="mypage_favorite_post_empty_submessage">커뮤니티에서 ⭐를 눌러 추가해보세요</string>
+
+    <string name="mypage_favorite_path">즐겨찾는 산책로</string>
+    <string name="mypage_favorite_path_empty">즐겨찾는 산책로가 없습니다.</string>
+    <string name="mypage_favorite_path_empty_submessage">산책로 페이지에서 *를 눌러 추가해보세요</string>
+
+    <!-- ========= Mypage Setting ========= -->
+    <string name="mypage_setting_title">권한 설정</string>
+    <string name="mypage_setting_subtitle">앱 기능 사용을 위한 권한을 관리합니다</string>
+    <string name="mypage_setting_enabled">활성화됨</string>
+    <string name="mypage_setting_permission_info_title">권한 안내</string>
+    <string name="mypage_setting_permission_info_camera">카메라: 산책 중 추억을 사진과 영상으로 남길 수 있습니다</string>
+    <string name="mypage_setting_permission_info_gps">GPS: 산책 경로를 기록하고 주변 산책로를 추천받을 수 있습니다</string>
+    <string name="mypage_setting_permission_info_notification">알림: 중요한 산책 일정과 커뮤니티 소식을 받을 수 있습니다</string>
+    <string name="mypage_setting_privacy_note">모든 권한은 언제든지 변경할 수 있으며,\n수집된 정보는 안전하게 보호됩니다.</string>
+
+    <string name="mypage_permission_camera_label">카메라</string>
+    <string name="mypage_permission_camera_desc">산책 중 사진 및 영상 촬영</string>
+    <string name="mypage_permission_gps_label">GPS</string>
+    <string name="mypage_permission_gps_desc">위치 기반 산책로 추천 및 기록</string>
+    <string name="mypage_permission_notification_label">알림</string>
+    <string name="mypage_permission_notification_desc">산책 알림 및 커뮤니티 소식</string>
+
+    <string name="mypage_pet_input_name">이름을 입력해주세요.</string>
 
     <!-- ========= Common ========= -->
     <string name="common_see_all">전체보기</string>
     <string name="common_searchbar_text_default">검색</string>
+    <string name="common_searchbar_placeholder_text">검색…</string>
+    <string name="common_view_more">더보기</string>
     <string name="common_menu">메뉴</string>
     <string name="common_detail">상세</string>
     <string name="common_create">생성</string>
     <string name="comment_placeholder_comment_write">댓글을 입력하세요…</string>
-    <string name="comment_action_edit">수정</string>
-    <string name="comment_action_delete">삭제</string>
-    <string name="comment_action_save">저장</string>
-    <string name="comment_action_cancel">취소</string>
-    <string name="comment_action_post">게시</string>
-    <string name="comment_delete_confirm_title">댓글 삭제</string>
-    <string name="comment_delete_confirm_text">이 댓글을 정말로 삭제하시겠습니까?</string>
+    <string name="common_action_edit">수정</string>
+    <string name="common_action_add">추가</string>
+    <string name="common_action_delete">삭제</string>
+    <string name="common_action_save">저장</string>
+    <string name="common_action_cancel">취소</string>
+    <string name="common_action_confirm">확인</string>
+    <string name="common_action_post">게시</string>
+    <string name="common_action_move">이동</string>
+    <string name="common_counts">개</string>
+    <string name="common_counts_views">회</string>
     <string name="common_yes">예</string>
     <string name="common_no">아니오</string>
+    <string name="common_finish">종료</string>
+    <string name="common_share">공유하기</string>
+    <string name="common_close">닫기</string>
 
+    <string name="common_like">좋아요</string>
+    <string name="common_title">제목</string>
+    <string name="common_categroy">카테고리</string>
+    <string name="common_image">이미지</string>
+    <string name="common_comment">댓글</string>
+    <string name="common_content">내용</string>
+    <string name="common_view_counts">조회수</string>
+    <string name="comment_delete_confirm_title">댓글 삭제</string>
+    <string name="comment_delete_confirm_text">이 댓글을 정말로 삭제하시겠습니까?</string>
+
+    <string name="common_empty_page">게시물이 없습니다.</string>
+    <string name="common_empty_comment">첫 댓글을 작성해보세요!</string>
+    <string name="common_empty_page_submessage">게시물을 추가해보세요.</string>
+    <string name="common_error_message_input_all">모든 정보를 입력해주세요.</string>
+    <string name="common_select_date">날짜를 선택해주세요</string>
+
+    <string name="common_add_image">사진 추가</string>
+
+    <string name="common_name">이름</string>
+    <string name="common_birthday">생일</string>
+    <string name="common_gender">성별</string>
+    <string name="common_pet_breed">품종</string>
+    <string name="common_pet_male">남아</string>
+    <string name="common_pet_female">여아</string>
+    <string name="common_memo">메모</string>
+    <string name="common_input_memo">메모를 추가하세요</string>
+
+    <string name="common_date_format_Md">M월 d일</string>
+    <string name="common_date_format_yyyyMd">yyyy년 M월 d일 (E)</string>
+
+    <string name="common_error_network">네트워크 연결을 확인해주세요</string>
+    <string name="common_error_unknown">알 수 없는 오류</string>
 
     <!-- ========= Auth ========= -->
     <string name="auth_join_welcome_title">환영합니다!</string>
     <string name="auth_join_welcome_message">아래 정보를 입력하여 회원가입을 완료하세요.</string>
+    <string name="auth_login_require_message">로그인이 필요한 기능입니다.</string>
+    <string name="auth_login_switch_to_screen">로그인 화면으로 이동하시겠습니까?</string>
+    <string name="auth_login_require_title_message">로그인이 필요한 기능입니다.</string>
+    <string name="auth_comment_require_login">댓글을 작성하려면 로그인이 필요합니다.</string>
     <string name="auth_join_email_label">이메일</string>
     <string name="auth_join_password_label">비밀번호</string>
+    <string name="auth_login_succeeded">로그인 성공</string>
+    <string name="auth_join_error_bad_request">아이디 혹은 비밀번호가 잘못되었습니다.</string>
     <string name="auth_join_password_helper">* 10자 이상이면서 영문, 숫자, 특수문자를 모두 포함하세요</string>
     <string name="auth_join_password_confirm_label">비밀번호 재확인</string>
     <string name="auth_join_password_confirm_helper">* 비밀번호를 다시 입력해주세요</string>
@@ -129,6 +249,8 @@
     <string name="auth_join_agreement_age">만 14세 이상입니다.</string>
     <string name="auth_join_agreement_terms">서비스 이용약관에 동의합니다.</string>
     <string name="auth_join_agreement_privacy">개인정보 수집 및 이용에 동의합니다.</string>
+    <string name="auth_info_pet_register_code">펫 등록 코드 (선택)</string>
+    <string name="auth_input_pet_register_code">펫 등록 코드가 있다면 입력해주세요</string>
 
 </resources>
 

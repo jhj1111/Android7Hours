@@ -11,7 +11,4 @@ data class MypageUseCase(
     val getSchedulesUseCase: GetSchedulesUseCase,
     val updatePermissionStatusUseCase: UpdatePermissionStatusUseCase,
     val updateScheduleUseCase: UpdateScheduleUseCase,
-    val diaryUseCase: DiaryUseCase,
-    val saveDiaryToLocalUseCase: SaveDiaryToLocalUseCase,
-    val getDiaryFromLocalUseCase: GetDiaryFromLocalUseCase
 )

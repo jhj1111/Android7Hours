@@ -69,7 +69,7 @@ import com.sesac.common.ui.theme.paddingLarge
 import com.sesac.common.ui.theme.paddingMedium
 import com.sesac.common.ui.theme.paddingMicro
 import com.sesac.common.ui.theme.paddingSmall
-import com.sesac.common.utils.samplePathUrl
+import com.sesac.common.config.samplePathUrl
 import com.sesac.domain.model.Path
 import com.sesac.domain.model.User
 
@@ -147,7 +147,7 @@ fun PathItem(
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context)
-                        .data(path.imageUrl ?: samplePathUrl)
+                        .data(path.thumbnail ?: samplePathUrl)
                         .crossfade(true)
                         .scale(Scale.FILL)
                         .build(),

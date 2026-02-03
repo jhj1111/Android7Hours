@@ -20,8 +20,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -42,21 +42,26 @@ import com.sesac.android7hours.nav_graph.AppBottomBarItem
 import com.sesac.android7hours.nav_graph.AppNavHost
 import com.sesac.auth.nav_graph.AuthNavigationRoute
 import com.sesac.common.CommonViewModel
+import com.sesac.common.FirebaseAnalyticsHelper
 import com.sesac.common.component.CommonMapLifecycle
-import com.sesac.common.component.CommonMapView
 import com.sesac.common.service.CurrentLocationService
 import com.sesac.common.ui.theme.Android7HoursTheme
 import com.sesac.community.nav_graph.CommunityNavigationRoute
 import com.sesac.community.presentation.CommunityViewModel
 import com.sesac.domain.model.Coord
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.home.nav_graph.EntryPointScreen
 import com.sesac.home.nav_graph.HomeNavigationRoute
 import com.sesac.home.nav_graph.TopBarAction
 import com.sesac.mypage.nav_graph.MypageNavigationRoute
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.trail.nav_graph.NestedNavigationRoute
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.PlaceViewModel
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailDetailViewModel
+import com.sesac.trail.presentation.TrailFollowViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
+//import com.sesac.trail.presentation.TrailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.sesac.common.R as cR
 
@@ -152,19 +157,33 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val context = LocalContext.current
+            val lifecycleOwner = LocalLifecycleOwner.current
+            val lifecycle = lifecycleOwner.lifecycle
             val uiState by commonViewModel.uiState.collectAsStateWithLifecycle()
             val isLocationServiceRunning by commonViewModel.isLocationServiceRunning.collectAsStateWithLifecycle()
 
-            // 🔹 공통 MapView + 공통 LifecycleHelper 생성 (앱 전체 공유)
-            val commonMapView = remember { CommonMapView.getMapView(context) }
-            val lifecycle = LocalLifecycleOwner.current.lifecycle
-            val commonMapLifecycle = remember { CommonMapLifecycle(lifecycle) }
-            val trailViewModel = hiltViewModel<TrailViewModel>()
+            // 🔥 더 이상 필요 없음! 각 화면에서 독립적으로 생성함
+
+            val trailMainViewModel = hiltViewModel<TrailMainViewModel>()
+            val trailCreateViewModel = hiltViewModel<TrailCreateViewModel>()
+            val trailDetailViewModel = hiltViewModel<TrailDetailViewModel>()
+            val followViewModel = hiltViewModel<TrailFollowViewModel>()
+            val placeViewModel = hiltViewModel<PlaceViewModel>()
             val communityViewModel = hiltViewModel<CommunityViewModel>()
             val mypageViewModel = hiltViewModel<MypageViewModel>()
             val navController = rememberNavController()
             val startDestination = HomeNavigationRoute.HomeTab
             val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+            // Add this LaunchedEffect to track screen views
+            LaunchedEffect(navController) {
+                navController.currentBackStackEntryFlow.collect { backStackEntry ->
+                    val route = backStackEntry.destination.route
+                    route?.let {
+                        FirebaseAnalyticsHelper.logScreenView(it, it)
+                    }
+                }
+            }
 
             // 서비스 실행 로직 중앙화
             LaunchedEffect(uiState, isLocationServiceRunning) {
@@ -183,11 +202,10 @@ class MainActivity : ComponentActivity() {
                 if (initialLocationState is ResponseUiState.Success) {
                     val coord = (initialLocationState as ResponseUiState.Success<Coord?>).result
                     if (coord != null) {
-                        trailViewModel.loadInitialPaths(coord)
+                        trailMainViewModel.loadInitialPaths(coord)
                     }
                 }
             }
-
 
             val topBarActions = if (uiState.isLoggedIn) {
                 listOf(
@@ -207,6 +225,7 @@ class MainActivity : ComponentActivity() {
                     )
                 )
             }
+
             val loginRequiredScreen = listOf(
                 stringResource(cR.string.mypage_main),
                 stringResource(cR.string.mypage_myinfo),
@@ -226,7 +245,7 @@ class MainActivity : ComponentActivity() {
             val appBottomBarItem = remember { AppBottomBarItem().fetch() }
             val isSearchOpen = remember { mutableStateOf(false) }
             val permissionStates = remember { mutableStateMapOf<String, Boolean>() }
-            val isRecording by trailViewModel.isRecording.collectAsStateWithLifecycle()
+            val isRecording by trailMainViewModel.isRecording.collectAsStateWithLifecycle()
 
             Android7HoursTheme {
                 LaunchedEffect(uiState) {
@@ -234,6 +253,7 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(AuthNavigationRoute.LoginTab)
                     }
                 }
+
                 EntryPointScreen(
                     isRecording = isRecording,
                     navController = navController,
@@ -254,10 +274,14 @@ class MainActivity : ComponentActivity() {
                     appTopBarData = finalTopBarData,
                     appBottomBarItem = appBottomBarItem,
                     isSearchOpen = isSearchOpen,
-                    screensWithCustomTopBar = listOf(stringResource(cR.string.community)), // New parameter
+                    screensWithCustomTopBar = listOf(stringResource(cR.string.community)),
                     navHost = { paddingValues ->
                         AppNavHost(
-                            trailViewModel = trailViewModel,
+                            trailMainViewModel = trailMainViewModel,
+                            placeViewModel = placeViewModel,
+                            trailCreateViewModel = trailCreateViewModel,
+                            trailDetailViewModel = trailDetailViewModel,
+                            followViewModel = followViewModel,
                             communityViewModel = communityViewModel,
                             mypageViewModel = mypageViewModel,
                             paddingValues = paddingValues,
@@ -273,12 +297,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = startDestination,
                             uiState = uiState,
                             onStartFollowing = { path ->
-                                trailViewModel.startFollowing(path) // ✅ ViewModel 함수 호출
-                                trailViewModel.updateIsSheetOpen(false) // 시트 닫기
-                                trailViewModel.updateIsFollowingPath(true) // 상태 업데이트
+                                followViewModel.startFollowing(path) // ✅ ViewModel 함수 호출
+                                trailMainViewModel.updateIsSheetOpen(false) // 시트 닫기
                                 Log.d("Tag-MainActivity", "Following path: ${path.pathName}")
                             },
-                            commonMapLifecycle = commonMapLifecycle,
                             permissionState = permissionStates,
                         )
                     }
@@ -286,7 +308,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             val cF = currentFocus

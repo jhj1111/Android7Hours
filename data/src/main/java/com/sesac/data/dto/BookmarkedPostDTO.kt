@@ -22,8 +22,6 @@ data class BookmarkedPostDTO(
     val title: String,
     val content: String, // PostList 출력 형태라 임시 제거
     val image: String?,
-    @Json(name = "image_url")
-    val imageUrl: String? = null,
     @Json(name = "view_count")
     val viewCount: Int,
     @Json(name = "comment_count")

@@ -9,7 +9,7 @@ import okhttp3.MultipartBody
 
 interface PostRepository {
     // 1. 공용 게시글 목록 조회
-    suspend fun getPostList(token: String, query: String? = null): Flow<AuthResult<List<Post>>>
+    suspend fun getPostList(query: String? = null): Flow<AuthResult<List<Post>>>
     // 2. 내 게시글 목록 조회
     suspend fun getMyPosts(token: String): Flow<AuthResult<List<Post>>>
     // 3. 게시글 상세 조회

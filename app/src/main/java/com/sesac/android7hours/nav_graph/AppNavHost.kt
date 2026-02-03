@@ -4,31 +4,40 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.sesac.auth.nav_graph.authRoute
-import com.sesac.common.component.CommonMapLifecycle
+import com.sesac.common.component.CommonMapView
 import com.sesac.common.model.PathParceler
 import com.sesac.community.nav_graph.communityRoute
 import com.sesac.community.presentation.CommunityViewModel
 import com.sesac.domain.model.Path
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.home.nav_graph.homeRoute
 import com.sesac.monitor.nav_graph.monitorRoute
 import com.sesac.mypage.nav_graph.mypageRoute
 import com.sesac.mypage.presentation.MypageViewModel
 import com.sesac.trail.nav_graph.trailNestedNavGraph
 import com.sesac.trail.nav_graph.trailRoute
-import com.sesac.trail.presentation.TrailViewModel
+import com.sesac.trail.presentation.PlaceViewModel
+import com.sesac.trail.presentation.TrailCreateViewModel
+import com.sesac.trail.presentation.TrailDetailViewModel
+import com.sesac.trail.presentation.TrailFollowViewModel
+import com.sesac.trail.presentation.TrailMainViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
     paddingValues: PaddingValues,
-    trailViewModel: TrailViewModel,
+    trailMainViewModel: TrailMainViewModel,
+    trailCreateViewModel: TrailCreateViewModel,
+    trailDetailViewModel: TrailDetailViewModel,
+    placeViewModel: PlaceViewModel,
+    followViewModel: TrailFollowViewModel,
     communityViewModel: CommunityViewModel,
     mypageViewModel: MypageViewModel,
     navController: NavHostController,
@@ -39,37 +48,37 @@ fun AppNavHost(
     startDestination: Any,
     uiState: AuthUiState,
     onStartFollowing: (Path) -> Unit,
-    commonMapLifecycle: CommonMapLifecycle,
     permissionState: SnapshotStateMap<String, Boolean>,
-    ) {
+) {
+    // 앱 종료 시 MapView 리소스를 완전히 해제하기 위한 Effect
+    DisposableEffect(Unit) {
+        onDispose {
+            CommonMapView.clear()
+        }
+    }
+
     NavHost(
         modifier = Modifier.padding(paddingValues = paddingValues),
         navController = navController,
         startDestination = startDestination,
-//        contentAlignment = ,
-//        route = null,
-//        typeMap = emptyMap(),
-//        enterTransition = ,
-//        exitTransition = ,
-//        popEnterTransition = ,
-//        popExitTransition = ,
-//        sizeTransform = ,
     ) {
         homeRoute(
-            uiState = uiState,
             onNavigateToPathDetail = onNavigateToPathDetail,
             onNavigateToCommunity = onNavigateToCommunity,
         )
         trailRoute(
-            trailViewModel = trailViewModel,
+            mainViewModel = trailMainViewModel,
+            createViewModel = trailCreateViewModel,
+            placeViewModel = placeViewModel,
+            followViewModel = followViewModel,
             navController = navController,
             uiState = uiState,
             onStartFollowing = onStartFollowing,
-            commonMapLifecycle = commonMapLifecycle,
-            )
+        )
         trailNestedNavGraph(
             uiState = uiState,
-            trailViewModel = trailViewModel,
+            detailViewModel = trailDetailViewModel,
+            placeViewModel = placeViewModel,
             navController = navController,
             onStartFollowing = onStartFollowing,
         )
@@ -79,8 +88,7 @@ fun AppNavHost(
             viewModel = communityViewModel)
 
         monitorRoute(
-            navController = navController,
-            commonMapLifecycle = commonMapLifecycle,
+            authorUiState = uiState,
         )
         mypageRoute(
             mypageViewModel = mypageViewModel,

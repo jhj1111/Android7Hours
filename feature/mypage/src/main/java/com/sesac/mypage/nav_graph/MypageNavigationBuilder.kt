@@ -6,14 +6,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.sesac.common.model.PathParceler
-import com.sesac.domain.result.AuthUiState
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.mypage.presentation.MypageViewModel
-import com.sesac.mypage.presentation.ui.AddPetScreen
-import com.sesac.mypage.presentation.ui.MypageDetailScreen
-import com.sesac.mypage.presentation.ui.MypageBookmarkScreen
-import com.sesac.mypage.presentation.ui.MypageMainScreen
-import com.sesac.mypage.presentation.ui.MypageManageScreen
-import com.sesac.mypage.presentation.ui.MypageSettingScreen
+import com.sesac.mypage.presentation.mypage_add_pet.AddPetScreen
+import com.sesac.mypage.presentation.mypage_detail.MypageDetailScreen
+import com.sesac.mypage.presentation.mypage_bookmark.MypageBookmarkScreen
+import com.sesac.mypage.presentation.mypage_main.MypageMainScreen
+import com.sesac.mypage.presentation.mypage_manage.MypageManageScreen
+import com.sesac.mypage.presentation.mypage_setting.MypageSettingScreen
 
 fun NavGraphBuilder.mypageRoute(
     mypageViewModel: MypageViewModel,
@@ -31,7 +31,10 @@ fun NavGraphBuilder.mypageRoute(
         )
     }
     composable<MypageNavigationRoute.ManageTab> {
-        MypageManageScreen()
+        MypageManageScreen(
+            uiState = uiState,
+            viewModel = mypageViewModel,
+        )
     }
     composable<MypageNavigationRoute.FavoriteTab> {
         MypageBookmarkScreen(uiStatus = uiState, onNavigateToPathDetail = onNavigateToPathDetail)

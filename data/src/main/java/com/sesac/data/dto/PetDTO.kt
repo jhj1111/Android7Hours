@@ -13,8 +13,6 @@ data class PetDTO(
     val neutering: Boolean,
     val breed: String?, // Changed to nullable
     val image: String? = null,
-    @Json(name = "image_url")
-    val imageUrl: String? = null,
     @Json(name = "linked_user")
     val linkedUser: String? = null, // New field
     @Json(name = "last_location")

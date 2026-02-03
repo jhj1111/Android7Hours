@@ -6,10 +6,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sesac.common.model.UiEvent
+import com.sesac.common.ui_state.AuthUiState
 import com.sesac.domain.model.Comment
 import com.sesac.domain.model.Post
 import com.sesac.domain.result.AuthResult
-import com.sesac.domain.result.ResponseUiState
+import com.sesac.common.ui_state.ResponseUiState
 import com.sesac.domain.type.BookmarkType
 import com.sesac.domain.type.CommentType
 import com.sesac.domain.type.LikeType
@@ -130,15 +131,10 @@ class CommunityViewModel @Inject constructor(
     // ---------------------------------------------------------
     // 🔥 게시글 목록
     // ---------------------------------------------------------
-    fun getPostList(token: String?, query: String? = null) {
+    fun getPostList(query: String? = null) {
         viewModelScope.launch {
-            if (token.isNullOrEmpty()) {
-                _invalidToken.send(UiEvent.ToastEvent("유저 정보가 없습니다."))
-                return@launch
-            }
-
             _postList.value = ResponseUiState.Loading
-            postUseCase.getPostListUseCase(token, query)
+            postUseCase.getPostListUseCase(query)
                 .catch { e ->
                     Log.e("CommunityVM", "게시글 리스트 로드 실패: ${e.message}")
                 }
@@ -162,37 +158,12 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    fun getPostDetail(token: String?, id: Int) {
-        viewModelScope.launch {
-            if (token.isNullOrEmpty()) {
-                _invalidToken.send(UiEvent.ToastEvent("유저 정보가 없습니다."))
-                return@launch
-            }
-
-            _post.value = ResponseUiState.Loading
-            postUseCase.getPostDetailUseCase(token, id)
-                .catch { e -> _post.value = ResponseUiState.Error(e.message ?: "알 수 없는 오류") }
-                .collectLatest { result ->
-                    when (result) {
-                        is AuthResult.Success -> {
-                            val detail = result.resultData
-                            _post.value = ResponseUiState.Success("조회 성공", detail)
-                            editingPost.value = detail
-                        }
-                        is AuthResult.NetworkError -> {
-                            _post.value = ResponseUiState.Error(result.exception.message ?: "네트워크 오류")
-                            _invalidToken.send(UiEvent.ToastEvent(result.exception.message ?: "오류 발생"))
-                        }
-                        else -> Unit
-                    }
-                }
-        }
-    }
-
     // ---------------------------------------------------------
     // 🔥 CRUD
     // ---------------------------------------------------------
-    fun createPost(context: Context, token: String?, post: Post, imageUri: Uri?) {
+    fun createPost(context: Context, uiState: AuthUiState, post: Post, imageUri: Uri?) {
+        val token = uiState.token
+
         if (token.isNullOrEmpty()) {
             _createPostState.value = ResponseUiState.Error("로그인이 필요합니다.")
             return

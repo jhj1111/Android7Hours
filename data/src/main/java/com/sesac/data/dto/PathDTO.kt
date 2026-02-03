@@ -2,11 +2,16 @@ package com.sesac.data.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class PathDTO(
     val id: Int = -1,
     val source: String? = null,
+    @Json(name = "created_at")
+    val createdAt: String? = null,
+    @Json(name = "updated_at")
+    val updatedAt: String? = null,
     @Json(name = "auth_user_nickname")
     val authUserNickname: String? = null,
     @Json(name = "path_name")
@@ -19,8 +24,6 @@ data class PathDTO(
     @Json(name = "is_private")
     val isPrivate: Boolean,
     val thumbnail: String?,
-    @Json(name = "thumbnail_url")
-    val imageUrl: String? = null,
     val coords: List<CoordDTO>,
     @Json(name = "distance_from_me")
     val distanceFromMe: Float? = null,

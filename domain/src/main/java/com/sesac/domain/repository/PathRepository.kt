@@ -2,6 +2,7 @@ package com.sesac.domain.repository
 
 import com.sesac.domain.model.BookmarkResponse
 import com.sesac.domain.model.Coord
+import com.sesac.domain.model.Diary
 import com.sesac.domain.model.Like
 import com.sesac.domain.model.Path
 import com.sesac.domain.result.AuthResult
@@ -14,6 +15,7 @@ interface PathRepository {
     suspend fun createPath(token: String, path: Path): Flow<AuthResult<Path>>
     suspend fun updatePath(token: String, id: Int, updatedPath: Path): Flow<AuthResult<Path>>
     suspend fun deletePath(token: String, id: Int): Flow<AuthResult<Unit>>
+    suspend fun getDiary(pathId: Int): Flow<AuthResult<Diary>>
     suspend fun toggleBookmark(token: String, id: Int): Flow<AuthResult<BookmarkResponse>>
     suspend fun toggleLike(token: String, id: Int): Flow<AuthResult<Like>>
 

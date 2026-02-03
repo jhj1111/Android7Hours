@@ -9,7 +9,6 @@ data class Pet(
     val neutering: Boolean,
     val breed: String?,
     val image: String? = null,
-    val imageUrl: String? = null,
     val linkedUser: String? = null,
     val lastLocation: PetLocation?,
 ) {
