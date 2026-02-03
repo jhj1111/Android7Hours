@@ -1,8 +1,9 @@
 <img  alt="image" src="https://github.com/user-attachments/assets/5a6c1965-fe2d-48cf-9530-818aced889d4" />
+
 # 🐾 7Hours: 반려견 산책로 공유 및 모니터링
 
 **7Hours**는 반려견과의 산책을 더욱 특별하게 만들어주는 안드로이드 애플리케이션입니다. 
-직접 걸은 산책로를 기록하고 다른 사용자들과 공유하며, 원격으로 반려견의 상태를 모니터링하는 등 반려 생활을 풍요롭게 하는 다양한 기능을 제공합니다.
+직접 걸은 산책로를 기록하고 다른 사용자들과 공유하며, 원격으로 반려견의 상태를 모니터링하는 등 반려 생활을 풍요롭게 하는 다양한 기능을 제공합니다.   
 [발표링크](https://docs.google.com/presentation/d/1m5UmF2lI8zsu2avCn9C5CNhvae_siHfdrOsQWkSA4zk/edit?usp=sharing)
 
 ## 🗓 프로젝트 기간
